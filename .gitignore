@@ -1,0 +1,31 @@
+/.yarn/*
+!/.yarn/releases
+!/.yarn/plugins
+!/.yarn/sdks
+yarn-error.log*
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+#!/.yarn/cache
+/.pnp.*
+
+.env
+
+abis
+artifacts
+cache
+node_modules
+typechain
+
+# OSX
+.DS_Store
+
+# Solidity Coverage
+coverage
+coverage.json
+
+.history
+docs
+
+deployments/localhost
+deployments/hardhat
