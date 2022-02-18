@@ -1,19 +1,29 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("OtterBadge", function () {
+  it("Should mint an NFT to the sender", async function () {
+    const OtterBadge = await ethers.getContractFactory("OtterBadge");
+    const otterBadge = await OtterBadge.deploy();
+    await otterBadge.deployed();
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+    const [owner, address1] = await ethers.getSigners();
+    const tokenURI = "https://api.otterspace.xyz/badges/1234"; // ipfs://
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    let mintBadgeTxn = await otterBadge.mintBadge(owner.address, tokenURI);
+    await mintBadgeTxn.wait();
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+    mintBadgeTxn = await otterBadge.mintBadge(address1.address, tokenURI);
+    await mintBadgeTxn.wait();
 
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+    mintBadgeTxn = await otterBadge.mintBadge(owner.address, tokenURI);
+    await mintBadgeTxn.wait();
+
+    expect(await otterBadge.balanceOf(owner.address)).to.equal(2);
+    expect(await otterBadge.balanceOf(address1.address)).to.equal(1);
+
+    expect(await otterBadge.ownerOf(1)).to.equal(owner.address)
+    expect(await otterBadge.ownerOf(2)).to.equal(address1.address)
+    expect(await otterBadge.ownerOf(3)).to.equal(owner.address)
   });
 });
