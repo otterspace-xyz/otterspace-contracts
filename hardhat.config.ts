@@ -13,6 +13,7 @@ const privateKey = process.env.PRIVATE_KEY;
 const etherscanAPIKey = process.env.ETHERSCAN_API_KEY;
 const ropstenURL = process.env.ROPSTEN_URL;
 
+const { MUMBAI_API_URL } = process.env;
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -47,6 +48,10 @@ const config: HardhatUserConfig = {
       url: ropstenURL || "",
       accounts: privateKey !== undefined ? [privateKey] : [],
     },
+    polygon_mumbai: {
+      url: MUMBAI_API_URL,
+      accounts: [`0x${privateKey}`]
+   }    
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
