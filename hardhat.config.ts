@@ -50,7 +50,7 @@ const config: HardhatUserConfig = {
     },
     polygon_mumbai: {
       url: MUMBAI_API_URL,
-      accounts: [`0x${privateKey}`]
+      accounts: privateKey !== undefined ? [`0x${privateKey}`] : []
    }    
   },
   gasReporter: {
