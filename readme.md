@@ -15,6 +15,13 @@ with on the Rinkeby Test Network. It allows anyone with Rinkeby Ether to mint
 an account-bound token to a given address with a fixed
 [metadata.json](./metadata.json).
 
+## Contracts
+
+- Contract on Etherscan (Rinkeby):
+  [rinkeby.etherscan.io/address/0x9a8469255a7d41a715e539a22eb1127be0973a1e](https://rinkeby.etherscan.io/address/0x9a8469255a7d41a715e539a22eb1127be0973a1e)
+- Metadata hosted on IPFS:
+  [QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC](https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC)
+
 ## Contributing
 
 ```bash
