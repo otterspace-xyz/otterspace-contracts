@@ -1,3 +1,6 @@
 [submodule "lib/ds-test"]
 	path = lib/ds-test
 	url = https://github.com/dapphub/ds-test
+[submodule "lib/ERC4973"]
+	path = lib/ERC4973
+	url = https://github.com/rugpullindex/ERC4973
