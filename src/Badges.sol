@@ -3,7 +3,7 @@ pragma solidity ^0.8.6;
 
 import { ERC4973 } from "ERC4973/ERC4973.sol";
 
-string constant uri = "https://ipfs.io/ipfs/QmdjBDRJLhv3aV3a1KhSAU3ChShK8oYgbX6kGa5Ln3AXn2";
+string constant uri = "https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC";
 
 contract Badges is ERC4973 {
   uint256 tokenId;
