@@ -29,6 +29,12 @@ git clone git@github.com:otterspace-xyz/otterspace-contracts.git
 forge test
 ```
 
+## Changelog
+
+#### 0.0.1
+
+- Initial deployment of https://badges.otterspace.xyz
+
 ## License
 
 See LICENSE file.
