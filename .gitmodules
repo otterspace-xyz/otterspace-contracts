@@ -4,3 +4,6 @@
 [submodule "lib/ERC4973"]
 	path = lib/ERC4973
 	url = https://github.com/rugpullindex/ERC4973
+[submodule "lib/chain-claim"]
+	path = lib/chain-claim
+	url = https://github.com/botdad/chain-claim
