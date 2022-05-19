@@ -7,11 +7,36 @@ import {Badges, uri} from "./Badges.sol";
 string constant name = "Name";
 string constant symbol = "Symbol";
 
+contract ProxyActor {
+  function proxyMint(address collection, address to) public returns (uint256) {
+    Badges b = Badges(collection);
+    return b.mint(to);
+  }
+
+}
+
 contract BadgesTest is DSTest {
   Badges b;
 
   function setUp() public {
-    b = new Badges(name, symbol);
+    address owner = address(this);
+    b = new Badges(name, symbol, owner);
+  }
+
+  function testMintingAuthorization() public {
+    ProxyActor pa = new ProxyActor();
+    address collection = address(b);
+    address receiver = address(1337);
+
+    uint256 tokenId = pa.proxyMint(collection, receiver);
+  }
+
+  function testOwnership() public {
+    assertEq(b.owner(), address(this));
+
+    address nextOwner = address(1337);
+    b.transferOwnership(nextOwner);
+    assertEq(b.owner(), nextOwner);
   }
 
   function testNameAndSymbol() public {
