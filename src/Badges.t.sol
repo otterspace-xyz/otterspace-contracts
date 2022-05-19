@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity ^0.8.6;
 
-import {DSTest} from "ds-test/test.sol";
+import "forge-std/Test.sol";
 import {Badges, uri} from "./Badges.sol";
 
 string constant name = "Name";
@@ -12,10 +12,9 @@ contract ProxyActor {
     Badges b = Badges(collection);
     return b.mint(to);
   }
-
 }
 
-contract BadgesTest is DSTest {
+contract BadgesTest is Test {
   Badges b;
 
   function setUp() public {
@@ -23,12 +22,26 @@ contract BadgesTest is DSTest {
     b = new Badges(name, symbol, owner);
   }
 
-  function testMintingAuthorization() public {
+  function testMintingWithoutAuthorization() public {
     ProxyActor pa = new ProxyActor();
     address collection = address(b);
     address receiver = address(1337);
 
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    pa.proxyMint(collection, receiver);
+  }
+
+  function testMintingWithTransferredAuthorization() public {
+    ProxyActor pa = new ProxyActor();
+    address collection = address(b);
+    address receiver = address(1337);
+
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    pa.proxyMint(collection, receiver);
+
+    b.transferOwnership(address(pa));
     uint256 tokenId = pa.proxyMint(collection, receiver);
+    assertEq(tokenId, 0);
   }
 
   function testOwnership() public {

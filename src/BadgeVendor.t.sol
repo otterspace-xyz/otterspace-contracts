@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.6;
 
-import {DSTest} from "ds-test/test.sol";
+import {Test} from "forge-std/Test.sol";
 import {BadgeVendor} from "./BadgeVendor.sol";
 
-contract BadgeVendorTest is DSTest {
+contract BadgeVendorTest is Test {
   BadgeVendor bv;
 
   function setUp() public {
