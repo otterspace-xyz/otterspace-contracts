@@ -2,13 +2,12 @@
 pragma solidity ^0.8.6;
 
 import { ChainClaim } from "chain-claim/ChainClaim.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract BadgeVendor is Ownable, ChainClaim {
+contract BadgeVendor is ChainClaim {
   constructor(
-    address nextOwner,
+    address issuer,
     string memory name
-  ) ChainClaim(nextOwner, name) {
-    transferOwnership(nextOwner);
-  }
+  ) ChainClaim(issuer, name) {}
+
+
 }

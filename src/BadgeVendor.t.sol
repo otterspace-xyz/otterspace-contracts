@@ -8,12 +8,12 @@ contract BadgeVendorTest is DSTest {
   BadgeVendor bv;
 
   function setUp() public {
-    address owner = address(this);
+    address issuer = address(this);
     string memory name = "name";
-    bv = new BadgeVendor(owner, name);
+    bv = new BadgeVendor(issuer, name);
   }
 
   function testParameters() public {
-    assertEq(bv.owner(), address(this));
+    assertEq(bv.ISSUER(), address(this));
   }
 }
