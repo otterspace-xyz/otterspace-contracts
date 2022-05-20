@@ -22,6 +22,16 @@ an account-bound token to a given address with a fixed
 - Metadata hosted on IPFS:
   [QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC](https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC)
 
+## Developer setup
+* This project used git submodules
+* Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
+```bash
+git submodule update --init
+forge install
+forge build
+forge test
+```
+
 ## Contributing
 
 ```bash
