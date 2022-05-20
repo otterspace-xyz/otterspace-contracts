@@ -1,0 +1,8 @@
+BadgeVendorTest:testChainClaim() (gas: 5623)
+BadgeVendorTest:testCollectionOwnership() (gas: 13003)
+BadgesTest:testMinting() (gas: 147703)
+BadgesTest:testMintingTwice() (gas: 266862)
+BadgesTest:testMintingWithTransferredAuthorization() (gas: 264304)
+BadgesTest:testMintingWithoutAuthorization() (gas: 116852)
+BadgesTest:testNameAndSymbol() (gas: 14864)
+BadgesTest:testOwnership() (gas: 14401)
