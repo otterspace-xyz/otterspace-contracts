@@ -2,8 +2,8 @@
 pragma solidity ^0.8.6;
 
 import {ERC4973} from "ERC4973/ERC4973.sol";
-import {Counters} from "@openzeppelin-contracts/contracts/utils/Counters.sol";
-import {Ownable} from "@openzeppelin-contracts/contracts/access/Ownable.sol";
+import {Counters} from "@openzeppelin/contracts/utils/Counters.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 string constant uri = "https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC";
 

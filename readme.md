@@ -40,7 +40,7 @@ Generate a remappings with `forge remappings` and create a remappings.txt under 
 
 Sample remappings.txt file
 ```txt
-@openzeppelin-contracts/=lib/openzeppelin-contracts/
+@openzeppelin/=lib/openzeppelin-contracts/
 chain-claim/=lib/chain-claim/src/
 forge-std/=lib/forge-std/src/
 ds-test/=lib/forge-std/lib/ds-test/src/
