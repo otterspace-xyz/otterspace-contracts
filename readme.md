@@ -26,17 +26,34 @@ an account-bound token to a given address with a fixed
 * This project used git submodules
 * Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
 ```bash
+git clone git@github.com:otterspace-xyz/otterspace-contracts.git
 git submodule update --init
 forge install
 forge build
 forge test
 ```
 
-## Contributing
+### Foundry setup for VS Code Users
+Per instructions laid out at https://book.getfoundry.sh/config/vscode.html
 
-```bash
-git clone git@github.com:otterspace-xyz/otterspace-contracts.git
-forge test
+Generate a remappings with `forge remappings` and create a remappings.txt under the root
+
+Sample remappings.txt file
+```txt
+@openzeppelin-contracts/=lib/openzeppelin-contracts/
+chain-claim/=lib/chain-claim/src/
+forge-std/=lib/forge-std/src/
+ds-test/=lib/forge-std/lib/ds-test/src/
+ERC4973/=lib/ERC4973/src/
+```
+
+Add a .vscode file under the root
+```json
+{
+  "solidity.packageDefaultDependenciesContractsDirectory": "src",
+  "solidity.packageDefaultDependenciesDirectory": "lib",
+  "solidity.compileUsingRemoteVersion": "v0.8.10"
+}
 ```
 
 ## Changelog

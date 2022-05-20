@@ -3,3 +3,7 @@ out/
 upload
 deploy
 verify
+
+# Foundry setup for VS Code users
+remappings.txt
+.vscode
