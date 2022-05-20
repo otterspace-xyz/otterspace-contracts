@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - master
+      - dev
   pull_request:
 
 name: unit tests
