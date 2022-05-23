@@ -38,7 +38,7 @@ jobs:
       - name: Install Forge
         if: steps.cache-forge.outputs.cache-hit != 'true'
         run: |
-          cargo install --git https://github.com/gakonst/foundry --bin forge --locked
+          cargo install --git https://github.com/foundry-rs/foundry --locked foundry-cli
       - name: Run tests
         run: forge test
 
