@@ -9,7 +9,9 @@
     "/out/BadgeVendor.sol/BadgeVendor.json"
   ],
   "scripts": {
-    "test": "forge test"
+    "test": "forge test",
+    "prepare": "husky install",
+    "build": "forge build && git add -A ."
   },
   "repository": {
     "type": "git",
@@ -29,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/otterspace-xyz/otterspace-contracts/issues"
   },
-  "homepage": "https://github.com/otterspace-xyz/otterspace-contracts#readme"
+  "homepage": "https://github.com/otterspace-xyz/otterspace-contracts#readme",
+  "devDependencies": {
+    "husky": "8.0.1"
+  }
 }
