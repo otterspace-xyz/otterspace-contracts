@@ -8,22 +8,22 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 string constant uri = "https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC";
 
 contract Badges is ERC4973, Ownable {
-	using Counters for Counters.Counter;
+  using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
   constructor(
     string memory name,
     string memory symbol,
-		address nextOwner
+    address nextOwner
   ) ERC4973(name, symbol) {
-		transferOwnership(nextOwner);
-	}
+    transferOwnership(nextOwner);
+  }
 
   function mint(
     address to
   ) external onlyOwner returns (uint256) {
     uint256 newTokenId = _tokenIds.current();
-		_mint(to, newTokenId, uri);
+    _mint(to, newTokenId, uri);
     _tokenIds.increment();
     return newTokenId;
   }
