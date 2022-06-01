@@ -3,7 +3,6 @@ pragma solidity ^0.8.6;
 
 import {Badges} from "./Badges.sol";
 import {ChainClaim} from "chain-claim/ChainClaim.sol";
-import "forge-std/console2.sol";
 
 struct Vendor {
   address issuer;

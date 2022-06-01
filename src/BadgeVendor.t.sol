@@ -3,7 +3,6 @@ pragma solidity ^0.8.6;
 
 import "forge-std/Test.sol";
 import {ChainClaim} from "chain-claim/ChainClaim.sol";
-import "forge-std/console2.sol";
 
 import {BadgeVendor, Badges, Vendor } from "./BadgeVendor.sol";
 

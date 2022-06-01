@@ -1,0 +1,19 @@
+name: custom-linter
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Run custom-linter"
+        run: |
+          chmod +x "${GITHUB_WORKSPACE}/scripts/custom-linter.sh"
+          "${GITHUB_WORKSPACE}/scripts/custom-linter.sh"
