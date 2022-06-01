@@ -1,5 +1,13 @@
 cache/
+
+# Generally, we want to ignore the outputs.
 out/
+# Unless for the contracts that we're shipping in this repository and their
+builds
+!out/Badges.sol/Badges.json
+!out/BadgeVendor.sol/BadgeVendor.json
+
+node_modules
 upload
 deploy
 verify
@@ -7,3 +15,4 @@ verify
 # Foundry setup for VS Code users
 remappings.txt
 .vscode
+

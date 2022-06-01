@@ -22,9 +22,29 @@ an account-bound token to a given address with a fixed
 - Metadata hosted on IPFS:
   [QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC](https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC)
 
+### Use ABIs with JavaScript
+
+We're publishing this repository at `@otterspacexyz/contracts`.
+
+```bash
+npm i @otterspacexyz/contracts
+```
+
+With node >=
+16, contract ABIs can be imported into JavaScript applications as npm
+dependencies as follows:
+
+```js
+import Badges from "@otterspacexyz/contracts/out/Badges.sol/Badges.json" assert { type: "json" };
+```
+
 ## Developer setup
-* This project used git submodules
-* Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
+
+### Foundry
+
+- This project used git submodules
+- Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
+
 ```bash
 git clone git@github.com:otterspace-xyz/otterspace-contracts.git
 git submodule update --init
@@ -33,12 +53,14 @@ forge build
 forge test
 ```
 
-### Foundry setup for VS Code Users
+#### Foundry setup for VS Code Users
+
 Per instructions laid out at https://book.getfoundry.sh/config/vscode.html
 
 Generate a remappings with `forge remappings` and create a remappings.txt under the root
 
 Sample remappings.txt file
+
 ```txt
 @openzeppelin/=lib/openzeppelin-contracts/
 chain-claim/=lib/chain-claim/src/
@@ -48,6 +70,7 @@ ERC4973/=lib/ERC4973/src/
 ```
 
 Add a .vscode file under the root
+
 ```json
 {
   "solidity.packageDefaultDependenciesContractsDirectory": "src",
@@ -56,11 +79,21 @@ Add a .vscode file under the root
 }
 ```
 
+### Hardhat
+
+Alternatively, this repository is available for importing with npm/hardhat:
+
+```bash
+npm i @otterspacexyz/contracts
+```
+
+We're exporting specific `.sol` files using the `"files"` property in
+`package.json`. Please familiarize yourself with the `.sol` files we're
+exporting by looking into `package.json`.
+
 ## Changelog
 
-#### 0.0.1
-
-- Initial deployment of https://badges.otterspace.xyz
+See changelog.md file.
 
 ## License
 
