@@ -63,6 +63,7 @@ contract BadgesTest is Test {
     assertEq(tokenId, 0);
     assertEq(b.tokenURI(tokenId), uri);
   }
+
   function testMintingTwice() public {
     address to = address(1);
     uint256 tokenId = b.mint(to);
