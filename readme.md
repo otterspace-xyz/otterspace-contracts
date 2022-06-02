@@ -24,18 +24,16 @@ an account-bound token to a given address with a fixed
 
 ### Use ABIs with JavaScript
 
-We're publishing this repository at `@otterspacexyz/contracts`.
+We're publishing this repository at `@otterspace-xyz/contracts`.
 
 ```bash
 npm i @otterspacexyz/contracts
 ```
 
-With node >=
-16, contract ABIs can be imported into JavaScript applications as npm
-dependencies as follows:
+With node >= 16, contract ABIs can be imported into JavaScript applications as npm dependencies as follows:
 
 ```js
-import Badges from "@otterspacexyz/contracts/out/Badges.sol/Badges.json" assert { type: "json" };
+import Badges from "@otterspace-xyz/contracts/out/Badges.sol/Badges.json" assert { type: "json" };
 ```
 
 ## Developer setup
