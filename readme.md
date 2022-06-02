@@ -27,7 +27,7 @@ an account-bound token to a given address with a fixed
 We're publishing this repository at `@otterspace-xyz/contracts`.
 
 ```bash
-npm i @otterspacexyz/contracts
+npm i @otterspace-xyz/contracts
 ```
 
 With node >= 16, contract ABIs can be imported into JavaScript applications as npm dependencies as follows:
