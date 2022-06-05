@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 0.1.1
+
+Publishing now to @otterspace-xyz org. 
+
 ## 0.1.0
 
 First release that makes contracts available on npm. It allows, e.g. importing
