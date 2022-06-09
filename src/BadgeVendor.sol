@@ -2,7 +2,7 @@
 pragma solidity ^0.8.6;
 
 import {Badges} from "./Badges.sol";
-import {ChainClaim} from "chain-claim/ChainClaim.sol";
+import {ChainClaim} from "./ChainClaim.sol";
 
 struct Vendor {
   address issuer;
