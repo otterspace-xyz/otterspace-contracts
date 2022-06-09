@@ -6,21 +6,11 @@
 
 ## Project Information
 
-This repository hosts the code for an
-[EIP-4973](https://otterspace-xyz.github.io/badges/) demo. We've created a
-front end hosted at
-[https://badges.otterspace.xyz/](https://badges.otterspace.xyz/)
-[[source](https://github.com/otterspace-xyz/badges)] that users can interact
-with on the Rinkeby Test Network. It allows anyone with Rinkeby Ether to mint
-an account-bound token to a given address with a fixed
-[metadata.json](./metadata.json).
+This repository hosts the code for Otterspace Badges.
 
 ## Contracts
 
-- Contract on Etherscan (Rinkeby):
-  [rinkeby.etherscan.io/address/0x9a8469255a7d41a715e539a22eb1127be0973a1e](https://rinkeby.etherscan.io/address/0x9a8469255a7d41a715e539a22eb1127be0973a1e)
-- Metadata hosted on IPFS:
-  [QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC](https://ipfs.io/ipfs/QmdoUaYzKCMUmeH473amYJNyFrL1a6gtccQ5rYsqqeHBsC)
+- [BadgeVendorFactory (Rinkeby)](https://rinkeby.etherscan.io/address/0x0ec999881841940c684438b42f648986295b5aa8)
 
 ### Use ABIs with JavaScript
 

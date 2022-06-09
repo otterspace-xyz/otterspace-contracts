@@ -2,6 +2,12 @@
 
 We're using https://semver.org/
 
+## 0.2.0
+
+- Added `BadgeVendorFactory` and deployed to Rinkeby
+- (breaking) In `BadgeVendor` constructor use simple primitive types instead of
+  struct.
+
 ## 0.1.1
 
 Publishing now to @otterspace-xyz org. 
