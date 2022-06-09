@@ -4,7 +4,7 @@ pragma solidity ^0.8.6;
 import "forge-std/Test.sol";
 import {ChainClaim} from "chain-claim/ChainClaim.sol";
 
-import {BadgeVendor, Badges, Vendor } from "./BadgeVendor.sol";
+import {BadgeVendor, Badges} from "./BadgeVendor.sol";
 
 // Reference: https://github.com/botdad/chain-claim/blob/d9bee752457e400ab3eac9988b6c7a755e7ff925/src/test/ChainClaim.t.sol#L67
 contract BadgeVendorTest is Test {
@@ -28,8 +28,7 @@ contract BadgeVendorTest is Test {
   bytes32 claimCodeS;
 
   function setUp() public {
-    Vendor memory vendor = Vendor(issuerAddress, name);
-    bv = new BadgeVendor(vendor);
+    bv = new BadgeVendor(issuerAddress, name);
 		vm.etch(exAddress, address(bv).code);
 
     // address(target) == exAddress

@@ -4,15 +4,11 @@ pragma solidity ^0.8.6;
 import {Badges} from "./Badges.sol";
 import {ChainClaim} from "chain-claim/ChainClaim.sol";
 
-struct Vendor {
-  address issuer;
-  string name;
-}
-
 contract BadgeVendor is ChainClaim {
   constructor(
-    Vendor memory v
-  ) ChainClaim(v.issuer, v.name) {}
+    address issuer,
+    string memory name
+  ) ChainClaim(issuer, name) {}
 
 	function _genDataHash(
 		address chainedAddress
