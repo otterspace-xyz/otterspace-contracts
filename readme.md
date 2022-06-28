@@ -51,7 +51,6 @@ Sample remappings.txt file
 
 ```txt
 @openzeppelin/=lib/openzeppelin-contracts/
-chain-claim/=lib/chain-claim/src/
 forge-std/=lib/forge-std/src/
 ds-test/=lib/forge-std/lib/ds-test/src/
 ERC4973/=lib/ERC4973/src/
