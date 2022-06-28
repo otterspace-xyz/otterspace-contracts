@@ -2,6 +2,11 @@
 
 We're using https://semver.org/
 
+## 0.3.0
+
+- Replacing `Chain-Claim` with `mintWithPermission`` from `ERC4973Permit`
+- `BadgeVendorFactory` and `BadgeVendor` are no longer existing in this version
+
 ## 0.2.0
 
 - Added `BadgeVendorFactory` and deployed to Rinkeby
@@ -10,7 +15,7 @@ We're using https://semver.org/
 
 ## 0.1.1
 
-Publishing now to @otterspace-xyz org. 
+Publishing now to @otterspace-xyz org.
 
 ## 0.1.0
 
