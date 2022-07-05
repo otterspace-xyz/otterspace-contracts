@@ -12,7 +12,7 @@
     "test": "forge test",
     "prepare": "husky install",
     "build": "forge build && git add -A .",
-    "postinstall":"typechain"    
+    "postinstall": "typechain"
   },
   "repository": {
     "type": "git",
@@ -34,7 +34,6 @@
   },
   "homepage": "https://github.com/otterspace-xyz/otterspace-contracts#readme",
   "devDependencies": {
-    "husky": "8.0.1",
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@typechain/ethers-v5": "^10.0.0",
@@ -47,8 +46,12 @@
     "ethers": "^5.6.6",
     "hardhat": "^2.9.5",
     "hardhat-preprocessor": "^0.1.4",
+    "husky": "8.0.1",
     "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
-    "typescript": "^4.6.4"    
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1"
   }
 }
