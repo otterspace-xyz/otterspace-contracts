@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/georgepickett/otterspace/otterspace-contracts/src/Badges.sol": {
-      "lastModificationDate": 1656947852363,
+      "lastModificationDate": 1657016032757,
       "contentHash": "51381434043af70de430393553ae1f61",
       "sourceName": "src/Badges.sol",
       "solcConfig": {
@@ -28,7 +28,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -70,7 +70,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -117,7 +117,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -161,7 +161,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -203,7 +203,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -243,7 +243,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -283,7 +283,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -327,7 +327,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -367,7 +367,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -409,7 +409,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -449,7 +449,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -489,7 +489,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -529,7 +529,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -571,7 +571,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -611,7 +611,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -651,7 +651,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303136323534373838"
             }
           }
         }
@@ -662,51 +662,6 @@
       ],
       "artifacts": [
         "IERC165"
-      ]
-    },
-    "/Users/georgepickett/otterspace/otterspace-contracts/src/Badges.t.sol": {
-      "lastModificationDate": 1656947848107,
-      "contentHash": "580144b627d075b0fd131b84c0f92c3e",
-      "sourceName": "src/Badges.t.sol",
-      "solcConfig": {
-        "version": "0.8.10",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "libraries": {
-            "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
-            }
-          }
-        }
-      },
-      "imports": [
-        "lib/forge-std/src/Test.sol",
-        "./Badges.sol",
-        "lib/ERC4973/src/ERC4973Permit.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.10"
-      ],
-      "artifacts": [
-        "BadgesTest",
-        "MockBadges"
       ]
     },
     "/Users/georgepickett/otterspace/otterspace-contracts/lib/forge-std/src/Test.sol": {

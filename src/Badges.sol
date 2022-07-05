@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.15;
 
 import {ERC4973Permit} from "ERC4973/ERC4973Permit.sol";
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
 import {Badges} from "../src/Badges.sol";

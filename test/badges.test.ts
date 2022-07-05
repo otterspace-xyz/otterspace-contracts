@@ -10,8 +10,6 @@ describe('Badges', function () {
     })
 })
 
-// merge this repo with the old one
-
 // deploy the contract
 
 // pass contract arguments correctly
