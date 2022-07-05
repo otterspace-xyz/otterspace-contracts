@@ -10,7 +10,7 @@ This repository hosts the code for Otterspace Badges.
 
 ## Contracts
 
-- [BadgeVendorFactory (Rinkeby)](https://rinkeby.etherscan.io/address/0x0ec999881841940c684438b42f648986295b5aa8)
+-   [BadgeVendorFactory (Rinkeby)](https://rinkeby.etherscan.io/address/0x0ec999881841940c684438b42f648986295b5aa8)
 
 ### Use ABIs with JavaScript
 
@@ -23,15 +23,16 @@ npm i @otterspace-xyz/contracts
 With node >= 16, contract ABIs can be imported into JavaScript applications as npm dependencies as follows:
 
 ```js
-import Badges from "@otterspace-xyz/contracts/out/Badges.sol/Badges.json" assert { type: "json" };
+import Badges from '@otterspace-xyz/contracts/out/Badges.sol/Badges.json' assert { type: 'json' }
 ```
 
 ## Developer setup
 
 ### Foundry
 
-- This project used git submodules
-- Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
+-   This project used git submodules
+-   Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
+-   Requires Node v16
 
 ```bash
 git clone git@github.com:otterspace-xyz/otterspace-contracts.git
@@ -60,9 +61,9 @@ Add a .vscode file under the root
 
 ```json
 {
-  "solidity.packageDefaultDependenciesContractsDirectory": "src",
-  "solidity.packageDefaultDependenciesDirectory": "lib",
-  "solidity.compileUsingRemoteVersion": "v0.8.10"
+    "solidity.packageDefaultDependenciesContractsDirectory": "src",
+    "solidity.packageDefaultDependenciesDirectory": "lib",
+    "solidity.compileUsingRemoteVersion": "v0.8.15"
 }
 ```
 
@@ -73,6 +74,8 @@ Alternatively, this repository is available for importing with npm/hardhat:
 ```bash
 npm i @otterspacexyz/contracts
 ```
+
+We recommend running Hardhat using the current LTS Node.js version. You can learn about it [here:](https://nodejs.org/en/about/releases/)
 
 We're exporting specific `.sol` files using the `"files"` property in
 `package.json`. Please familiarize yourself with the `.sol` files we're

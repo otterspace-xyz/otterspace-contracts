@@ -2,16 +2,22 @@
 
 We're using https://semver.org/
 
+## 0.4.0
+
+-   Introduced Hardhat support
+-   Using Solidity 0.8.15
+-   Using Yarn instead of npm
+
 ## 0.3.0
 
-- Replacing `Chain-Claim` with `mintWithPermission`` from `ERC4973Permit`
-- `BadgeVendorFactory` and `BadgeVendor` are no longer existing in this version
+-   Replacing `Chain-Claim` with ` mintWithPermission`` from  `ERC4973Permit`
+-   `BadgeVendorFactory` and `BadgeVendor` are no longer existing in this version
 
 ## 0.2.0
 
-- Added `BadgeVendorFactory` and deployed to Rinkeby
-- (breaking) In `BadgeVendor` constructor use simple primitive types instead of
-  struct.
+-   Added `BadgeVendorFactory` and deployed to Rinkeby
+-   (breaking) In `BadgeVendor` constructor use simple primitive types instead of
+    struct.
 
 ## 0.1.1
 
@@ -32,4 +38,4 @@ call `Badges.mint`.
 
 ## 0.0.1
 
-- Initial release on mainnet
+-   Initial release on mainnet
