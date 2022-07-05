@@ -56,6 +56,6 @@ contract BadgesTest is Test {
   }
 
     function testName() public {
-        assertEq(b.name(), "Badges");
-    }  
+        assertEq(b.name(), "Name");
+    }
 }
