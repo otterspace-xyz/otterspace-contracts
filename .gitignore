@@ -1,22 +1,20 @@
+# Developer
+.DS_Store
+.vscode
+
+# Hardhat
 cache/
+artifacts/
+cache_hardhat/
+typechain-types/
 
-# Generally, we want to ignore the outputs.
+# Foundry
 out/
-# Unless for the contracts that we're shipping in this repository and their
-builds
 !out/Badges.sol/Badges.json
-!out/BadgeVendor.sol/BadgeVendor.json
 
+# Project
 node_modules
 upload
 deploy
 verify
-
-# Foundry setup for VS Code users
 remappings.txt
-.vscode
-
-typechain-types/
-artifacts/
-cache_hardhat/
-.DS_Store
