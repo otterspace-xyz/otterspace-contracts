@@ -17,6 +17,7 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
+  PromiseOrValue,
 } from "../../../../common";
 
 export interface IERC1271Interface extends utils.Interface {
@@ -28,7 +29,7 @@ export interface IERC1271Interface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "isValidSignature",
-    values: [BytesLike, BytesLike]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
 
   decodeFunctionResult(
@@ -67,22 +68,22 @@ export interface IERC1271 extends BaseContract {
 
   functions: {
     isValidSignature(
-      hash: BytesLike,
-      signature: BytesLike,
+      hash: PromiseOrValue<BytesLike>,
+      signature: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string] & { magicValue: string }>;
   };
 
   isValidSignature(
-    hash: BytesLike,
-    signature: BytesLike,
+    hash: PromiseOrValue<BytesLike>,
+    signature: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   callStatic: {
     isValidSignature(
-      hash: BytesLike,
-      signature: BytesLike,
+      hash: PromiseOrValue<BytesLike>,
+      signature: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
   };
@@ -91,16 +92,16 @@ export interface IERC1271 extends BaseContract {
 
   estimateGas: {
     isValidSignature(
-      hash: BytesLike,
-      signature: BytesLike,
+      hash: PromiseOrValue<BytesLike>,
+      signature: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     isValidSignature(
-      hash: BytesLike,
-      signature: BytesLike,
+      hash: PromiseOrValue<BytesLike>,
+      signature: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

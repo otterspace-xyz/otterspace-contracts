@@ -16,3 +16,5 @@ verify
 remappings.txt
 .vscode
 
+typechain-types
+artifacts

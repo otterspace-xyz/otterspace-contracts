@@ -41,6 +41,26 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC721Metadata__factory>;
     getContractFactory(
+      name: "DSTest",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DSTest__factory>;
+    getContractFactory(
+      name: "StdError",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.StdError__factory>;
+    getContractFactory(
+      name: "StdStorage",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.StdStorage__factory>;
+    getContractFactory(
+      name: "Test",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Test__factory>;
+    getContractFactory(
+      name: "Vm",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Vm__factory>;
+    getContractFactory(
       name: "IERC1271",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IERC1271__factory>;
@@ -48,6 +68,14 @@ declare module "hardhat/types/runtime" {
       name: "Badges",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Badges__factory>;
+    getContractFactory(
+      name: "BadgesTest",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.BadgesTest__factory>;
+    getContractFactory(
+      name: "MockBadges",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.MockBadges__factory>;
 
     getContractAt(
       name: "ERC165",
@@ -85,6 +113,31 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IERC721Metadata>;
     getContractAt(
+      name: "DSTest",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DSTest>;
+    getContractAt(
+      name: "StdError",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.StdError>;
+    getContractAt(
+      name: "StdStorage",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.StdStorage>;
+    getContractAt(
+      name: "Test",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Test>;
+    getContractAt(
+      name: "Vm",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Vm>;
+    getContractAt(
       name: "IERC1271",
       address: string,
       signer?: ethers.Signer
@@ -94,6 +147,16 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.Badges>;
+    getContractAt(
+      name: "BadgesTest",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.BadgesTest>;
+    getContractAt(
+      name: "MockBadges",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.MockBadges>;
 
     // default types
     getContractFactory(

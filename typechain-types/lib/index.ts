@@ -3,5 +3,7 @@
 /* eslint-disable */
 import type * as erc4973 from "./ERC4973";
 export type { erc4973 };
+import type * as forgeStd from "./forge-std";
+export type { forgeStd };
 import type * as openzeppelinContracts from "./openzeppelin-contracts";
 export type { openzeppelinContracts };

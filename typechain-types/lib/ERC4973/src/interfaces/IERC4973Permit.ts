@@ -19,6 +19,7 @@ import type {
   TypedEvent,
   TypedListener,
   OnEvent,
+  PromiseOrValue,
 } from "../../../../common";
 
 export interface IERC4973PermitInterface extends utils.Interface {
@@ -30,7 +31,11 @@ export interface IERC4973PermitInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "mintWithPermission",
-    values: [string, string, BytesLike]
+    values: [
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<BytesLike>
+    ]
   ): string;
 
   decodeFunctionResult(
@@ -69,25 +74,25 @@ export interface IERC4973Permit extends BaseContract {
 
   functions: {
     mintWithPermission(
-      from: string,
-      uri: string,
-      signature: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      from: PromiseOrValue<string>,
+      uri: PromiseOrValue<string>,
+      signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
 
   mintWithPermission(
-    from: string,
-    uri: string,
-    signature: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    from: PromiseOrValue<string>,
+    uri: PromiseOrValue<string>,
+    signature: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     mintWithPermission(
-      from: string,
-      uri: string,
-      signature: BytesLike,
+      from: PromiseOrValue<string>,
+      uri: PromiseOrValue<string>,
+      signature: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -96,19 +101,19 @@ export interface IERC4973Permit extends BaseContract {
 
   estimateGas: {
     mintWithPermission(
-      from: string,
-      uri: string,
-      signature: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      from: PromiseOrValue<string>,
+      uri: PromiseOrValue<string>,
+      signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     mintWithPermission(
-      from: string,
-      uri: string,
-      signature: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      from: PromiseOrValue<string>,
+      uri: PromiseOrValue<string>,
+      signature: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }
