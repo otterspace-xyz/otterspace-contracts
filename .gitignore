@@ -16,6 +16,7 @@ verify
 remappings.txt
 .vscode
 
-typechain-types
-artifacts
-cache_hardhat
+typechain-types/
+artifacts/
+cache_hardhat/
+.DS_Store
