@@ -6,7 +6,7 @@
       "contentHash": "51381434043af70de430393553ae1f61",
       "sourceName": "src/Badges.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -28,7 +28,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -48,7 +48,7 @@
       "contentHash": "f659926f19d78327cbfdcd1fdbfc9c2b",
       "sourceName": "lib/ERC4973/src/ERC4973Permit.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -70,7 +70,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -95,7 +95,7 @@
       "contentHash": "a6c043c18ceaf0499c284c8b65b313f4",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/cryptography/SignatureChecker.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -117,7 +117,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -139,7 +139,7 @@
       "contentHash": "161aae4dc1450371d0f324488f66a9cf",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/cryptography/draft-EIP712.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -161,7 +161,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -181,7 +181,7 @@
       "contentHash": "74654e3ae5d7f39555055dfe244dab7a",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/Counters.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -203,7 +203,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -221,7 +221,7 @@
       "contentHash": "a4862458388199138bffd4fa18f6c8ba",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/structs/BitMaps.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -243,7 +243,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -261,7 +261,7 @@
       "contentHash": "88e362679f233bce6b06b2a82fc79de9",
       "sourceName": "lib/ERC4973/src/ERC4973.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -283,7 +283,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -305,7 +305,7 @@
       "contentHash": "e0172c6262a6a7980995276ff694dfb2",
       "sourceName": "lib/ERC4973/src/interfaces/IERC4973Permit.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -327,7 +327,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -345,7 +345,7 @@
       "contentHash": "4ca906243606c2545cd89d150afc541d",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -367,7 +367,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -387,7 +387,7 @@
       "contentHash": "ad714a6368ee7d43cded6bbe8af0b155",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/Address.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -409,7 +409,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -427,7 +427,7 @@
       "contentHash": "8fe867b95c856b204f954a1910e28a1e",
       "sourceName": "lib/openzeppelin-contracts/contracts/interfaces/IERC1271.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -449,7 +449,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -467,7 +467,7 @@
       "contentHash": "9ba0bb93454a1ab7b6824f59ead41f42",
       "sourceName": "lib/openzeppelin-contracts/contracts/utils/Strings.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -489,7 +489,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -507,7 +507,7 @@
       "contentHash": "e0faa971cf5a8e345f52b6af3e0797ba",
       "sourceName": "lib/ERC4973/src/ERC165.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -529,7 +529,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -549,7 +549,7 @@
       "contentHash": "6a3fd851ab69c6ac8a6371860877dffb",
       "sourceName": "lib/ERC4973/src/interfaces/IERC721Metadata.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -571,7 +571,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -589,7 +589,7 @@
       "contentHash": "0c05f5704af66de81144e489500ead40",
       "sourceName": "lib/ERC4973/src/interfaces/IERC4973.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -611,7 +611,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -629,7 +629,7 @@
       "contentHash": "3218ee9c9d37478f89bc29d095439949",
       "sourceName": "lib/ERC4973/src/interfaces/IERC165.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -651,7 +651,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -669,7 +669,7 @@
       "contentHash": "580144b627d075b0fd131b84c0f92c3e",
       "sourceName": "src/Badges.t.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -691,7 +691,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -714,7 +714,7 @@
       "contentHash": "63433c966bf039a0e7de78092bf19565",
       "sourceName": "lib/forge-std/src/Test.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -736,7 +736,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -762,7 +762,7 @@
       "contentHash": "1af1970835110fd1d828d9570c720bdb",
       "sourceName": "lib/forge-std/src/Vm.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -784,7 +784,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -802,7 +802,7 @@
       "contentHash": "962996f0e05d5218857a538a62d7c47e",
       "sourceName": "lib/forge-std/lib/ds-test/src/test.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -824,7 +824,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -842,7 +842,7 @@
       "contentHash": "100b8a33b917da1147740d7ab8b0ded3",
       "sourceName": "lib/forge-std/src/console.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -864,7 +864,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }
@@ -882,7 +882,7 @@
       "contentHash": "5df91f8e93efbfcccf68973dc1b74a70",
       "sourceName": "lib/forge-std/src/console2.sol",
       "solcConfig": {
-        "version": "0.8.13",
+        "version": "0.8.10",
         "settings": {
           "optimizer": {
             "enabled": true,
@@ -904,7 +904,7 @@
           },
           "libraries": {
             "": {
-              "__CACHE_BREAKER__": "0x0000000000000031363537303038333832313432"
+              "__CACHE_BREAKER__": "0x0000000000000031363537303039393037303538"
             }
           }
         }

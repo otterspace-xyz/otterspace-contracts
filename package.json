@@ -11,7 +11,8 @@
   "scripts": {
     "test": "forge test",
     "prepare": "husky install",
-    "build": "forge build && git add -A ."
+    "build": "forge build && git add -A .",
+    "postinstall":"typechain"    
   },
   "repository": {
     "type": "git",
