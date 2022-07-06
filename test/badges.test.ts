@@ -14,6 +14,7 @@ describe('Badges', function () {
     const symbol = 'OTTR'
     const version = '1'
     const chainId = 31337
+    const tokenURI = "blah"
 
     const issuerWallet = new Wallet('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80')
     const claimantWallet = new Wallet('0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d')
@@ -46,56 +47,58 @@ describe('Badges', function () {
         }
 
         const types = {
-            Claim: [{ name: 'chainedAddress', type: 'address' }],
+            Claim: [{ name: 'fromAddress', type: 'address' }],
         }
 
         const value = {
-            chainedAddress: claimantWallet.address,
+            fromAddress: issuerWallet.address,
         }
 
         const offChainHash = _TypedDataEncoder.hash(domain, types, value)
-        const onChainHash = await badgesContract.genDataHash(value.chainedAddress)
+        const onChainHash = await badgesContract.genDataHash(value.fromAddress)
 
         expect(offChainHash).to.equal(onChainHash)
 
-        const signature = await claimantWallet._signTypedData(domain, types, value)
+        const signature = await issuerWallet._signTypedData(domain, types, value)
         const { v, r, s, compact, yParityAndS, _vs } = splitSignature(signature)
-        const isValid = await badgesContract.isValidIssuerSig(claimantWallet.address, v, r, s)
+        const isValid = await badgesContract.isValidIssuerSig(issuerWallet.address, v, r, s)
 
         expect(isValid).to.equal(true)
     })
 
-    it('should mint with permission', async () => {
-        const domain = {
-            name: name,
-            version: version,
-            chainId,
-            verifyingContract: badgesContract.address,
-        }
+    // it('should mint with permission', async () => {
+    //     const domain = {
+    //         name: name,
+    //         version: version,
+    //         chainId,
+    //         verifyingContract: badgesContract.address,
+    //     }
 
-        const types = {
-            MintPermit: [
-                { name: 'fromAddress', type: 'address' },
-                { name: 'toAddress', type: 'address' },
-                { name: 'tokenURI', type: 'string' }
-            ],
-        }
+    //     const types = {
+    //         MintPermit: [
+    //             { name: 'from', type: 'address' },
+    //             { name: 'to', type: 'address' },
+    //             { name: 'tokenURI', type: 'string' }
+    //         ],
+    //     }
 
-        const value = {
-            chainedAddress: claimantWallet.address,
-        }
+    //     const value = {
+    //         from: issuerWallet.address,
+    //         to: claimantWallet.address,
+    //         tokenURI: tokenURI,
+    //     }
 
-        const offChainHash = _TypedDataEncoder.hash(domain, types, value)
-        const onChainHash = await badgesContract.genDataHash(value.chainedAddress)
+    //     const offChainHash = _TypedDataEncoder.hash(domain, types, value)
+    //     const onChainHash = await badgesContract.getHash(value.from, value.to, value.tokenURI)
 
-        expect(offChainHash).to.equal(onChainHash)
+    //     expect(offChainHash).to.equal(onChainHash)
 
-        const signature = await claimantWallet._signTypedData(domain, types, value)
-        const { v, r, s, compact, yParityAndS, _vs } = splitSignature(signature)
-        const isValid = await badgesContract.isValidIssuerSig(claimantWallet.address, v, r, s)
+    //     // const signature = await claimantWallet._signTypedData(domain, types, value)
+    //     // const { v, r, s, compact, yParityAndS, _vs } = splitSignature(signature)
+    //     // const isValid = await badgesContract.isValidIssuerSig(claimantWallet.address, v, r, s)
 
-        expect(isValid).to.equal(true)
-    })
+    //     // expect(isValid).to.equal(true)
+    // })
 
     // it("should revert with message 'mintWithPermission: invalid signature', when given a bad signature", async () => {
     //     await badgesContract.deployed()

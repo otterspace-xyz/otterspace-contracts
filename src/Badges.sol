@@ -8,7 +8,7 @@ import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/Signa
 contract Badges is ERC4973Permit {
 
   bytes32 private immutable _CHAIN_CLAIM_TYPEHASH =
-    keccak256("Claim(address chainedAddress)");
+    keccak256("Claim(address fromAddress, string tokenURI)");
 
   constructor(
     string memory name,
@@ -16,6 +16,13 @@ contract Badges is ERC4973Permit {
     string memory version
   ) ERC4973Permit(name, symbol, version) {}
 
+  function getHash(
+    address from,
+    address to,
+    string calldata tokenURI
+  ) public view returns (bytes32) {
+    return _getHash(from, to, tokenURI);
+  }
 
   function isValidIssuerSig(
     address claimantAddress,
@@ -32,14 +39,13 @@ contract Badges is ERC4973Permit {
   }
 
   /// @notice On chain generation for a valid EIP-712 hash
-  /// @param chainedAddress the address that has been signed
+  /// @param fromAddress the address that has been signed
   /// @return The typed data hash
-  function genDataHash(address chainedAddress) public view returns (bytes32) {
+  function genDataHash(address fromAddress) public view returns (bytes32) {
     bytes32 structHash = keccak256(
-      abi.encode(_CHAIN_CLAIM_TYPEHASH, chainedAddress)
+      abi.encode(_CHAIN_CLAIM_TYPEHASH, fromAddress)
     );
 
     return _hashTypedDataV4(structHash);
   }
-
 }
