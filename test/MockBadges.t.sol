@@ -43,6 +43,19 @@ contract BadgesTest is Test {
     assertEq(b.symbol(), symbol);
   }
 
+  // function isValidIssuerSig(
+  //   address issuedAddress,
+  //   uint8 v,
+  //   bytes32 r,
+  //   bytes32 s
+  // ) internal view returns (bool) {
+  //   bytes32 hash = genDataHash(issuedAddress);
+
+  //   address signer = ECDSA.recover(hash, v, r, s);
+
+  //   return signer == ISSUER;
+  // }
+
   function testMintWithPermission() public {
     string memory tokenURI = "https://some-token-uri.com";
     bytes32 hash = mb.getHash(fromAddress, toAddress, tokenURI);
