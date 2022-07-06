@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 
 contract Badges is ERC4973Permit {
-  
+
   bytes32 private immutable _CHAIN_CLAIM_TYPEHASH =
-    keccak256("MintPermit(address chainedAddress)");
+    keccak256("Claim(address chainedAddress)");
 
   constructor(
     string memory name,
@@ -26,7 +26,7 @@ contract Badges is ERC4973Permit {
     bytes32 hash = genDataHash(claimantAddress);
     address signer = ECDSA.recover(hash, v, r, s);
     // bool isValidSig = SignatureChecker.isValidSignatureNow(claimantAddress, hash);
-    
+
     // console.log("isValidSig", isValidSig);
     return signer == claimantAddress;
   }
@@ -40,6 +40,6 @@ contract Badges is ERC4973Permit {
     );
 
     return _hashTypedDataV4(structHash);
-  }  
+  }
 
 }
