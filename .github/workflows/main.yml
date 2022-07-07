@@ -31,6 +31,9 @@ jobs:
             - name: Run postinstall
               run: npm run postinstall
 
+            - name: Compile hardhat
+              run: npx hardhat compile
+
             - name: Run hardhat tests
               run: npx hardhat test
 

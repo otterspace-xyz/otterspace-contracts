@@ -689,7 +689,7 @@
   resolved "https://registry.yarnpkg.com/@tsconfig/node16/-/node16-1.0.3.tgz#472eaab5f15c1ffdd7f8628bd4c4f753995ec79e"
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
-"@typechain/ethers-v5@^10.0.0":
+"@typechain/ethers-v5@^10.1.0":
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@typechain/ethers-v5/-/ethers-v5-10.1.0.tgz#068d7dc7014502354696dab59590a7841091e951"
   integrity sha512-3LIb+eUpV3mNCrjUKT5oqp8PBsZYSnVrkfk6pY/ZM0boRs2mKxjFZ7bktx42vfDye8PPz3NxtW4DL5NsNsFqlg==
@@ -704,7 +704,7 @@
   dependencies:
     ethers "^5.0.2"
 
-"@typechain/hardhat@^6.0.0":
+"@typechain/hardhat@^6.1.2":
   version "6.1.2"
   resolved "https://registry.yarnpkg.com/@typechain/hardhat/-/hardhat-6.1.2.tgz#d3beccc6937d93f9b437616b741f839a8b953693"
   integrity sha512-k4Ea3pVITKB2DH8p1a5U38cyy7KZPD04Spo4q5b4wO+n2mT+uAz5dxckPtbczn/Kk5wiFq+ZkuOtw5ZKFhL/+w==
@@ -7309,7 +7309,7 @@ typechain@^3.0.0:
     ts-essentials "^6.0.3"
     ts-generator "^0.1.1"
 
-typechain@^8.0.0:
+typechain@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/typechain/-/typechain-8.1.0.tgz#fc4902ce596519cb2ccfd012e4ddf92a9945b569"
   integrity sha512-5jToLgKTjHdI1VKqs/K8BLYy42Sr3o8bV5ojh4MnR9ExHO83cyyUdw+7+vMJCpKXUiVUvARM4qmHTFuyaCMAZQ==
