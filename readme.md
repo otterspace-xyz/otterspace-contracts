@@ -8,10 +8,6 @@
 
 This repository hosts the code for Otterspace Badges.
 
-## Contracts
-
--   [BadgeVendorFactory (Rinkeby)](https://rinkeby.etherscan.io/address/0x0ec999881841940c684438b42f648986295b5aa8)
-
 ### Use ABIs with JavaScript
 
 We're publishing this repository at `@otterspace-xyz/contracts`.
@@ -26,36 +22,52 @@ With node >= 16, contract ABIs can be imported into JavaScript applications as n
 import Badges from '@otterspace-xyz/contracts/out/Badges.sol/Badges.json' assert { type: 'json' }
 ```
 
-## Developer setup
+## Tech Stack
+
+We use **Foundry** and **Hardhat** together. With this setup we get:
+
+-   Unit tests written in Solidity
+-   Integration tests written in JavaScript
 
 ### Foundry
 
--   This project used git submodules
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+
+Foundry consists of:
+
+-   [**Forge**](./forge): Ethereum testing framework (like Truffle, Hardhat and DappTools).
+-   [**Cast**](./cast): Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+-   [**Anvil**](./anvil): local Ethereum node, akin to Ganache, Hardhat Network.
+
+**Need help getting started with Foundry? Read the [📖 Foundry Book][foundry-book] (WIP)!**
+
+### Hardhat
+
+Hardhat is an Ethereum development environment for professionals. It facilitates performing frequent tasks, such as running tests, automatically checking code for mistakes or interacting with a smart contract.
+
+On [Hardhat's website](https://hardhat.org) you will find:
+
+-   [Guides to get started](https://hardhat.org/getting-started/)
+-   [Hardhat Network](https://hardhat.org/hardhat-network/)
+-   [Plugin list](https://hardhat.org/plugins/)
+
+## Project setup
+
 -   Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
--   Requires Node v16
+-   Requires Node `v16` and Solidity `0.8.15`
 
 ```bash
 git clone git@github.com:otterspace-xyz/otterspace-contracts.git
 git submodule update --init
+yarn
 forge install
 forge build
 forge test
+npx hardhat typechain
+npx hardhat test
 ```
 
 #### Foundry setup for VS Code Users
-
-Per instructions laid out at https://book.getfoundry.sh/config/vscode.html
-
-Generate a remappings with `forge remappings` and create a remappings.txt under the root
-
-Sample remappings.txt file
-
-```txt
-@openzeppelin/=lib/openzeppelin-contracts/
-forge-std/=lib/forge-std/src/
-ds-test/=lib/forge-std/lib/ds-test/src/
-ERC4973/=lib/ERC4973/src/
-```
 
 Add a .vscode file under the root
 
@@ -67,7 +79,7 @@ Add a .vscode file under the root
 }
 ```
 
-### Hardhat
+### Hardhat without Foundry
 
 Alternatively, this repository is available for importing with npm/hardhat:
 

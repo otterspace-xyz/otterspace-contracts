@@ -4,15 +4,12 @@
     "description": "The Solidity contracts for EIP-4973 contributor badges for DAO. A protocol implementing Account Bound Tokens / Soul Bound Tokens or Non-Transferable NFTs.",
     "files": [
         "/src/Badges.sol",
-        "/src/BadgesVendor.sol",
-        "/out/Badges.sol/Badges.json",
-        "/out/BadgeVendor.sol/BadgeVendor.json"
+        "/out/Badges.sol/Badges.json"
     ],
     "scripts": {
         "test": "forge test",
         "prepare": "husky install",
-        "build": "forge build && git add -A .",
-        "postinstall": "typechain"
+        "build": "forge build && git add -A ."
     },
     "repository": {
         "type": "git",
@@ -20,12 +17,16 @@
     },
     "keywords": [
         "account-bound",
+        "account bound",
+        "account bound token",
         "soulbound",
+        "soulbound token",
         "tokens",
         "ethereum",
         "eip",
         "badges",
-        "non-transferrable"
+        "non-transferrable",
+        "non-transferrable tokens"
     ],
     "author": "otterspace-xyz",
     "license": "GPL-3.0-only",
