@@ -37,6 +37,9 @@ jobs:
             - name: Run hardhat tests
               run: npx hardhat test
 
+            - name: Run Forge install
+              run: forge install
+
             - name: Run forge tests
               run: forge test -vvv
 
