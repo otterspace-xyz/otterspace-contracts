@@ -28,7 +28,10 @@ jobs:
             - name: Install yarn dependencies
               run: yarn --frozen-lockfile
 
-            - name: Run tests
+            - name: Run postinstall
+              run: npm run postinstall
+
+            - name: Run hardhat tests
               run: npx hardhat test
 
             - name: Run forge tests
