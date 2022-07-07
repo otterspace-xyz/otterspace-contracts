@@ -28,9 +28,6 @@ jobs:
             - name: Install yarn dependencies
               run: yarn --frozen-lockfile
 
-            - name: Run postinstall
-              run: npm run postinstall
-
             - name: Compile hardhat
               run: npx hardhat compile
 
