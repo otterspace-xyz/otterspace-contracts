@@ -1,2 +1,3 @@
-BadgesTest:testConstructorParams() (gas: 15080)
-BadgesTest:testMintWithPermission() (gas: 138316)
+BadgesTest:testConstructorParams() (gas: 15046)
+BadgesTest:testMintWithPermission() (gas: 138259)
+BadgesTest:testName() (gas: 9849)
