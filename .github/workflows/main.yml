@@ -36,7 +36,5 @@ jobs:
                   cache: yarn
             - name: Install
               run: yarn --frozen-lockfile
-            - name: Build
-              run: yarn build
             - name: Run tests
               run: npx hardhat test
