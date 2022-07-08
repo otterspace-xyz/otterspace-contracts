@@ -68,7 +68,7 @@ describe('Badges', function () {
     })
 
     it('should mint with permission', async () => {
-        const [owner, issuer, claimant] = await ethers.getSigners()
+        const [, issuer, claimant] = await ethers.getSigners()
 
         const typedData = {
             domain: {
@@ -105,23 +105,27 @@ describe('Badges', function () {
 
         const balanceOfClaimant = await badgesContract.balanceOf(claimant.address)
         expect(balanceOfClaimant).to.equal(1)
+
+        const newlyMintedTokenId = 0
+        const uriOfToken = await badgesContract.tokenURI(newlyMintedTokenId)
+        expect(uriOfToken).to.equal(typedData.value.tokenURI)
     })
 
     it('should revert when given a bad signature', async () => {
         await badgesContract.deployed()
         const provider = waffle.provider
         const sig = {
-            v: 28,
-            r: 'junk r value',
-            s: 'junk s value',
-            compact: 'jumk conpact value',
-            yParityAndS: 'junk parity value',
-            _vs: 'blah',
+            // v: 28,
+            // r: 'junk r value',
+            // s: 'junk s value',
+            compact: 'junk conpact value',
+            // yParityAndS: 'junk parity value',
+            // _vs: 'blah',
         }
         const sigAsBytes = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sig)))
-        const issuerWallet = new Wallet('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', provider)
+        const claimantWallet = new Wallet('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', provider)
         await expect(
-            badgesContract.mintWithPermission(issuerWallet.address, 'https://someURI.com', sigAsBytes)
+            badgesContract.mintWithPermission(claimantWallet.address, 'https://someURI.com', sigAsBytes)
         ).to.be.revertedWith('mintWithPermission: invalid signature')
     })
 })
