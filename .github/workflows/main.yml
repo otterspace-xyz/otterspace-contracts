@@ -28,17 +28,17 @@ jobs:
             - name: Install yarn dependencies
               run: yarn --frozen-lockfile
 
+            - name: Run forge install
+              run: forge install
+
+            - name: Run forge tests
+              run: forge test -vvv
+
             - name: Compile hardhat
               run: npx hardhat compile
 
             - name: Run hardhat tests
               run: npx hardhat test
-
-            - name: Run Forge install
-              run: forge install
-
-            - name: Run forge tests
-              run: forge test -vvv
 
             - name: Run snapshot
               run: forge snapshot
