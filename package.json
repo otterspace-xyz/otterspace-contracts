@@ -1,38 +1,58 @@
 {
-  "name": "@otterspace-xyz/contracts",
-  "version": "0.3.0",
-  "description": "The Solidity contracts for EIP-4973 contributor badges for DAO. A protocol implementing Account Bound Tokens / Soul Bound Tokens or Non-Transferable NFTs.",
-  "files": [
-    "/src/Badges.sol",
-    "/src/BadgesVendor.sol",
-    "/out/Badges.sol/Badges.json",
-    "/out/BadgeVendor.sol/BadgeVendor.json"
-  ],
-  "scripts": {
-    "test": "forge test",
-    "prepare": "husky install",
-    "build": "forge build && git add -A ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/otterspace-xyz/otterspace-contracts.git"
-  },
-  "keywords": [
-    "account-bound",
-    "soulbound",
-    "tokens",
-    "ethereum",
-    "eip",
-    "badges",
-    "non-transferrable"
-  ],
-  "author": "otterspace-xyz",
-  "license": "GPL-3.0-only",
-  "bugs": {
-    "url": "https://github.com/otterspace-xyz/otterspace-contracts/issues"
-  },
-  "homepage": "https://github.com/otterspace-xyz/otterspace-contracts#readme",
-  "devDependencies": {
-    "husky": "8.0.1"
-  }
+    "name": "@otterspace-xyz/contracts",
+    "version": "0.4.0",
+    "description": "The Solidity contracts for EIP-4973 contributor badges for DAO. A protocol implementing Account Bound Tokens / Soul Bound Tokens or Non-Transferable NFTs.",
+    "files": [
+        "/src/Badges.sol",
+        "/out/Badges.sol/Badges.json"
+    ],
+    "scripts": {
+        "test": "forge test",
+        "prepare": "husky install",
+        "build": "forge build && git add -A ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/otterspace-xyz/otterspace-contracts.git"
+    },
+    "keywords": [
+        "account-bound",
+        "account bound",
+        "account bound token",
+        "soulbound",
+        "soulbound token",
+        "tokens",
+        "ethereum",
+        "eip",
+        "badges",
+        "non-transferrable",
+        "non-transferrable tokens"
+    ],
+    "author": "otterspace-xyz",
+    "license": "GPL-3.0-only",
+    "bugs": {
+        "url": "https://github.com/otterspace-xyz/otterspace-contracts/issues"
+    },
+    "homepage": "https://github.com/otterspace-xyz/otterspace-contracts#readme",
+    "devDependencies": {
+        "@nomiclabs/hardhat-ethers": "^2.0.6",
+        "@nomiclabs/hardhat-waffle": "^2.0.3",
+        "@typechain/ethers-v5": "^10.1.0",
+        "@typechain/hardhat": "^6.1.2",
+        "@types/chai": "^4.3.0",
+        "@types/mocha": "^9.1.0",
+        "@types/node": "^17.0.35",
+        "chai": "^4.3.6",
+        "ethereum-waffle": "^3.2.0",
+        "ethers": "^5.6.6",
+        "hardhat": "^2.9.5",
+        "hardhat-preprocessor": "^0.1.4",
+        "husky": "8.0.1",
+        "ts-node": "^10.7.0",
+        "typechain": "^8.1.0",
+        "typescript": "^4.6.4"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.1"
+    }
 }

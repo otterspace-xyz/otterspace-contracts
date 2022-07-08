@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.15;
 
 import {ERC4973Permit} from "ERC4973/ERC4973Permit.sol";
 
@@ -9,4 +9,12 @@ contract Badges is ERC4973Permit {
     string memory symbol,
     string memory version
   ) ERC4973Permit(name, symbol, version) {}
+
+  function getHash(
+    address from,
+    address to,
+    string calldata tokenURI
+  ) public view returns (bytes32) {
+    return _getHash(from, to, tokenURI);
+  }
 }
