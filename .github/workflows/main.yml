@@ -4,7 +4,7 @@ name: test
 
 jobs:
     check:
-        name: Foundry project
+        name: Unit & Integration Tests
         runs-on: ubuntu-latest
         strategy:
             matrix:
