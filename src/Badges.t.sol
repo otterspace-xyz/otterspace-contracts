@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "forge-std/Test.sol";
-import { Badges } from "../src/Badges.sol";
+import { Badges } from "./Badges.sol";
 import { ERC4973Permit } from "ERC4973/ERC4973Permit.sol";
 
 contract BadgesTest is Test {
