@@ -5,7 +5,7 @@ import { Wallet } from 'ethers'
 import { waffle } from 'hardhat'
 import { splitSignature, _TypedDataEncoder } from 'ethers/lib/utils'
 
-describe('Badges', function () {
+describe('Badges', async function () {
     let badgesContract: Badges
 
     const name = 'Otter'
@@ -34,7 +34,7 @@ describe('Badges', function () {
     })
 
     it('should match off-chain hash to on-chain hash', async () => {
-        const [owner, issuer, claimant] = await ethers.getSigners()
+        const [owner, issuer, claimant, badActor] = await ethers.getSigners()
 
         const typedData = {
             domain: {
@@ -110,22 +110,77 @@ describe('Badges', function () {
         const uriOfToken = await badgesContract.tokenURI(newlyMintedTokenId)
         expect(uriOfToken).to.equal(typedData.value.tokenURI)
     })
+})
 
-    it('should revert when given a bad signature', async () => {
-        await badgesContract.deployed()
-        const provider = waffle.provider
-        const sig = {
-            // v: 28,
-            // r: 'junk r value',
-            // s: 'junk s value',
-            compact: 'junk conpact value',
-            // yParityAndS: 'junk parity value',
-            // _vs: 'blah',
+describe('Check different payloads', async function () {
+    let badgesContract: Badges
+    let typedData: any
+    const name = 'Otter'
+    const symbol = 'OTTR'
+    const version = '1'
+    const chainId = 31337
+    const tokenURI = 'blah'
+    let issuer: any
+    let claimant: any
+
+    beforeEach(async () => {
+        const Badges = await ethers.getContractFactory('Badges')
+        const signers = await ethers.getSigners()
+        issuer = signers[0]
+        claimant = signers[1]
+
+        // needs to match my domain object below
+        badgesContract = await Badges.deploy(name, symbol, version)
+        typedData = {
+            domain: {
+                name: name,
+                version: version,
+                chainId,
+                verifyingContract: badgesContract.address,
+            },
+            types: {
+                MintPermit: [
+                    { name: 'from', type: 'address' },
+                    { name: 'to', type: 'address' },
+                    { name: 'tokenURI', type: 'string' },
+                ],
+            },
+            value: {
+                from: issuer.address,
+                to: claimant.address,
+                tokenURI,
+            },
         }
-        const sigAsBytes = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sig)))
-        const claimantWallet = new Wallet('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80', provider)
+    })
+
+    it('should reject the signature when there is an incorrect from address', async () => {
+        const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
+        const { compact } = splitSignature(signature)
+        const randomWallet = Wallet.createRandom()
+
         await expect(
-            badgesContract.mintWithPermission(claimantWallet.address, 'https://someURI.com', sigAsBytes)
+            badgesContract.connect(claimant).mintWithPermission(randomWallet.address, typedData.value.tokenURI, compact)
+        ).to.be.revertedWith('mintWithPermission: invalid signature')
+    })
+
+    it('should reject the signature when the URI doesnt match', async () => {
+        const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
+        const { compact } = splitSignature(signature)
+        await expect(
+            badgesContract
+                .connect(claimant)
+                .mintWithPermission(typedData.value.from, 'https://some-incorrect-uri.com', compact)
+        ).to.be.revertedWith('mintWithPermission: invalid signature')
+    })
+
+    it('should reject the signature when the signature is invalid', async () => {
+        const sig = { compact: 'junk conpact value' }
+        const sigAsBytes = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sig)))
+
+        await expect(
+            badgesContract
+                .connect(claimant)
+                .mintWithPermission(typedData.value.from, typedData.value.tokenURI, sigAsBytes)
         ).to.be.revertedWith('mintWithPermission: invalid signature')
     })
 })
