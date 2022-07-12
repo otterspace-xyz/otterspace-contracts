@@ -1,6 +1,7 @@
 # Developer
 .DS_Store
 .vscode
+.env
 
 # Hardhat
 cache/
