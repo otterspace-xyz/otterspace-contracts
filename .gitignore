@@ -2,7 +2,7 @@
 .DS_Store
 .vscode
 .env
-
+.env.rinkeby
 # Hardhat
 cache/
 artifacts/
