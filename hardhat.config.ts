@@ -3,6 +3,7 @@ import '@nomiclabs/hardhat-waffle'
 import '@typechain/hardhat'
 import 'hardhat-preprocessor'
 import '@nomiclabs/hardhat-ethers'
+import 'hardhat-watcher'
 
 import { HardhatUserConfig, task } from 'hardhat/config'
 
@@ -31,6 +32,13 @@ const config: HardhatUserConfig = {
     paths: {
         sources: './src', // Use ./src rather than ./contracts as Hardhat expects
         cache: './cache_hardhat', // Use a different cache for Hardhat than Foundry
+    },
+    watcher: {
+        test: {
+            tasks: [{ command: 'test', params: { testFiles: ['{path}'] } }],
+            files: ['./test/**/*'],
+            verbose: true,
+        },
     },
     // This fully resolves paths for imports in the ./lib directory for Hardhat
     preprocess: {
