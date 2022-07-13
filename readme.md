@@ -67,6 +67,12 @@ npx hardhat typechain
 npx hardhat test
 ```
 
+### Deploying and verifying contract
+
+-   create an `.env.network` file matching the variables seen in `.env.example`
+-   run `./scripts/deploy_and_verify.sh .env.network`
+-   Forge will build, verify, and confirm verification
+
 #### Foundry setup for VS Code Users
 
 Add a .vscode file under the root
