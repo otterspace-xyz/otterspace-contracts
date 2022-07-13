@@ -7,6 +7,7 @@ We're using https://semver.org/
 -   Introduced Hardhat support
 -   Using Solidity 0.8.15
 -   Using Yarn instead of npm
+-   Rinkeby deployment: https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6
 
 ## 0.3.0
 
