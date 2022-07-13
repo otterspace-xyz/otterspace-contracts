@@ -1,7 +1,6 @@
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
 import { Raft } from '../typechain-types'
-import { Event, Wallet } from 'ethers'
 import { waffle } from 'hardhat'
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
 
@@ -13,19 +12,24 @@ describe('Raft', async function () {
     const tokenURI = 'blah'
 
     async function deployContractFixture() {
-        const Raft = await ethers.getContractFactory('Raft')
+        const raft = await ethers.getContractFactory('Raft')
         const [owner, addr1] = await ethers.getSigners()
-        const raftContract = await Raft.deploy(owner.address, name, symbol)
+        const raftContract = await raft.deploy(owner.address, name, symbol)
         await raftContract.deployed()
-        return { Raft, raftContract, owner, addr1 }
+        return { raft, raftContract, owner, addr1 }
     }
 
     it('should deploy the contract with the right params', async function () {
-        const { raftContract } = await loadFixture(deployContractFixture)
+        const { raftContract, owner } = await loadFixture(deployContractFixture)
         const deployedContractName = await raftContract.name()
         const deployedSymbolName = await raftContract.symbol()
+        const deployedContractOwner = await raftContract.owner()
+        expect(deployedContractOwner).to.equal(owner.address)
         expect(deployedContractName).to.equal(name)
         expect(deployedSymbolName).to.equal(symbol)
+
+        const isPaused = await raftContract.paused()
+        expect(isPaused).to.equal(true)
 
         const provider = waffle.provider
         const network = await provider.getNetwork()
@@ -37,6 +41,9 @@ describe('Raft', async function () {
         const { raftContract, addr1 } = await loadFixture(deployContractFixture)
         const recipientAddress = addr1.address
         const recipientBalance = await raftContract.balanceOf(recipientAddress)
+
+        const isPaused = await raftContract.paused()
+        expect(isPaused).to.equal(true)
 
         await raftContract.mint(recipientAddress, tokenURI)
         const recipientBalanceAfter = await raftContract.balanceOf(recipientAddress)
