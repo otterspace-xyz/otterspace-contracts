@@ -69,7 +69,7 @@ npx hardhat test
 
 ### Deploying and verifying contract
 
--   create a `.env` file or (`.env.network`) matching the parameters seen in `./scripts/deploy_and_verify.sh`, and pass it as a parameter when running the script as seen below
+-   create an `.env.network` file matching the variables seen in `.env.example`
 -   run `./scripts/deploy_and_verify.sh .env.network`
 -   Forge will build, verify, and confirm verification
 
