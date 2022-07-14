@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.15;
 
-import {ERC4973Permit} from "ERC4973/ERC4973Permit.sol";
+import { ERC4973 } from "ERC4973/ERC4973.sol";
 
-contract Badges is ERC4973Permit {
+contract Badges is ERC4973 {
   constructor(
     string memory name,
     string memory symbol,
     string memory version
-  ) ERC4973Permit(name, symbol, version) {}
+  ) ERC4973(name, symbol, version) {}
 
   function getHash(
     address from,
@@ -16,5 +16,13 @@ contract Badges is ERC4973Permit {
     string calldata tokenURI
   ) public view returns (bytes32) {
     return _getHash(from, to, tokenURI);
+  }
+
+  function mint(
+    address to,
+    uint256 tokenId,
+    string memory uri
+  ) public returns (uint256) {
+    return _mint(to, tokenId, uri);
   }
 }
