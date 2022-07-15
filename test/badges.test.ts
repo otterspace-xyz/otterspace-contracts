@@ -5,6 +5,7 @@ import { Wallet } from 'ethers'
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { waffle } from 'hardhat'
 import { splitSignature, _TypedDataEncoder } from 'ethers/lib/utils'
+import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
 
 describe('Badges', async function () {
     const name = 'Otter'
@@ -13,25 +14,12 @@ describe('Badges', async function () {
     const chainId = 31337
     const tokenURI = 'blah'
 
-    let badgesContract: Badges
-    let owner: SignerWithAddress
-    let issuer: SignerWithAddress
-    let claimant: SignerWithAddress
-    let badActor: SignerWithAddress
-    let typedData: any
-
-    before(async () => {
-        const Badges = await ethers.getContractFactory('Badges')
-        badgesContract = await Badges.deploy(name, symbol, version)
+    async function deployContractFixture() {
+        const badges = await ethers.getContractFactory('Badges')
+        const [owner, issuer, claimant, badActor] = await ethers.getSigners()
+        const badgesContract = await badges.deploy(name, symbol, version)
         await badgesContract.deployed()
-
-        const signers = await ethers.getSigners()
-        owner = signers[0]
-        issuer = signers[1]
-        claimant = signers[2]
-        badActor = signers[3]
-
-        typedData = {
+        const typedData = {
             domain: {
                 name: name,
                 version: version,
@@ -51,9 +39,12 @@ describe('Badges', async function () {
                 tokenURI,
             },
         }
-    })
+        return { badges, badgesContract, owner, issuer, claimant, badActor, typedData }
+    }
 
     it('should deploy the contract with the right params', async function () {
+        const { badgesContract } = await loadFixture(deployContractFixture)
+
         const deployedContractName = await badgesContract.name()
         const deployedSymbolName = await badgesContract.symbol()
         expect(deployedContractName).to.equal(name)
@@ -66,6 +57,7 @@ describe('Badges', async function () {
     })
 
     it('should match off-chain hash to on-chain hash', async () => {
+        const { badgesContract, typedData } = await loadFixture(deployContractFixture)
         const offChainHash = _TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.value)
         const onChainHash = await badgesContract.getHash(
             typedData.value.from,
@@ -77,6 +69,7 @@ describe('Badges', async function () {
     })
 
     it('should successfully mint with permission', async () => {
+        const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
         const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
         const { compact } = splitSignature(signature)
 
@@ -98,6 +91,7 @@ describe('Badges', async function () {
     })
 
     it('should fail to mint when using incorrect issuer address', async () => {
+        const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
         const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
         const { compact } = splitSignature(signature)
         const randomWallet = Wallet.createRandom()
@@ -108,6 +102,7 @@ describe('Badges', async function () {
     })
 
     it('should fail to mint when using incorrect token uri', async () => {
+        const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
         const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
         const { compact } = splitSignature(signature)
         await expect(
@@ -118,6 +113,7 @@ describe('Badges', async function () {
     })
 
     it('should fail to mint when using invalid signature', async () => {
+        const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
         const sig = { compact: 'junk conpact value' }
         const sigAsBytes = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sig)))
 
@@ -129,6 +125,7 @@ describe('Badges', async function () {
     })
 
     it('should fail to mint when using unauthorized claimant', async () => {
+        const { badgesContract, typedData, issuer, claimant, badActor } = await loadFixture(deployContractFixture)
         const signature = await badActor._signTypedData(typedData.domain, typedData.types, typedData.value)
         const { compact } = splitSignature(signature)
 
