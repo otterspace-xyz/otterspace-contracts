@@ -25,4 +25,10 @@ contract Badges is ERC4973 {
   ) public returns (uint256) {
     return _mint(to, tokenId, uri);
   }
+
+  function getTokenIdFromHash(
+    bytes32 hash
+  ) public pure returns (uint256) {
+    return uint256(hash);
+  }  
 }
