@@ -32,15 +32,19 @@ contract BadgesController is EIP712 {
     return _hashTypedDataV4(structHash);
   }
 
-  function registerSpec(
+  function registerSpecWithSignature(
     string calldata specUri,
     uint256 raftTokenId,
     bytes calldata signature,
     bool selfMint
   ) public {
+    
     // ✅ only if a DAO admin / raft owner has permitted this DAO agent via a valid signature, this agent can create new badge specs within this DAO
+    // I Think this will never pass
     require(_specToRaft[specUri] == 0, "Spec already registered");
-
+    // use this instead of the above line
+    require(_registeredSpecs[specUri] == false, "Spec already registered");
+    
     bytes32 hash = getCreateSpecHash(msg.sender, raftTokenId);
 
     address raftOwner = _raft.ownerOf(raftTokenId);
@@ -69,8 +73,9 @@ contract BadgesController is EIP712 {
     // authorize the user that they are indeed the owner of this badge
     require(_badges.ownerOf(badgeTokenId) == msg.sender, "unauthorized");
     // make sure that the DAO associated to this badge is the same DAO that the new spec is being registered
+    // I don't think this works because the badgeID wouldnt have been associated iwth the raftTokenId yet
+    
     require(_badgeToRaft[badgeTokenId] == raftTokenId, "unauthorized");
-
     _specToRaft[specUri] = raftTokenId;
     _registeredSpecs[specUri] = true;
 
@@ -82,6 +87,9 @@ contract BadgesController is EIP712 {
   function mintBadgeToSelf(string calldata specUri) private returns (uint256) {
     bytes32 hash = _badges.getHash(msg.sender, msg.sender, specUri);
     uint256 index = uint256(hash);
+    // verify that these require's are legit (auto-generated)
+    require(_registeredSpecs[specUri] == true, "Spec not registered");
+    require(_specToRaft[specUri] != 0, "Spec not registered");
     return _badges.mint(msg.sender, index, specUri);
   }
 
