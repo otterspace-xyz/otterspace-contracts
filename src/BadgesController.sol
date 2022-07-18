@@ -38,7 +38,7 @@ contract BadgesController is EIP712 {
     bytes calldata signature,
     bool selfMint
   ) public {
-    // ✅ only if a DAO admin / raft owner has permitted via a valid signature, msg.sender can create new badge specs
+    // ✅ only if a DAO admin / raft owner has permitted this DAO agent via a valid signature, this agent can create new badge specs within this DAO
     require(_specToRaft[specUri] == 0, "Spec already registered");
 
     bytes32 hash = getCreateSpecHash(msg.sender, raftTokenId);
@@ -55,15 +55,14 @@ contract BadgesController is EIP712 {
     }
   }
 
-  // register a badge spec that can be used for minting
   function registerSpec(
     uint256 badgeTokenId,
     uint256 raftTokenId,
     string calldata specUri,
     bool selfMint
   ) public {
-    // ✅ only someone with a badge in a certain dao can create new badge specs
-    // ✅ user should be able to optionally self-mint the spec they just created as its first badge holder
+    // ✅ only a DAO agent that has a badge in a DAO can create new badge specs within that DAO
+    // ✅ this DAO agent should be able to optionally self-mint the spec they just created as its first badge holder
 
     // spec should not be registered already
     require(_registeredSpecs[specUri] == false, "Spec already registered");
