@@ -39,11 +39,6 @@ describe('Badges', async function () {
         passive: issuer.address,
         tokenURI,
       },
-      // value: {
-      //     from: issuer.address,
-      //     to: claimant.address,
-      //     tokenURI,
-      // },
     }
     return { badges, badgesContract, owner, issuer, claimant, badActor, typedData }
   }
@@ -91,8 +86,6 @@ describe('Badges', async function () {
 
     const ownerOfMintedToken = await badgesContract.ownerOf(tokenId)
 
-    const ownerBalance = await badgesContract.balanceOf(ownerOfMintedToken)
-
     expect(ownerOfMintedToken).to.equal(claimant.address)
 
     const balanceOfClaimant = await badgesContract.balanceOf(claimant.address)
@@ -124,7 +117,7 @@ describe('Badges', async function () {
   })
 
   it('should fail to mint when using invalid signature', async () => {
-    const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
+    const { badgesContract, typedData, claimant } = await loadFixture(deployContractFixture)
     const sig = { compact: 'junk conpact value' }
     const sigAsBytes = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sig)))
 
@@ -134,8 +127,8 @@ describe('Badges', async function () {
   })
 
   it('should fail to mint when using unauthorized claimant', async () => {
-    const { badgesContract, typedData, issuer, claimant, badActor } = await loadFixture(deployContractFixture)
-    const signature = await badActor._signTypedData(typedData.domain, typedData.types, typedData.value)
+    const { badgesContract, typedData, issuer, badActor } = await loadFixture(deployContractFixture)
+    const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
 
     await expect(
