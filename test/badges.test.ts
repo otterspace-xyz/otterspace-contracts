@@ -12,7 +12,6 @@ describe('Badges', async function () {
   const symbol = 'OTTR'
   const version = '1'
   const chainId = 31337
-  const tokenURI = 'some token uri'
   const specUri = 'some spec uri'
 
   async function deployContractFixture() {
@@ -21,6 +20,25 @@ describe('Badges', async function () {
 
     const badgesContract = await badges.deploy(name, symbol, version)
     await badgesContract.deployed()
+
+    const raft = await ethers.getContractFactory('Raft')
+    const raftContract = await raft.deploy(owner.address, name, symbol)
+    await raftContract.deployed()
+
+    const tx = await raftContract.mint(issuer.address, specUri)
+    const txReceipt = await tx.wait()
+
+    const [transferEvent] = txReceipt.events!
+    const { tokenId: rawTokenId } = transferEvent.args!
+    const raftTokenId = ethers.BigNumber.from(rawTokenId).toNumber()
+    const tokenOwner = await raftContract.ownerOf(raftTokenId)
+    expect(tokenOwner).to.equal(issuer.address)
+
+    const specTx = await badgesContract.createSpecAsRaftOwner(specUri, raftTokenId)
+    await specTx.wait()
+    const specExists = await badgesContract.checkIfSpecExists(specUri)
+    expect(specExists).to.equal(true)
+
     const typedData = {
       domain: {
         name: name,
@@ -38,7 +56,7 @@ describe('Badges', async function () {
       value: {
         active: claimant.address,
         passive: issuer.address,
-        tokenURI,
+        tokenURI: specUri,
       },
     }
     return { badges, badgesContract, owner, issuer, claimant, badActor, typedData }
@@ -71,7 +89,7 @@ describe('Badges', async function () {
     expect(offChainHash).to.equal(onChainHash)
   })
 
-  it('should fail to mint when using incorrect issuer address', async () => {
+  it('should fail to mintWithAuthorizedBadge when using incorrect issuer address', async () => {
     const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
@@ -82,18 +100,19 @@ describe('Badges', async function () {
     ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
   })
 
-  it('should fail to mint when using incorrect token uri', async () => {
+  it('should fail to mintWithAuthorizedBadge when using incorrect token uri', async () => {
     const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
+
     await expect(
       badgesContract
         .connect(claimant)
         .mintAuthorizedBadge(typedData.value.passive, 'https://some-incorrect-uri.com', compact)
-    ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
+    ).to.be.revertedWith('mintAuthorizedBadge: spec is not registered')
   })
 
-  it('should fail to mint when using invalid signature', async () => {
+  it('should fail to mintWithAuthorizedBadge when using invalid signature', async () => {
     const { badgesContract, typedData, claimant } = await loadFixture(deployContractFixture)
     const sig = { compact: 'junk conpact value' }
     const sigAsBytes = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(JSON.stringify(sig)))
@@ -105,7 +124,7 @@ describe('Badges', async function () {
     ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
   })
 
-  it('should fail to mint when using unauthorized claimant', async () => {
+  it('should fail to mintWithAuthorizedBadge when using unauthorized claimant', async () => {
     const { badgesContract, typedData, issuer, badActor } = await loadFixture(deployContractFixture)
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
@@ -115,25 +134,8 @@ describe('Badges', async function () {
     ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
   })
 
-  it('should mint a raft token, createSpecAsRaftOwner, then mintAuthorizedBadge', async function () {
-    const { badgesContract, owner, issuer, claimant, badActor, typedData } = await deployContractFixture()
-    const raft = await ethers.getContractFactory('Raft')
-    const raftContract = await raft.deploy(owner.address, name, symbol)
-    await raftContract.deployed()
-
-    const tx = await raftContract.mint(issuer.address, specUri)
-    const txReceipt = await tx.wait()
-
-    const [transferEvent] = txReceipt.events!
-    const { tokenId: rawTokenId } = transferEvent.args!
-    const raftTokenId = ethers.BigNumber.from(rawTokenId).toNumber()
-    const tokenOwner = await raftContract.ownerOf(raftTokenId)
-    expect(tokenOwner).to.equal(issuer.address)
-
-    const specTx = await badgesContract.createSpecAsRaftOwner(specUri, raftTokenId)
-    await specTx.wait()
-    const specExists = await badgesContract.checkIfSpecExists(specUri)
-    expect(specExists).to.equal(true)
+  it('should successfully mintAuthorizedBadge', async function () {
+    const { badgesContract, issuer, claimant, typedData } = await deployContractFixture()
 
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)

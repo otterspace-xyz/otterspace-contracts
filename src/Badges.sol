@@ -31,29 +31,25 @@ contract Badges is ERC4973 {
 
   function mintAuthorizedBadge(
     address from,
-    string calldata tokenUri,
+    string calldata specUri,
     bytes calldata signature
   ) public returns (uint256) {
-    
-    // TODO: make sure spec is registered, only registered specs can be used for minting
-    // to know if the spec is registered, we need the specUri to call _specToRaft[specUri]
-
+    uint256 raftTokenId = _specToRaft[specUri];
+    // only registered specs can be used for minting
+    require(raftTokenId != 0, "mintAuthorizedBadge: spec is not registered");
     // if we use this.take() it will pass in this contract's address as msg.sender
     // so we use delegatecall to make sure we use the caller's address as msg.sender
     (bool success, bytes memory data) = address(this).delegatecall(
-      abi.encodeWithSignature("take(address,string,bytes)", from, tokenUri, signature)
+      abi.encodeWithSignature("take(address,string,bytes)", from, specUri, signature)
     );
     if (!success) {
       revert("mintAuthorizedBadge: badge minting failed");
     }
-    uint256 tokenId = abi.decode(data, (uint256));
-
-    // TODO: map the tokenId to the raftTokenId
-    // _badgeToRaft[tokenId] = raftTokenId;
     
+    uint256 tokenId = abi.decode(data, (uint256));
+    _badgeToRaft[tokenId] = raftTokenId;
     emit BadgeMinted(from, tokenId);
     return tokenId;
-
   }
 
   function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
