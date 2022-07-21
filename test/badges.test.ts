@@ -2,10 +2,10 @@ import { expect } from 'chai'
 import { ethers } from 'hardhat'
 import { Badges } from '../typechain-types'
 import { Wallet } from 'ethers'
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { waffle } from 'hardhat'
 import { splitSignature, _TypedDataEncoder } from 'ethers/lib/utils'
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers'
+import { PromiseOrValue } from '../typechain-types/common'
 
 describe('Badges', async function () {
   const name = 'Otter'
@@ -13,7 +13,13 @@ describe('Badges', async function () {
   const version = '1'
   const chainId = 31337
   const specUri = 'some spec uri'
+  const testSpecUri = 'test spec uri'
   const incorrectUri = 'https://some-incorrect-uri.com'
+
+  const createSpec = async (uri: PromiseOrValue<string>, badgesContract: Badges, raftTokenId: any) => {
+    const specTx = await badgesContract.createSpecAsRaftOwner(uri, raftTokenId)
+    await specTx.wait()
+  }
 
   async function deployContractFixture() {
     const badges = await ethers.getContractFactory('Badges')
@@ -35,10 +41,7 @@ describe('Badges', async function () {
     const tokenOwner = await raftContract.ownerOf(raftTokenId)
     expect(tokenOwner).to.equal(issuer.address)
 
-    const specTx = await badgesContract.createSpecAsRaftOwner(specUri, raftTokenId)
-    await specTx.wait()
-    const specExists = await badgesContract.checkIfSpecExists(specUri)
-    expect(specExists).to.equal(true)
+    await createSpec(specUri, badgesContract, raftTokenId)
 
     const typedData = {
       domain: {
@@ -60,7 +63,7 @@ describe('Badges', async function () {
         tokenURI: specUri,
       },
     }
-    return { badges, badgesContract, owner, issuer, claimant, claimant2, typedData }
+    return { badges, badgesContract, owner, issuer, claimant, claimant2, typedData, raftTokenId }
   }
 
   it('should deploy the contract with the right params', async function () {
@@ -169,5 +172,23 @@ describe('Badges', async function () {
 
     const uriOfToken = await badgesContract.tokenURI(tokenId)
     expect(uriOfToken).to.equal(typedData.value.tokenURI)
+  })
+  it('should register a spec successfully', async function () {
+    const { badgesContract, raftTokenId } = await deployContractFixture()
+    await createSpec(testSpecUri, badgesContract, raftTokenId)
+    const specExists = await badgesContract.checkIfSpecExists(testSpecUri)
+    expect(specExists).to.equal(true)
+  })
+
+  it('should fail register a spec if the spec URI is already registered', async function () {
+    const { badgesContract, raftTokenId } = await deployContractFixture()
+
+    await createSpec(testSpecUri, badgesContract, raftTokenId)
+    const specExists = await badgesContract.checkIfSpecExists(testSpecUri)
+    expect(specExists).to.equal(true)
+
+    await expect(createSpec(testSpecUri, badgesContract, raftTokenId)).to.be.revertedWith(
+      'createSpecAsRaftOwner: spec already registered'
+    )
   })
 })
