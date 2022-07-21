@@ -4,10 +4,11 @@ pragma solidity ^0.8.15;
 import { ERC4973 } from "ERC4973/ERC4973.sol";
 
 contract Badges is ERC4973 {
-    event BadgeMinted(address indexed, uint256 tokenId);
-    event SpecCreated(address indexed, string specUri);
-    mapping(string => uint256) private _specToRaft;
-    mapping(uint256 => uint256) private _badgeToRaft;
+  event BadgeMinted(address indexed, uint256 tokenId);
+  event SpecCreated(address indexed, string specUri);
+  mapping(string => uint256) private _specToRaft;
+  mapping(uint256 => uint256) private _badgeToRaft;
+
   constructor(
     string memory name,
     string memory symbol,
@@ -22,12 +23,9 @@ contract Badges is ERC4973 {
     return _getHash(from, to, tokenURI);
   }
 
-  function getTokenIdFromHash(
-    bytes32 hash
-  ) public pure returns (uint256) {
+  function getTokenIdFromHash(bytes32 hash) public pure returns (uint256) {
     return uint256(hash);
   }
-
 
   function mintAuthorizedBadge(
     address from,
@@ -45,7 +43,7 @@ contract Badges is ERC4973 {
     if (!success) {
       revert("mintAuthorizedBadge: badge minting failed");
     }
-    
+
     uint256 tokenId = abi.decode(data, (uint256));
     _badgeToRaft[tokenId] = raftTokenId;
     emit BadgeMinted(from, tokenId);
