@@ -3,42 +3,42 @@ on: [push]
 name: test
 
 jobs:
-    check:
-        name: Unit & Integration Tests
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [16]
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v2
-              with:
-                  submodules: recursive
-                  node-version: ${{ matrix.node }}
-                  cache: yarn
+  check:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [16]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          submodules: recursive
+          node-version: ${{ matrix.node }}
+          cache: yarn
 
-            - name: Install Foundry
-              uses: foundry-rs/foundry-toolchain@v1
-              with:
-                  version: nightly
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
 
-            - name: Install submodules
-              run: git submodule update --init
+      - name: Install submodules
+        run: git submodule update --init
 
-            - name: Install yarn dependencies
-              run: yarn --frozen-lockfile
+      - name: Install yarn dependencies
+        run: yarn --frozen-lockfile
 
-            - name: Run forge install
-              run: forge install
+      - name: Run forge install
+        run: forge install
 
-            - name: Run forge tests
-              run: forge test -vvv
+      # - name: Run forge tests
+      #   run: forge test -vvv
 
-            - name: Compile hardhat
-              run: npx hardhat compile
+      - name: Compile hardhat
+        run: npx hardhat compile
 
-            - name: Run hardhat tests
-              run: npx hardhat test
+      - name: Run hardhat tests
+        run: npx hardhat test
 
-            - name: Run snapshot
-              run: forge snapshot
+      - name: Run snapshot
+        run: forge snapshot
