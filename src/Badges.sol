@@ -53,7 +53,7 @@ contract Badges is ERC4973 {
   }
 
   function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
-    require(_specToRaft[specUri] == 0, "spec already registered");
+    require(_specToRaft[specUri] == 0, "createSpecAsRaftOwner: spec already registered");
     _specToRaft[specUri] = raftTokenId;
     emit SpecCreated(msg.sender, specUri);
   }

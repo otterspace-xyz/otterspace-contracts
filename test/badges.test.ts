@@ -13,10 +13,11 @@ describe('Badges', async function () {
   const version = '1'
   const chainId = 31337
   const specUri = 'some spec uri'
+  const incorrectUri = 'https://some-incorrect-uri.com'
 
   async function deployContractFixture() {
     const badges = await ethers.getContractFactory('Badges')
-    const [owner, issuer, claimant, badActor] = await ethers.getSigners()
+    const [owner, issuer, claimant, claimant2] = await ethers.getSigners()
 
     const badgesContract = await badges.deploy(name, symbol, version)
     await badgesContract.deployed()
@@ -59,7 +60,7 @@ describe('Badges', async function () {
         tokenURI: specUri,
       },
     }
-    return { badges, badgesContract, owner, issuer, claimant, badActor, typedData }
+    return { badges, badgesContract, owner, issuer, claimant, claimant2, typedData }
   }
 
   it('should deploy the contract with the right params', async function () {
@@ -89,7 +90,7 @@ describe('Badges', async function () {
     expect(offChainHash).to.equal(onChainHash)
   })
 
-  it('should fail to mintWithAuthorizedBadge when using incorrect issuer address', async () => {
+  it('should fail to mintWithAuthorizedBadge when trying to claim with a wallet address that doesnt match the signature', async () => {
     const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
@@ -100,15 +101,27 @@ describe('Badges', async function () {
     ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
   })
 
+  it('should fail to mintWithAuthorizedBadge when signature is created with an incorrect address', async () => {
+    const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
+    const randomWallet = Wallet.createRandom()
+
+    // genera
+    typedData.value.passive = randomWallet.address
+    const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
+    const { compact } = splitSignature(signature)
+
+    await expect(
+      badgesContract.connect(claimant).mintAuthorizedBadge(typedData.value.passive, typedData.value.tokenURI, compact)
+    ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
+  })
+
   it('should fail to mintWithAuthorizedBadge when using incorrect token uri', async () => {
     const { badgesContract, typedData, issuer, claimant } = await loadFixture(deployContractFixture)
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
 
     await expect(
-      badgesContract
-        .connect(claimant)
-        .mintAuthorizedBadge(typedData.value.passive, 'https://some-incorrect-uri.com', compact)
+      badgesContract.connect(claimant).mintAuthorizedBadge(typedData.value.passive, incorrectUri, compact)
     ).to.be.revertedWith('mintAuthorizedBadge: spec is not registered')
   })
 
@@ -125,12 +138,12 @@ describe('Badges', async function () {
   })
 
   it('should fail to mintWithAuthorizedBadge when using unauthorized claimant', async () => {
-    const { badgesContract, typedData, issuer, badActor } = await loadFixture(deployContractFixture)
+    const { badgesContract, typedData, issuer, claimant2 } = await loadFixture(deployContractFixture)
     const signature = await issuer._signTypedData(typedData.domain, typedData.types, typedData.value)
     const { compact } = splitSignature(signature)
 
     await expect(
-      badgesContract.connect(badActor).mintAuthorizedBadge(typedData.value.passive, typedData.value.tokenURI, compact)
+      badgesContract.connect(claimant2).mintAuthorizedBadge(typedData.value.passive, typedData.value.tokenURI, compact)
     ).to.be.revertedWith('mintAuthorizedBadge: badge minting failed')
   })
 
