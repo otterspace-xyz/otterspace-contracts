@@ -2,7 +2,8 @@
 .DS_Store
 .vscode
 .env
-.env.rinkeby
+.env.rinkeby.badges
+.env.rinkeby.raft
 # Hardhat
 cache/
 artifacts/
