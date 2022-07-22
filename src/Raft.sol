@@ -1,4 +1,3 @@
-// contracts/NFT.sol
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.3;
 
@@ -17,12 +16,12 @@ contract Raft is ERC721URIStorage, Ownable, Pausable {
   Counters.Counter private _tokenIds;
 
   constructor(
-    address owner,
+    address nextOwner,
     string memory name,
     string memory symbol
   ) ERC721(name, symbol) {
     // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
-    transferOwnership(owner);
+    transferOwnership(nextOwner);
     // pause the contract by default
     _pause();
   }
