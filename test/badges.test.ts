@@ -285,7 +285,6 @@ describe('Badges', async function () {
     expect(transferEventData.tokenId).gt(0)
 
     const badgeEventData = await getBadgeMintedEventLogData(txn.hash, badgesContract)
-    // expect(badgeEventData.from).equal(typedData.value.passive) // issuer.address
     expect(badgeEventData.to).equal(typedData.value.active) // claimant.address
 
     expect(badgeEventData.specUri).equal(specUri)
