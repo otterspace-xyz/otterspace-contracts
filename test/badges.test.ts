@@ -14,10 +14,10 @@ const chainId = 31337
 const specUri = 'some spec uri'
 
 const errNotOwner = 'Ownable: caller is not the owner'
-const errMintFailed = 'mintAuthorizedBadge: badge minting failed'
-const errSpecNotRegistered = 'mintAuthorizedBadge: spec is not registered'
+const errSpecNotRegistered = '_mint: spec is not registered'
 const errSpecAlreadyRegistered = 'createSpecAsRaftOwner: spec already registered'
 const errNotRaftOwner = 'createSpecAsRaftOwner: unauthorized'
+const errInvalidSig = '_safeCheckAgreement: invalid signature'
 
 async function createSpec(
   badgesContract: Badges,
@@ -272,9 +272,9 @@ describe('Badges', async function () {
     // get signature
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
 
-    const txn = await badgesContract
-      .connect(claimant)
-      .mintAuthorizedBadge(typedData.value.passive, typedData.value.tokenURI, compact)
+    // take's "from" is the issuer
+    // take's msg.sender is the claimant
+    const txn = await badgesContract.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
     await txn.wait()
 
     const transferEventData = await getTransferEventLogData(txn.hash, badgesContract)
@@ -284,9 +284,10 @@ describe('Badges', async function () {
     expect(transferEventData.tokenId).gt(0)
 
     const badgeEventData = await getBadgeMintedEventLogData(txn.hash, badgesContract)
-    expect(badgeEventData.from).equal(typedData.value.passive) // issuer.address
     expect(badgeEventData.to).equal(typedData.value.active) // claimant.address
+
     expect(badgeEventData.specUri).equal(specUri)
+
     expect(badgeEventData.tokenId).gt(0)
 
     const ownerOfMintedToken = await badgesContract.ownerOf(transferEventData.tokenId)
@@ -319,8 +320,8 @@ describe('Badges', async function () {
     const unauthorizedClaimant = Wallet.createRandom()
 
     await expect(
-      badgesContract.connect(claimant).mintAuthorizedBadge(unauthorizedClaimant.address, specUri, compact)
-    ).to.be.revertedWith(errMintFailed)
+      badgesContract.connect(claimant).take(unauthorizedClaimant.address, specUri, compact)
+    ).to.be.revertedWith(errInvalidSig)
   })
 
   it('should fail to mint badge when signed by a random issuer', async () => {
@@ -339,9 +340,9 @@ describe('Badges', async function () {
     // get signature by random signer
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, randomSigner)
 
-    await expect(
-      badgesContract.connect(claimant).mintAuthorizedBadge(claimant.address, specUri, compact)
-    ).to.be.revertedWith(errMintFailed)
+    await expect(badgesContract.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
+      errInvalidSig
+    )
   })
 
   it('should fail to mint badge when using incorrect token uri', async () => {
@@ -363,9 +364,9 @@ describe('Badges', async function () {
     // get signature
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
 
-    await expect(
-      badgesContract.connect(claimant).mintAuthorizedBadge(claimant.address, specUri, compact)
-    ).to.be.revertedWith(errMintFailed)
+    await expect(badgesContract.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
+      errInvalidSig
+    )
   })
 
   it('should fail to mint badge when using an unregistered spec', async () => {
@@ -381,8 +382,8 @@ describe('Badges', async function () {
     // get signature
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
 
-    await expect(
-      badgesContract.connect(claimant).mintAuthorizedBadge(claimant.address, specUri, compact)
-    ).to.be.revertedWith(errSpecNotRegistered)
+    await expect(badgesContract.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
+      errSpecNotRegistered
+    )
   })
 })

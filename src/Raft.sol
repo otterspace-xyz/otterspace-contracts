@@ -2,7 +2,7 @@
 pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -10,10 +10,12 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 /// @title RAFT Contract
 /// @author Otterspace
 /// @notice The RAFT NFT gives the owner the ability to create a DAO within Otterspace
-/// @dev Inherits from ERC721URIStorage so that we can store the URI of the token.
-contract Raft is ERC721URIStorage, Ownable, Pausable {
+/// @dev Inherits from ERC721Enumerable so that we can access useful functions for
+/// querying owners of tokens from the web app.
+contract Raft is ERC721Enumerable, Ownable, Pausable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
+  mapping(uint256 => string) private _tokenURIs;
 
   constructor(
     address nextOwner,
@@ -37,6 +39,15 @@ contract Raft is ERC721URIStorage, Ownable, Pausable {
     _setTokenURI(newItemId, tokenURI);
 
     return newItemId;
+  }
+
+  function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
+    require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
+    _tokenURIs[tokenId] = _tokenURI;
+  }
+
+  function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    return _tokenURIs[tokenId];
   }
 
   function pause() external onlyOwner {

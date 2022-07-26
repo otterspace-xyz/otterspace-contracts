@@ -88,4 +88,24 @@ describe('Raft', async function () {
     const { raftContract, addr1 } = await loadFixture(deployContractFixture)
     await expect(raftContract.connect(addr1).pause()).to.be.revertedWith('Ownable: caller is not the owner')
   })
+
+  it('should mint 2 tokens, query the balance, then retrieve the correct tokenIds', async function () {
+    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
+
+    const tx = await raftContract.mint(addr1.address, tokenURI)
+    const txReceipt = await tx.wait()
+
+    const tx2 = await raftContract.mint(addr1.address, tokenURI)
+    const txReceipt2 = await tx2.wait()
+
+    const balanceOfOwner = await raftContract.balanceOf(addr1.address)
+    expect(balanceOfOwner).to.equal(2)
+    const token1 = await raftContract.tokenOfOwnerByIndex(addr1.address, 0)
+    const parsedTokenId1 = ethers.BigNumber.from(txReceipt.events![0].args!.tokenId).toNumber()
+    expect(token1).to.equal(parsedTokenId1)
+
+    const token2 = await raftContract.tokenOfOwnerByIndex(addr1.address, 1)
+    const parsedTokenId2 = ethers.BigNumber.from(txReceipt2.events![0].args!.tokenId).toNumber()
+    expect(token2).to.equal(parsedTokenId2)
+  })
 })
