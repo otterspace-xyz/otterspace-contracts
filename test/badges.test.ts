@@ -14,7 +14,7 @@ const chainId = 31337
 const specUri = 'some spec uri'
 
 const errNotOwner = 'Ownable: caller is not the owner'
-const errSpecNotRegistered = 'mintAuthorizedBadge: spec is not registered'
+const errSpecNotRegistered = '_mint: spec is not registered'
 const errSpecAlreadyRegistered = 'createSpecAsRaftOwner: spec already registered'
 const errNotRaftOwner = 'createSpecAsRaftOwner: unauthorized'
 const errInvalidSig = '_safeCheckAgreement: invalid signature'
