@@ -7,6 +7,8 @@ We're using https://semver.org/
 - Add Raft token
 - Add Rinkeby deployment/verification scripts for Badges and Raft token
 - Improve integration tests
+- Badges Rinkeby deployment: https://rinkeby.etherscan.io/address/0x9323497dc6f24df13fcd09d71bb17efa47b659e3
+- Rinkeby deployment: https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6
 
 ## 0.4.0
 

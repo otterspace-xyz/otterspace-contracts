@@ -30,7 +30,7 @@ npx hardhat test
 
 Live contract on:
 
-- [Badges contract on Rinkeby](https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6)
+- [Badges contract on Rinkeby](https://rinkeby.etherscan.io/address/0x9323497dc6f24df13fcd09d71bb17efa47b659e3)
 - [Raft contract on Rinkeby](https://rinkeby.etherscan.io/address/0xbda5a3595a315d8473c3200e813394ffdcfca66a)
 
 ### Use ABIs with JavaScript
@@ -90,8 +90,8 @@ On [Hardhat's website](https://hardhat.org) you will find:
 
 ## Deploying and verifying the contract
 
-- create an `.env.network.contractName` file matching the variables seen in `.env.example`
-- run `./scripts/deploy_and_verify.sh .env.network`
+- create an `.env.network.contractName` file matching the variables seen in `.env.network.contract.example`
+- run `./scripts/deploy_and_verify.sh .env.network.contract`
 - Forge will build, verify, and confirm verification
 
 #### Foundry setup for VS Code Users
@@ -113,8 +113,6 @@ Alternatively, this repository is available for importing with npm/hardhat:
 ```bash
 npm i @otterspacexyz/contracts
 ```
-
-We recommend running Hardhat using the current LTS Node.js version. You can learn about it [here:](https://nodejs.org/en/about/releases/)
 
 We're exporting specific `.sol` files using the `"files"` property in
 `package.json`. Please familiarize yourself with the `.sol` files we're
