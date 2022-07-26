@@ -52,7 +52,7 @@ import Badges from '@otterspace-xyz/contracts/out/Badges.sol/Badges.json' assert
 Raft ABI
 
 ```js
-import Badges from '@otterspace-xyz/contracts/out/Raft.sol/Raft.json' assert { type: 'json' }
+import Raft from '@otterspace-xyz/contracts/out/Raft.sol/Raft.json' assert { type: 'json' }
 ```
 
 ---
