@@ -6,7 +6,7 @@ import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Badges is ERC4973, Ownable {
-  event BadgeMinted(address indexed from, address indexed to, string specUri, uint256 tokenId);
+  event BadgeMinted(address indexed to, string specUri, uint256 tokenId);
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
   mapping(string => uint256) private _specToRaft;
@@ -41,30 +41,19 @@ contract Badges is ERC4973, Ownable {
     return _getHash(from, to, tokenURI);
   }
 
-  function mintAuthorizedBadge(
-    address from,
-    string calldata specUri,
-    bytes calldata signature
-  ) public returns (uint256) {
-    uint256 raftTokenId = _specToRaft[specUri];
+  function _mint(
+    address to,
+    uint256 tokenId,
+    string memory uri
+  ) internal override returns (uint256) {
+    uint256 raftTokenId = _specToRaft[uri];
 
     // only registered specs can be used for minting
     require(raftTokenId != 0, "mintAuthorizedBadge: spec is not registered");
-
-    // if we use this.take() it will pass in this contract's address as msg.sender
-    // so we use delegatecall to make sure we use the caller's address as msg.sender
-    (bool success, bytes memory data) = address(this).delegatecall(
-      abi.encodeWithSignature("take(address,string,bytes)", from, specUri, signature)
-    );
-
-    if (!success) {
-      revert("mintAuthorizedBadge: badge minting failed");
-    }
-
-    uint256 tokenId = abi.decode(data, (uint256));
+    super._mint(to, tokenId, uri);
     _badgeToRaft[tokenId] = raftTokenId;
 
-    emit BadgeMinted(from, msg.sender, specUri, tokenId);
+    emit BadgeMinted(msg.sender, uri, tokenId);
 
     return tokenId;
   }
