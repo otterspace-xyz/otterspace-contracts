@@ -2,23 +2,29 @@
 
 We're using https://semver.org/
 
+## 0.5.0
+
+- Add Raft token
+- Add Rinkeby deployment/verification scripts for Badges and Raft token
+- Improve integration tests
+
 ## 0.4.0
 
--   Introduced Hardhat support
--   Using Solidity 0.8.15
--   Using Yarn instead of npm
--   Rinkeby deployment: https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6
+- Introduced Hardhat support
+- Using Solidity 0.8.15
+- Using Yarn instead of npm
+- Rinkeby deployment: https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6
 
 ## 0.3.0
 
--   Replacing `Chain-Claim` with ` mintWithPermission`` from  `ERC4973Permit`
--   `BadgeVendorFactory` and `BadgeVendor` are no longer existing in this version
+- Replacing `Chain-Claim` with ` mintWithPermission`` from  `ERC4973Permit`
+- `BadgeVendorFactory` and `BadgeVendor` are no longer existing in this version
 
 ## 0.2.0
 
--   Added `BadgeVendorFactory` and deployed to Rinkeby
--   (breaking) In `BadgeVendor` constructor use simple primitive types instead of
-    struct.
+- Added `BadgeVendorFactory` and deployed to Rinkeby
+- (breaking) In `BadgeVendor` constructor use simple primitive types instead of
+  struct.
 
 ## 0.1.1
 
@@ -39,4 +45,4 @@ call `Badges.mint`.
 
 ## 0.0.1
 
--   Initial release on mainnet
+- Initial release on mainnet

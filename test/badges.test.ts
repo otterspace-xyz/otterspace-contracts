@@ -14,7 +14,6 @@ const chainId = 31337
 const specUri = 'some spec uri'
 
 const errNotOwner = 'Ownable: caller is not the owner'
-const errMintFailed = 'mintAuthorizedBadge: badge minting failed'
 const errSpecNotRegistered = 'mintAuthorizedBadge: spec is not registered'
 const errSpecAlreadyRegistered = 'createSpecAsRaftOwner: spec already registered'
 const errNotRaftOwner = 'createSpecAsRaftOwner: unauthorized'

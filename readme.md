@@ -30,7 +30,8 @@ npx hardhat test
 
 Live contract on:
 
-- [Rinkeby](https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6)
+- [Badges contract on Rinkeby](https://rinkeby.etherscan.io/address/0x19020014ef77c5dce4fbcf97c2e3d6e67a616fc6)
+- [Raft contract on Rinkeby](https://rinkeby.etherscan.io/address/0xbda5a3595a315d8473c3200e813394ffdcfca66a)
 
 ### Use ABIs with JavaScript
 
@@ -42,8 +43,16 @@ npm i @otterspace-xyz/contracts
 
 With node >= 16, contract ABIs can be imported into JavaScript applications as npm dependencies as follows:
 
+Badges ABI
+
 ```js
 import Badges from '@otterspace-xyz/contracts/out/Badges.sol/Badges.json' assert { type: 'json' }
+```
+
+Raft ABI
+
+```js
+import Badges from '@otterspace-xyz/contracts/out/Raft.sol/Raft.json' assert { type: 'json' }
 ```
 
 ---

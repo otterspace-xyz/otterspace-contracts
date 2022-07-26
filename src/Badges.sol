@@ -49,7 +49,7 @@ contract Badges is ERC4973, Ownable {
     uint256 raftTokenId = _specToRaft[uri];
 
     // only registered specs can be used for minting
-    require(raftTokenId != 0, "mintAuthorizedBadge: spec is not registered");
+    require(raftTokenId != 0, "_mint: spec is not registered");
     super._mint(to, tokenId, uri);
     _badgeToRaft[tokenId] = raftTokenId;
 
