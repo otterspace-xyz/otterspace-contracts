@@ -4,33 +4,34 @@ pragma solidity ^0.8.15;
 import { ERC4973 } from "ERC4973/ERC4973.sol";
 import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./DataHolder.sol";
+import "./RaftInterface.sol";
 
 contract Badges is ERC4973, Ownable {
   event BadgeMinted(address indexed to, string specUri, uint256 tokenId);
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
-  mapping(string => uint256) private _specToRaft;
-  mapping(uint256 => uint256) private _badgeToRaft;
-
-  Raft private _raft;
+  DataHolder private dataHolder;
+  address public initialOwner;
+  RaftInterface public raft;
 
   constructor(
     string memory name,
     string memory symbol,
-    string memory version,
-    address raftAddress,
-    address nextOwner
+    string memory version
   ) ERC4973(name, symbol, version) {
-    _raft = Raft(raftAddress);
-    transferOwnership(nextOwner);
+    initialOwner = msg.sender;
   }
 
-  function getRaftAddress() external view returns (address) {
-    return address(_raft);
+  // The owner can call this once only. They should call this when the contract is first deployed.
+  function setDataHolder(address _dataHolder) external {
+    require(msg.sender == initialOwner);
+    // require(address(dataHolder) == address(0x0));
+    dataHolder = DataHolder(_dataHolder);
   }
 
-  function setRaftAddress(address newRaftAddress) external onlyOwner {
-    _raft = Raft(newRaftAddress);
+  function setRaft(address _raftAddress) public {
+    raft = RaftInterface(_raftAddress);
   }
 
   function getHash(
@@ -46,12 +47,12 @@ contract Badges is ERC4973, Ownable {
     uint256 tokenId,
     string memory uri
   ) internal override returns (uint256) {
-    uint256 raftTokenId = _specToRaft[uri];
+    uint256 raftTokenId = dataHolder.getRaftTokenId(uri);
 
     // only registered specs can be used for minting
     require(raftTokenId != 0, "_mint: spec is not registered");
     super._mint(to, tokenId, uri);
-    _badgeToRaft[tokenId] = raftTokenId;
+    dataHolder.setBadgeToRaft(tokenId, raftTokenId);
 
     emit BadgeMinted(msg.sender, uri, tokenId);
 
@@ -59,15 +60,25 @@ contract Badges is ERC4973, Ownable {
   }
 
   function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
-    require(_raft.ownerOf(raftTokenId) == msg.sender, "createSpecAsRaftOwner: unauthorized");
-    require(_specToRaft[specUri] == 0, "createSpecAsRaftOwner: spec already registered");
+    address raftOwner = raft.ownerOf(raftTokenId);
+    require(raftOwner == msg.sender, "createSpecAsRaftOwner: unauthorized");
+    require(!dataHolder.specIsRegistered(specUri), "createSpecAsRaftOwner: spec already registered");
 
-    _specToRaft[specUri] = raftTokenId;
+    dataHolder.setSpecToRaft(specUri, raftTokenId);
 
-    emit SpecCreated(msg.sender, specUri, raftTokenId, address(_raft));
+    emit SpecCreated(msg.sender, specUri, raftTokenId, dataHolder.getRaftAddress());
   }
 
-  function getRaftTokenIdOf(string calldata specUri) external view returns (uint256) {
-    return _specToRaft[specUri];
+  function getRaftTokenIdOf(string memory specUri) public view returns (uint256) {
+    return dataHolder.getRaftTokenId(specUri);
+  }
+
+  function getRaftAddress() public view returns (address) {
+    return dataHolder.getRaftAddress();
+  }
+
+  function setRaftAddress(address _newRaftAddress) public onlyOwner {
+    require(msg.sender == initialOwner);
+    dataHolder.setRaftAddress(_newRaftAddress);
   }
 }

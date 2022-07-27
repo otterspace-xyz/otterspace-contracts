@@ -13,6 +13,7 @@ typechain-types/
 # Foundry
 out/
 !out/Badges.sol/Badges.json
+!out/Raft.sol/Raft.json
 
 # Project
 node_modules
