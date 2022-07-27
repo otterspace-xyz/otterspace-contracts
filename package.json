@@ -1,10 +1,12 @@
 {
   "name": "@otterspace-xyz/contracts",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "The Solidity contracts for EIP-4973 contributor badges for DAO. A protocol implementing Account Bound Tokens / Soul Bound Tokens or Non-Transferable NFTs.",
   "files": [
     "/src/Badges.sol",
-    "/out/Badges.sol/Badges.json"
+    "/out/Badges.sol/Badges.json",
+    "/src/Raft.sol",
+    "/out/Raft.sol/Raft.json"
   ],
   "scripts": {
     "test": "forge test",
