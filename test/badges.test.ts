@@ -115,16 +115,13 @@ async function deployContractFixture() {
   const raftContract = await raft.deploy(owner.address, name, symbol)
   await raftContract.deployed()
 
+  const badgesDataHolder = await ethers.getContractFactory('BadgesDataHolder')
+  const badgesDataHolderContract = await badgesDataHolder.deploy(raftContract.address, owner.address)
+  await badgesDataHolderContract.deployed()
+
   const badges = await ethers.getContractFactory('Badges')
-  const badgesContract = await badges.deploy(name, symbol, version)
+  const badgesContract = await badges.deploy(name, symbol, version, owner.address, badgesDataHolderContract.address)
   await badgesContract.deployed()
-
-  const dataHolder = await ethers.getContractFactory('DataHolder')
-  const dataHolderContract = await dataHolder.deploy(badgesContract.address, raftContract.address)
-  await dataHolderContract.deployed()
-
-  await badgesContract.setDataHolder(dataHolderContract.address)
-  await badgesContract.setRaft(raftContract.address)
 
   const typedData = {
     domain: {
@@ -146,13 +143,13 @@ async function deployContractFixture() {
       tokenURI: specUri,
     },
   }
-  return { badgesContract, raftContract, owner, issuer, claimant, randomSigner, typedData, dataHolderContract }
+  return { badgesContract, raftContract, owner, issuer, claimant, randomSigner, typedData, badgesDataHolderContract }
 }
 
 describe('Badge Specs', () => {
   it('should register a spec successfully', async function () {
     // deploy contracts
-    const { badgesContract, raftContract, typedData, issuer, claimant, owner, randomSigner } = await loadFixture(
+    const { badgesContract, raftContract, typedData, issuer, owner, badgesDataHolderContract } = await loadFixture(
       deployContractFixture
     )
     const specUri = typedData.value.tokenURI
@@ -168,7 +165,7 @@ describe('Badge Specs', () => {
     expect(specCreatedEventData.raftTokenId).equal(raftTokenId)
     expect(specCreatedEventData.raftAddress).equal(raftContract.address)
 
-    const raftTokenIdOfSpec = await badgesContract.getRaftTokenIdOf(specUri)
+    const raftTokenIdOfSpec = await badgesDataHolderContract.getRaftTokenId(specUri)
 
     expect(raftTokenIdOfSpec).to.equal(raftTokenId)
   })
@@ -207,35 +204,39 @@ describe('Badge Specs', () => {
 
 describe('Badges', async function () {
   it('should deploy the contract with the right params', async function () {
-    const { badgesContract, raftContract, owner, dataHolderContract } = await loadFixture(deployContractFixture)
+    const { badgesContract, raftContract, owner, badgesDataHolderContract } = await loadFixture(deployContractFixture)
     const deployedContractName = await badgesContract.name()
     const deployedSymbolName = await badgesContract.symbol()
     expect(deployedContractName).to.equal(name)
     expect(deployedSymbolName).to.equal(symbol)
     const deployedOwnerAddress = await badgesContract.owner()
     expect(deployedOwnerAddress).to.equal(owner.address)
-    const raftOwnerAddress = await dataHolderContract.getRaftAddress()
+    const raftOwnerAddress = await badgesDataHolderContract.getRaftAddress()
     expect(raftOwnerAddress).to.equal(raftContract.address)
     const provider = waffle.provider
     const network = await provider.getNetwork()
     const deployedToChainId = network.chainId
     expect(deployedToChainId).to.equal(chainId)
   })
-  it('should successfully set new raft address when called by owner', async () => {
-    const { badgesContract, raftContract, owner, dataHolderContract } = await loadFixture(deployContractFixture)
+  it('should successfully set new raft contract when called by owner', async () => {
+    const { badgesContract, raftContract, owner, badgesDataHolderContract } = await loadFixture(deployContractFixture)
     const raft = await ethers.getContractFactory('Raft')
     const newRaftContract = await raft.deploy(owner.address, name, symbol)
     await raftContract.deployed()
-    await badgesContract.connect(owner).setRaftAddress(newRaftContract.address)
-    const raftAddress = await badgesContract.getRaftAddress()
+    const tx = await badgesDataHolderContract.setRaft(newRaftContract.address)
+    await tx.wait()
+    const raftAddress = await badgesDataHolderContract.getRaftAddress()
     expect(raftAddress).to.equal(newRaftContract.address)
   })
+
   it('should revert setting new raft address when called by non-owner', async () => {
-    const { badgesContract, raftContract, owner, randomSigner } = await loadFixture(deployContractFixture)
+    const { badgesContract, raftContract, owner, randomSigner, badgesDataHolderContract } = await loadFixture(
+      deployContractFixture
+    )
     const raft = await ethers.getContractFactory('Raft')
     const newRaftContract = await raft.deploy(owner.address, name, symbol)
     await raftContract.deployed()
-    await expect(badgesContract.connect(randomSigner).setRaftAddress(newRaftContract.address)).to.be.revertedWith(
+    await expect(badgesDataHolderContract.connect(randomSigner).setRaft(newRaftContract.address)).to.be.revertedWith(
       errNotOwner
     )
   })
