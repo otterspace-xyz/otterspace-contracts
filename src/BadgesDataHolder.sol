@@ -3,20 +3,26 @@ pragma solidity ^0.8.15;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import { Raft } from "./Raft.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 // import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
-contract BadgesDataHolder is Ownable, Initializable {
+contract BadgesDataHolder is Initializable, OwnableUpgradeable {
   mapping(string => uint256) private _specToRaft;
   mapping(uint256 => uint256) private _badgeToRaft;
+
   Raft private raft;
 
   // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
 
   function initialize(address _raftAddress, address nextOwner) public initializer {
+    __Ownable_init();
     setRaft(_raftAddress);
     transferOwnership(nextOwner);
   }
+
+  // function _authorizeUpgrade(address) internal onlyOwner {}
 
   function setRaft(address _raftAddress) public onlyOwner {
     raft = Raft(_raftAddress);
