@@ -10,13 +10,15 @@ describe('Raft', async function () {
   const symbol = 'RAFT'
   const chainId = 31337
   const tokenURI = 'blah'
+  const errNotOwner = 'Ownable: caller is not the owner'
+  const errNonExitentTokenToSet = '_setTokenURI: URI set of nonexistent token'
 
   async function deployContractFixture() {
     const raft = await ethers.getContractFactory('Raft')
-    const [owner, addr1] = await ethers.getSigners()
+    const [owner, signer1] = await ethers.getSigners()
     const raftContract = await raft.deploy(owner.address, name, symbol)
     await raftContract.deployed()
-    return { raft, raftContract, owner, addr1 }
+    return { raft, raftContract, owner, signer1 }
   }
 
   it('should deploy the contract with the right params', async function () {
@@ -38,8 +40,8 @@ describe('Raft', async function () {
   })
 
   it('should allow owner to mint when minting is paused', async function () {
-    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
-    const recipientAddress = addr1.address
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
+    const recipientAddress = signer1.address
     const recipientBalance = await raftContract.balanceOf(recipientAddress)
 
     const isPaused = await raftContract.paused()
@@ -51,30 +53,30 @@ describe('Raft', async function () {
   })
 
   it('should prevent non-owner from minting when minting is paused', async function () {
-    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
     const isPaused = await raftContract.paused()
     expect(isPaused).to.equal(true)
 
-    await expect(raftContract.connect(addr1).mint(addr1.address, tokenURI)).to.be.revertedWith(
+    await expect(raftContract.connect(signer1).mint(signer1.address, tokenURI)).to.be.revertedWith(
       'mint: unauthorized to mint'
     )
   })
 
   it('should should allow non-owner to mint when minting is unpaused', async function () {
-    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
 
     await raftContract.unpause()
     const isPaused = await raftContract.paused()
     expect(isPaused).to.equal(false)
 
-    await raftContract.connect(addr1).mint(addr1.address, tokenURI)
-    expect(await raftContract.balanceOf(addr1.address)).to.equal(1)
+    await raftContract.connect(signer1).mint(signer1.address, tokenURI)
+    expect(await raftContract.balanceOf(signer1.address)).to.equal(1)
   })
 
   it('should fetch then tokenURI after minting', async function () {
-    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
 
-    const tx = await raftContract.mint(addr1.address, tokenURI)
+    const tx = await raftContract.mint(signer1.address, tokenURI)
     const txReceipt = await tx.wait()
     const [transferEvent] = txReceipt.events!
     const { tokenId: rawTokenId } = transferEvent.args!
@@ -85,27 +87,66 @@ describe('Raft', async function () {
   })
 
   it('should not allow non-owner to call pause', async function () {
-    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
-    await expect(raftContract.connect(addr1).pause()).to.be.revertedWith('Ownable: caller is not the owner')
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
+    await expect(raftContract.connect(signer1).pause()).to.be.revertedWith('Ownable: caller is not the owner')
   })
 
   it('should mint 2 tokens, query the balance, then retrieve the correct tokenIds', async function () {
-    const { raftContract, addr1 } = await loadFixture(deployContractFixture)
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
 
-    const tx = await raftContract.mint(addr1.address, tokenURI)
+    const tx = await raftContract.mint(signer1.address, tokenURI)
     const txReceipt = await tx.wait()
 
-    const tx2 = await raftContract.mint(addr1.address, tokenURI)
+    const tx2 = await raftContract.mint(signer1.address, tokenURI)
     const txReceipt2 = await tx2.wait()
 
-    const balanceOfOwner = await raftContract.balanceOf(addr1.address)
+    const balanceOfOwner = await raftContract.balanceOf(signer1.address)
     expect(balanceOfOwner).to.equal(2)
-    const token1 = await raftContract.tokenOfOwnerByIndex(addr1.address, 0)
+
+    const token1 = await raftContract.tokenOfOwnerByIndex(signer1.address, 0)
     const parsedTokenId1 = ethers.BigNumber.from(txReceipt.events![0].args!.tokenId).toNumber()
     expect(token1).to.equal(parsedTokenId1)
 
-    const token2 = await raftContract.tokenOfOwnerByIndex(addr1.address, 1)
+    const token2 = await raftContract.tokenOfOwnerByIndex(signer1.address, 1)
     const parsedTokenId2 = ethers.BigNumber.from(txReceipt2.events![0].args!.tokenId).toNumber()
     expect(token2).to.equal(parsedTokenId2)
   })
+
+  it('should successful set token uri when called by owner', async () => {
+    const { raftContract, owner, signer1 } = await loadFixture(deployContractFixture)
+
+    let tx = await raftContract.mint(signer1.address, tokenURI)
+    let txReceipt = await tx.wait()
+    const [transferEvent] = txReceipt.events!
+    const { tokenId: rawTokenId } = transferEvent.args!
+    const tokenId = ethers.BigNumber.from(rawTokenId).toNumber()
+
+    const newTokenUri: string = "https://new-token-uri.com"
+    tx = await raftContract.connect(owner).setTokenURI(tokenId, newTokenUri)
+    tx.wait()
+
+    const actualUpdatedTokenUri = await raftContract.tokenURI(tokenId)
+    expect(actualUpdatedTokenUri).to.equal(newTokenUri)
+  });
+
+  it('should fail to set token uri when called by a non-owner', async () => {
+    const { raftContract, signer1 } = await loadFixture(deployContractFixture)
+
+    const tx = await raftContract.mint(signer1.address, tokenURI)
+    const txReceipt = await tx.wait()
+    const [transferEvent] = txReceipt.events!
+    const { tokenId: rawTokenId } = transferEvent.args!
+    const tokenId = ethers.BigNumber.from(rawTokenId).toNumber()
+
+    const newTokenUri: string = "https://new-token-uri.com"
+    await expect(raftContract.connect(signer1).setTokenURI(tokenId, newTokenUri)).to.be.revertedWith(errNotOwner)
+  });
+
+  it('should fail to set token uri for a non-existent token id', async () => {
+    const { raftContract, owner } = await loadFixture(deployContractFixture)
+
+    const nonExistentTokenId = 1010101
+    const newTokenUri: string = "https://new-token-uri.com"
+    await expect(raftContract.connect(owner).setTokenURI(nonExistentTokenId, newTokenUri)).to.be.revertedWith(errNonExitentTokenToSet)
+  });
 })
