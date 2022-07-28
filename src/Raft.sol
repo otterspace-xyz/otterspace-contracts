@@ -15,6 +15,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 contract Raft is ERC721Enumerable, Ownable, Pausable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
+
   mapping(uint256 => string) private _tokenURIs;
 
   constructor(
@@ -24,11 +25,12 @@ contract Raft is ERC721Enumerable, Ownable, Pausable {
   ) ERC721(name, symbol) {
     // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
     transferOwnership(nextOwner);
+
     // pause the contract by default
     _pause();
   }
 
-  function mint(address recipient, string memory tokenURI) external returns (uint256) {
+  function mint(address recipient, string memory uri) external returns (uint256) {
     // owners can always mint tokens
     // non-owners can only mint when the contract is unpaused
     require(msg.sender == owner() || !paused(), "mint: unauthorized to mint");
@@ -36,18 +38,9 @@ contract Raft is ERC721Enumerable, Ownable, Pausable {
     uint256 newItemId = _tokenIds.current();
 
     _mint(recipient, newItemId);
-    _setTokenURI(newItemId, tokenURI);
+    _tokenURIs[newItemId] = uri;
 
     return newItemId;
-  }
-
-  function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
-    require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
-    _tokenURIs[tokenId] = _tokenURI;
-  }
-
-  function tokenURI(uint256 tokenId) public view override returns (string memory) {
-    return _tokenURIs[tokenId];
   }
 
   function pause() external onlyOwner {
@@ -56,5 +49,14 @@ contract Raft is ERC721Enumerable, Ownable, Pausable {
 
   function unpause() external onlyOwner {
     _unpause();
+  }
+
+  function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
+    require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
+    _tokenURIs[tokenId] = uri;
+  }
+
+  function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    return _tokenURIs[tokenId];
   }
 }
