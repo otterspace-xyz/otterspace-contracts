@@ -31,8 +31,12 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    optimismGoerli: {
+      url: `${process.env.OPTIMISM_GOERLI_URL}`,
+      accounts: [process.env.PRIVATE_KEY!],
+    },
     goerli: {
-      url: `${process.env.ALCHEMY_URL}`,
+      url: `${process.env.ETH_GOERLI_URL}`,
       accounts: [process.env.PRIVATE_KEY!],
     },
   },

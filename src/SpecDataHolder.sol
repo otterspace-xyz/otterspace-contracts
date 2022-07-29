@@ -8,21 +8,28 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgr
 
 // import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
-contract BadgesDataHolder is Initializable, OwnableUpgradeable {
+contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   mapping(string => uint256) private _specToRaft;
   mapping(uint256 => uint256) private _badgeToRaft;
 
   Raft private raft;
 
-  // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() {
+    _disableInitializers();
+  }
 
+  // Not implementing this function because it is used to check who is authorized
+  // to update the contract, we're using onlyOwnerfor this purpose.
+  function _authorizeUpgrade(address) internal override onlyOwner {}
+
+  // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
   function initialize(address _raftAddress, address nextOwner) public initializer {
     __Ownable_init();
     setRaft(_raftAddress);
     transferOwnership(nextOwner);
+    __UUPSUpgradeable_init();
   }
-
-  // function _authorizeUpgrade(address) internal onlyOwner {}
 
   function setRaft(address _raftAddress) public onlyOwner {
     raft = Raft(_raftAddress);

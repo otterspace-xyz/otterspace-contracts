@@ -3,19 +3,28 @@ pragma solidity ^0.8.15;
 
 import { ERC4973 } from "ERC4973/ERC4973.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./BadgesDataHolder.sol";
+import "./SpecDataHolder.sol";
 import { IERC4973 } from "./IERC4973.sol";
 import { SignatureCheckerUpgradeable } from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/draft-EIP712Upgradeable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/ERC165Upgradeable.sol";
 import { ERC165 } from "./ERC165.sol";
-
 import { IERC721Metadata } from "./IERC721Metadata.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Badges is ERC165, IERC721Metadata, IERC4973, Initializable, OwnableUpgradeable, EIP712Upgradeable {
+contract Badges is
+  IERC721Metadata,
+  IERC4973,
+  Initializable,
+  ERC165Upgradeable,
+  UUPSUpgradeable,
+  OwnableUpgradeable,
+  EIP712Upgradeable
+{
   using BitMaps for BitMaps.BitMap;
   BitMaps.BitMap private _usedHashes;
   string private _name;
@@ -25,42 +34,52 @@ contract Badges is ERC165, IERC721Metadata, IERC4973, Initializable, OwnableUpgr
   mapping(uint256 => string) private _tokenURIs;
   mapping(address => uint256) private _balances;
 
-  event BadgeMinted(address indexed to, string specUri, uint256 tokenId);
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
-  BadgesDataHolder private dataHolder;
+  SpecDataHolder private specDataHolder;
+
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() {
+    _disableInitializers();
+  }
 
   function initialize(
     string memory name_,
     string memory symbol_,
     string memory version,
     address nextOwner,
-    address dataHolderAddress
+    address specDataHolderAddress
   ) public initializer {
     _name = name_;
     _symbol = symbol_;
+    __ERC165_init();
     __Ownable_init_unchained();
     __EIP712_init(name_, version);
+    __UUPSUpgradeable_init();
     transferOwnership(nextOwner);
-    dataHolder = BadgesDataHolder(dataHolderAddress);
+    specDataHolder = SpecDataHolder(specDataHolderAddress);
   }
+
+  // Not implementing this function because it is used to check who is authorized
+  // to update the contract, we're using onlyOwnerfor this purpose.
+  function _authorizeUpgrade(address) internal override onlyOwner {}
 
   // The owner can call this once only. They should call this when the contract is first deployed.
   function setDataHolder(address _dataHolder) external onlyOwner {
     // require(address(dataHolder) == address(0x0));
-    dataHolder = BadgesDataHolder(_dataHolder);
+    specDataHolder = SpecDataHolder(_dataHolder);
   }
 
   function getDataHolderAddress() public view returns (address) {
-    return address(dataHolder);
+    return address(specDataHolder);
   }
 
   function getHash(
     address from,
     address to,
-    string calldata tokenURI
+    string calldata tokenURI_
   ) public view returns (bytes32) {
-    return _getHash(from, to, tokenURI);
+    return _getHash(from, to, tokenURI_);
   }
 
   function _mint(
@@ -68,7 +87,7 @@ contract Badges is ERC165, IERC721Metadata, IERC4973, Initializable, OwnableUpgr
     uint256 tokenId,
     string memory uri
   ) internal returns (uint256) {
-    uint256 raftTokenId = dataHolder.getRaftTokenId(uri);
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(uri);
 
     // only registered specs can be used for minting
     require(raftTokenId != 0, "_mint: spec is not registered");
@@ -79,20 +98,18 @@ contract Badges is ERC165, IERC721Metadata, IERC4973, Initializable, OwnableUpgr
     _tokenURIs[tokenId] = uri;
     emit Transfer(address(0), to, tokenId);
 
-    dataHolder.setBadgeToRaft(tokenId, raftTokenId);
-
-    // emit BadgeMinted(msg.sender, uri, tokenId);
+    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
     return tokenId;
   }
 
   function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
-    address raftOwner = dataHolder.getRaftOwner(raftTokenId);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == msg.sender, "createSpecAsRaftOwner: unauthorized");
-    require(!dataHolder.specIsRegistered(specUri), "createSpecAsRaftOwner: spec already registered");
+    require(!specDataHolder.specIsRegistered(specUri), "createSpecAsRaftOwner: spec already registered");
 
-    dataHolder.setSpecToRaft(specUri, raftTokenId);
+    specDataHolder.setSpecToRaft(specUri, raftTokenId);
 
-    emit SpecCreated(msg.sender, specUri, raftTokenId, dataHolder.getRaftAddress());
+    emit SpecCreated(msg.sender, specUri, raftTokenId, specDataHolder.getRaftAddress());
   }
 
   function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {

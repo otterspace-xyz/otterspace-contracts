@@ -51,6 +51,7 @@ contract Raft is ERC721Enumerable, Ownable, Pausable {
     _unpause();
   }
 
+  // we are basically implementing the functionality of ERC721URIStorage ourselves here
   function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
     require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
