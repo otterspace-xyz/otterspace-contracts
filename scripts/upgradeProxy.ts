@@ -1,9 +1,9 @@
 const { ethers, upgrades } = require('hardhat')
 
-const proxyAddress = '0x3d24eC0BA04CEcA732a0F1AF6BC82481aFbD40c1'
+const proxyAddress = '0x99e722b2CeA3e14f634EA7DBa755f3e5592FaE85'
 
 async function main() {
-  const contract = await ethers.getContractFactory('BadgesDataHolderV2')
+  const contract = await ethers.getContractFactory('RaftV2')
   console.log('Upgrading...')
   const tx = await upgrades.upgradeProxy(proxyAddress, contract)
   console.log('upgraded successfully')

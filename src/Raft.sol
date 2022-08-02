@@ -2,30 +2,40 @@
 pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
+import "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
 /// @title RAFT Contract
 /// @author Otterspace
 /// @notice The RAFT NFT gives the owner the ability to create a DAO within Otterspace
 /// @dev Inherits from ERC721Enumerable so that we can access useful functions for
 /// querying owners of tokens from the web app.
-contract Raft is ERC721Enumerable, Ownable, Pausable {
+contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
   mapping(uint256 => string) private _tokenURIs;
 
-  constructor(
+  /// @custom:oz-upgrades-unsafe-allow constructor
+  constructor() {
+    _disableInitializers();
+  }
+
+  function _authorizeUpgrade(address) internal override onlyOwner {}
+
+  function initialize(
     address nextOwner,
-    string memory name,
-    string memory symbol
-  ) ERC721(name, symbol) {
+    string memory name_,
+    string memory symbol_
+  ) public initializer {
+    __ERC721Enumerable_init();
+    __ERC721_init(name_, symbol_);
+    __UUPSUpgradeable_init();
+    __Ownable_init_unchained();
     // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
     transferOwnership(nextOwner);
-
     // pause the contract by default
     _pause();
   }

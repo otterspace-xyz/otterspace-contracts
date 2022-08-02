@@ -61,7 +61,7 @@ contract Badges is
   }
 
   // Not implementing this function because it is used to check who is authorized
-  // to update the contract, we're using onlyOwnerfor this purpose.
+  // to update the contract, we're using onlyOwner for this purpose.
   function _authorizeUpgrade(address) internal override onlyOwner {}
 
   // The owner can call this once only. They should call this when the contract is first deployed.

@@ -19,6 +19,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     _disableInitializers();
   }
 
+  // The {_authorizeUpgrade} function must be overridden to include access restriction to the upgrade mechanism.
   // Not implementing this function because it is used to check who is authorized
   // to update the contract, we're using onlyOwnerfor this purpose.
   function _authorizeUpgrade(address) internal override onlyOwner {}

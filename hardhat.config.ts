@@ -5,6 +5,7 @@ import 'hardhat-preprocessor'
 import '@nomiclabs/hardhat-ethers'
 import 'hardhat-watcher'
 import '@openzeppelin/hardhat-upgrades'
+import '@openzeppelin/hardhat-defender'
 import { HardhatUserConfig, task } from 'hardhat/config'
 
 import example from './tasks/example'
@@ -21,6 +22,11 @@ function getRemappings() {
 task('example', 'Example task').setAction(example)
 
 const config: HardhatUserConfig = {
+  // todo figure out TS issue for apiKey and apiSecret
+  defender: {
+    apiKey: process.env.DEFENDER_TEAM_API_KEY!,
+    apiSecret: process.env.DEFENDER_TEAM_API_SECRET_KEY!,
+  },
   solidity: {
     version: '0.8.15',
     settings: {
@@ -37,6 +43,10 @@ const config: HardhatUserConfig = {
     },
     goerli: {
       url: `${process.env.ETH_GOERLI_URL}`,
+      accounts: [process.env.PRIVATE_KEY!],
+    },
+    rinkeby: {
+      url: `${process.env.RINKEBY_URL}`,
       accounts: [process.env.PRIVATE_KEY!],
     },
   },
