@@ -5,6 +5,7 @@ import { Raft } from "./Raft.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "hardhat/console.sol";
 
 // import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
@@ -25,7 +26,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   function _authorizeUpgrade(address) internal override onlyOwner {}
 
   // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
-  function initialize(address _raftAddress, address nextOwner) public initializer {
+  function initialize(address _raftAddress, address nextOwner) external initializer {
     __Ownable_init();
     setRaft(_raftAddress);
     transferOwnership(nextOwner);

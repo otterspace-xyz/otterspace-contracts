@@ -29,6 +29,7 @@ contract Badges is
   BitMaps.BitMap private _usedHashes;
   string private _name;
   string private _symbol;
+  string private favNumber;
 
   mapping(uint256 => address) private _owners;
   mapping(uint256 => string) private _tokenURIs;
@@ -49,11 +50,11 @@ contract Badges is
     string memory version,
     address nextOwner,
     address specDataHolderAddress
-  ) public initializer {
+  ) external initializer {
     _name = name_;
     _symbol = symbol_;
     __ERC165_init();
-    __Ownable_init_unchained();
+    __Ownable_init();
     __EIP712_init(name_, version);
     __UUPSUpgradeable_init();
     transferOwnership(nextOwner);

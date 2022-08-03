@@ -1,12 +1,11 @@
-// contracts/BoxV2.sol
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.15;
 
+import "hardhat/console.sol";
 import "./Raft.sol";
 
 contract RaftV2 is Raft {
-  // Increments the stored value by 1
-  function getVersion() public pure returns (uint256) {
+  function getVersion() external pure returns (uint256) {
     return 2;
   }
 }

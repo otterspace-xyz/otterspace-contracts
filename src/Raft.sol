@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity ^0.8.3;
+pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import "hardhat/console.sol";
 
 /// @title RAFT Contract
 /// @author Otterspace
@@ -29,11 +30,11 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
     address nextOwner,
     string memory name_,
     string memory symbol_
-  ) public initializer {
+  ) external initializer {
     __ERC721Enumerable_init();
     __ERC721_init(name_, symbol_);
     __UUPSUpgradeable_init();
-    __Ownable_init_unchained();
+    __Ownable_init();
     // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
     transferOwnership(nextOwner);
     // pause the contract by default

@@ -10,7 +10,10 @@ import { HardhatUserConfig, task } from 'hardhat/config'
 
 import example from './tasks/example'
 require('dotenv').config()
-
+const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
+const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
+const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
+const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
 function getRemappings() {
   return fs
     .readFileSync('remappings.txt', 'utf8')
@@ -22,7 +25,6 @@ function getRemappings() {
 task('example', 'Example task').setAction(example)
 
 const config: HardhatUserConfig = {
-  // todo figure out TS issue for apiKey and apiSecret
   defender: {
     apiKey: process.env.DEFENDER_TEAM_API_KEY!,
     apiSecret: process.env.DEFENDER_TEAM_API_SECRET_KEY!,
@@ -39,20 +41,22 @@ const config: HardhatUserConfig = {
   networks: {
     optimismGoerli: {
       url: `${process.env.OPTIMISM_GOERLI_URL}`,
-      accounts: [process.env.PRIVATE_KEY!],
+      accounts: [`0x${PRIVATE_KEY_1}`],
     },
     goerli: {
       url: `${process.env.ETH_GOERLI_URL}`,
-      accounts: [process.env.PRIVATE_KEY!],
-    },
-    rinkeby: {
-      url: `${process.env.RINKEBY_URL}`,
-      accounts: [process.env.PRIVATE_KEY!],
+      accounts: [`0x${PRIVATE_KEY_1}`, `0x${PRIVATE_KEY_2}`, `0x${PRIVATE_KEY_3}`, `0x${PRIVATE_KEY_4}`],
+      chainId: 5,
+      timeout: 20000,
     },
   },
   paths: {
     sources: './src', // Use ./src rather than ./contracts as Hardhat expects
     cache: './cache_hardhat', // Use a different cache for Hardhat than Foundry
+  },
+  // if a test takes longer than 40s Hardhat will fail it
+  mocha: {
+    timeout: 100000000,
   },
   watcher: {
     test: {
