@@ -10,11 +10,11 @@ import { HardhatUserConfig, task } from 'hardhat/config'
 
 import example from './tasks/example'
 require('dotenv').config()
-const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
-const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
-const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
-const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
-console.log('🚀 ~ PRIVATE_KEY_4', PRIVATE_KEY_4)
+// const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
+// const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
+// const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
+// const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
+
 function getRemappings() {
   return fs
     .readFileSync('remappings.txt', 'utf8')
@@ -42,11 +42,11 @@ const config: HardhatUserConfig = {
   networks: {
     optimismGoerli: {
       url: `${process.env.OPTIMISM_GOERLI_URL}`,
-      accounts: [`0x${PRIVATE_KEY_1}`],
+      // accounts: [`0x${PRIVATE_KEY_1}`],
     },
     goerli: {
       url: `${process.env.ETH_GOERLI_URL}`,
-      accounts: [`0x${PRIVATE_KEY_1}`, `0x${PRIVATE_KEY_2}`, `0x${PRIVATE_KEY_3}`, `0x${PRIVATE_KEY_4}`],
+      // accounts: [`0x${PRIVATE_KEY_1}`, `0x${PRIVATE_KEY_2}`, `0x${PRIVATE_KEY_3}`, `0x${PRIVATE_KEY_4}`],
       chainId: 5,
       timeout: 20000,
     },
