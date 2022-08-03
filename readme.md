@@ -30,8 +30,9 @@ npx hardhat test
 
 Live contract on:
 
-- [Badges contract on Rinkeby](https://rinkeby.etherscan.io/address/0x9323497dc6f24df13fcd09d71bb17efa47b659e3)
-- [Raft contract on Rinkeby](https://rinkeby.etherscan.io/address/0xbda5a3595a315d8473c3200e813394ffdcfca66a)
+- [Badges contract on Goerli](https://goerli.etherscan.io/address/0xde30567ebA075D622da01D0836aFcc4356dB9dEC)
+- [Raft contract on Goerli](https://goerli.etherscan.io/address/0xA32Ef0ED6B60dD406f37f31D40044AD8F6530bbe)
+- [SpecDataHolder contract on Goerli](https://goerli.etherscan.io/address/0x562AD9882B50AB12C445c5b0e30acBE02c09b7F9)
 
 ### Use ABIs with JavaScript
 
@@ -121,6 +122,13 @@ exporting by looking into `package.json`.
 ## Changelog
 
 See changelog.md file.
+
+### Checklist for bumping version
+
+- update "version" in package.json
+- re-deploy contracts
+- update contract addresses in readme (if necessary)
+- update changelog
 
 ## License
 

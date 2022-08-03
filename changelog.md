@@ -2,6 +2,16 @@
 
 We're using https://semver.org/
 
+## 0.6.0
+
+- Make contracts upgradeable
+- Seprate spec-related data to SpecDataHolder
+- Move logic of ERC-4973 into Badges.sol (ERC-4973 is no longer a dependency)
+- Move deployments over to Goerli
+- Badges Goerli deployment: https://goerli.etherscan.io/address/0xde30567ebA075D622da01D0836aFcc4356dB9dEC
+- Raft Goerli deployment: https://goerli.etherscan.io/address/0xA32Ef0ED6B60dD406f37f31D40044AD8F6530bbe
+- SpecDataHolder Goerli deployment: https://goerli.etherscan.io/address/0x562AD9882B50AB12C445c5b0e30acBE02c09b7F9
+
 ## 0.5.0
 
 - Add Raft token
