@@ -14,6 +14,7 @@ const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
 const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
 const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
 const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
+console.log('🚀 ~ PRIVATE_KEY_4', PRIVATE_KEY_4)
 function getRemappings() {
   return fs
     .readFileSync('remappings.txt', 'utf8')

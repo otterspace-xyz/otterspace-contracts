@@ -6,7 +6,8 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgr
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import "hardhat/console.sol";
+
+// import "hardhat/console.sol";
 
 /// @title RAFT Contract
 /// @author Otterspace
