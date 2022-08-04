@@ -1,4 +1,4 @@
-import { expect, assert } from 'chai'
+import { expect } from 'chai'
 import { ethers, upgrades } from 'hardhat'
 import { Badges, Raft } from '../typechain-types'
 import { BigNumberish, Wallet } from 'ethers'
@@ -14,7 +14,6 @@ const version = '1'
 //live network and automaticall set the chainId to the correct value.
 const chainId = 31337
 const specUri = 'some spec uri'
-const specUri2 = 'another spec uri'
 
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = '_mint: spec is not registered'
@@ -131,7 +130,7 @@ const setup = async () => {
 
 beforeEach(setup)
 
-async function deployContractFixture() {
+const deployContractFixture = async () => {
   const [owner, issuer, claimant, randomSigner] = await ethers.getSigners()
 
   const raft = await ethers.getContractFactory('Raft')
@@ -207,6 +206,18 @@ describe('Proxy upgrades', () => {
     expect(v2).equal(2)
 
     await mintBadge()
+  })
+
+  it('Should upgrade then instantiate new variable right after', async () => {
+    const { badgesProxy } = deployed
+
+    const badgesV2 = await ethers.getContractFactory('BadgesV2')
+    const upgradedV2Contract = await upgrades.upgradeProxy(badgesProxy.address, badgesV2)
+    await upgradedV2Contract.deployed()
+    await upgradedV2Contract.setNewVar()
+    const newVar = await upgradedV2Contract.myNewVar()
+    expect(newVar).equal(9)
+    await expect(upgradedV2Contract.setNewVar()).to.be.revertedWith('Var is already set')
   })
 
   it('Should upgrade the SpecDataHolder contract then create raft/spec/badge', async () => {

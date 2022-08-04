@@ -6,15 +6,17 @@ import '@nomiclabs/hardhat-ethers'
 import 'hardhat-watcher'
 import '@openzeppelin/hardhat-upgrades'
 import '@openzeppelin/hardhat-defender'
+import '@nomiclabs/hardhat-etherscan'
+
 import { HardhatUserConfig, task } from 'hardhat/config'
 
 import example from './tasks/example'
 require('dotenv').config()
-// const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
-// const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
-// const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
-// const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
-
+const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
+const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
+const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
+const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 function getRemappings() {
   return fs
     .readFileSync('remappings.txt', 'utf8')
@@ -46,7 +48,7 @@ const config: HardhatUserConfig = {
     },
     goerli: {
       url: `${process.env.ETH_GOERLI_URL}`,
-      // accounts: [`0x${PRIVATE_KEY_1}`, `0x${PRIVATE_KEY_2}`, `0x${PRIVATE_KEY_3}`, `0x${PRIVATE_KEY_4}`],
+      accounts: [`0x${PRIVATE_KEY_1}`],
       chainId: 5,
       timeout: 20000,
     },
@@ -64,6 +66,11 @@ const config: HardhatUserConfig = {
       tasks: [{ command: 'test', params: { testFiles: ['{path}'] } }],
       files: ['./test/**/*'],
       verbose: true,
+    },
+  },
+  etherscan: {
+    apiKey: {
+      goerli: ETHERSCAN_API_KEY!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

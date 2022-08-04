@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.15;
 
-import { ERC4973 } from "ERC4973/ERC4973.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "./SpecDataHolder.sol";
 import { IERC4973 } from "./IERC4973.sol";
 import { SignatureCheckerUpgradeable } from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol";
@@ -11,9 +9,7 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgrad
 import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/ERC165Upgradeable.sol";
-import { ERC165 } from "./ERC165.sol";
 import { IERC721Metadata } from "./IERC721Metadata.sol";
-
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
 contract Badges is
@@ -29,7 +25,6 @@ contract Badges is
   BitMaps.BitMap private _usedHashes;
   string private _name;
   string private _symbol;
-  string private favNumber;
 
   mapping(uint256 => address) private _owners;
   mapping(uint256 => string) private _tokenURIs;
@@ -47,7 +42,7 @@ contract Badges is
   function initialize(
     string memory name_,
     string memory symbol_,
-    string memory version,
+    string memory version_,
     address nextOwner,
     address specDataHolderAddress
   ) external initializer {
@@ -55,7 +50,7 @@ contract Badges is
     _symbol = symbol_;
     __ERC165_init();
     __Ownable_init();
-    __EIP712_init(name_, version);
+    __EIP712_init(name_, version_);
     __UUPSUpgradeable_init();
     transferOwnership(nextOwner);
     specDataHolder = SpecDataHolder(specDataHolderAddress);
