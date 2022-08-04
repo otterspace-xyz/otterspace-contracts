@@ -30,9 +30,9 @@ npx hardhat test
 
 Live contract on:
 
-- [Badges contract on Goerli](https://goerli.etherscan.io/address/0xde30567ebA075D622da01D0836aFcc4356dB9dEC)
-- [Raft contract on Goerli](https://goerli.etherscan.io/address/0xA32Ef0ED6B60dD406f37f31D40044AD8F6530bbe)
-- [SpecDataHolder contract on Goerli](https://goerli.etherscan.io/address/0x562AD9882B50AB12C445c5b0e30acBE02c09b7F9)
+- [Badges contract on Goerli](https://goerli.etherscan.io/address/0xaaf05001BE90920425407921A2266Ad301489BF3)
+- [Raft contract on Goerli](https://goerli.etherscan.io/address/0xf3babd5c1379a8191ddaed9f20cfbcc020e61adc)
+- [SpecDataHolder contract on Goerli](https://goerli.etherscan.io/address/0x4705c7d49d5085231Be821d027ab07647014cD8d)
 
 ### Use ABIs with JavaScript
 
