@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.15;
+pragma solidity 0.8.15;
 
 import { ERC4973 } from "ERC4973/ERC4973.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
