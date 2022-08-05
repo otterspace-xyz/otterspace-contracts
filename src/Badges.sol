@@ -2,7 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "./SpecDataHolder.sol";
-import { IERC4973 } from "./IERC4973.sol";
+import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { SignatureCheckerUpgradeable } from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
