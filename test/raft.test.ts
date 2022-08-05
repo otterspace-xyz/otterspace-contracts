@@ -42,7 +42,7 @@ const deployContractFixture = async () => {
 }
 
 describe('Raft Upgrades', async function () {
-  it.only('Should upgrade then instantiate new variable right after', async () => {
+  it('Should upgrade then instantiate new variable right after', async () => {
     const { raftProxy } = deployed
 
     const raftV2 = await ethers.getContractFactory('RaftV2')

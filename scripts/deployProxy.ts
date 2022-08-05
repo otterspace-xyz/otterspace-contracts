@@ -2,13 +2,13 @@ const { ethers, upgrades } = require('hardhat')
 require('dotenv').config()
 
 async function main() {
-  const { BADGES_NAME, BADGES_SYMBOL, BADGES_VERSION, RAFT_NAME, RAFT_SYMBOL } = process.env
+  const { BADGES_NAME, BADGES_SYMBOL, BADGES_VERSION, RAFT_NAME, RAFT_SYMBOL, GNOSIS_MULTISIG } = process.env
 
   const [deployer] = await ethers.getSigners()
   console.log('🚀 ~ main ~ deployer', deployer.address)
 
   const raft = await ethers.getContractFactory('Raft')
-  const raftContract = await upgrades.deployProxy(raft, [deployer.address, RAFT_NAME, RAFT_SYMBOL], {
+  const raftContract = await upgrades.deployProxy(raft, [GNOSIS_MULTISIG, RAFT_NAME, RAFT_SYMBOL], {
     kind: 'uups',
   })
   await raftContract.deployed()
@@ -16,7 +16,7 @@ async function main() {
   console.log('raft contract deployed to address = ', raftContract.address)
 
   const specDataHolder = await ethers.getContractFactory('SpecDataHolder')
-  const specDataHolderContract = await upgrades.deployProxy(specDataHolder, [raftContract.address, deployer.address], {
+  const specDataHolderContract = await upgrades.deployProxy(specDataHolder, [raftContract.address, GNOSIS_MULTISIG], {
     kind: 'uups',
   })
   await specDataHolderContract.deployed()
@@ -26,7 +26,7 @@ async function main() {
   const badges = await ethers.getContractFactory('Badges')
   const badgesContract = await upgrades.deployProxy(
     badges,
-    [BADGES_NAME, BADGES_SYMBOL, BADGES_VERSION, deployer.address, specDataHolderContract.address],
+    [BADGES_NAME, BADGES_SYMBOL, BADGES_VERSION, GNOSIS_MULTISIG, specDataHolderContract.address],
     {
       kind: 'uups',
     }

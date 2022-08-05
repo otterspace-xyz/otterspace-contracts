@@ -13,9 +13,11 @@ import { HardhatUserConfig, task } from 'hardhat/config'
 import example from './tasks/example'
 require('dotenv').config()
 const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
-const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
-const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
-const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
+// extra private keys only needed to run tests on live networks
+// provide them in the "accounts" array below
+// const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
+// const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
+// const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 function getRemappings() {
   return fs
@@ -42,10 +44,6 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    optimismGoerli: {
-      url: `${process.env.OPTIMISM_GOERLI_URL}`,
-      // accounts: [`0x${PRIVATE_KEY_1}`],
-    },
     goerli: {
       url: `${process.env.ETH_GOERLI_URL}`,
       accounts: [`0x${PRIVATE_KEY_1}`],
