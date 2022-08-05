@@ -35,6 +35,9 @@ jobs:
       #   run: forge test -vvv
 
       - name: Compile hardhat
+        env:
+          PRIVATE_KEY_1: ${{ secrets.PRIVATE_KEY_1 }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
         run: npx hardhat compile
 
       - name: Run hardhat tests
