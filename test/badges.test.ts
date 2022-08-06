@@ -17,9 +17,9 @@ const specUri = 'some spec uri'
 const specUri2 = 'another spec uri'
 
 const errNotOwner = 'Ownable: caller is not the owner'
-const errSpecNotRegistered = '_mint: spec is not registered'
-const errSpecAlreadyRegistered = 'createSpecAsRaftOwner: spec already registered'
-const errNotRaftOwner = 'createSpecAsRaftOwner: unauthorized'
+const errSpecNotRegistered = '_mint__specIsNotRegistered()'
+const errSpecAlreadyRegistered = 'createSpecAsRaftOwner_specAlreadyRegistered()'
+const errNotRaftOwner = 'createSpecAsRaftOwner_unauthorized()'
 const errInvalidSig = '_safeCheckAgreement: invalid signature'
 
 let deployed: any
