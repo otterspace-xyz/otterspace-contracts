@@ -14,6 +14,17 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/
 import { ERC165 } from "./ERC165.sol";
 import { IERC721Metadata } from "./IERC721Metadata.sol";
 
+error _mint__specIsNotRegistered();
+error mint__tokenIDexists();
+error createSpecAsRaftOwner_unauthorized();
+error createSpecAsRaftOwner_specAlreadyRegistered();
+error tokenURI_tokenDoesNotExist();
+error unequip_senderMustBeOwner();
+error balanceOf_AddressZeroIsNotValid_owner_();
+error ownerOf_tokenDoesNotExist();
+error give_cannotGiveFromSelf();
+error take_cannotTakeFromSelf();
+
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
 contract Badges is
@@ -91,9 +102,8 @@ contract Badges is
     uint256 raftTokenId = specDataHolder.getRaftTokenId(uri);
 
     // only registered specs can be used for minting
-    require(raftTokenId != 0, "_mint: spec is not registered");
-
-    require(!_exists(tokenId), "mint: tokenID exists");
+    if(raftTokenId == 0){revert _mint__specIsNotRegistered();}
+    if(_exists(tokenId)){revert mint__tokenIDexists();}
     _balances[to] += 1;
     _owners[tokenId] = to;
     _tokenURIs[tokenId] = uri;
@@ -105,8 +115,8 @@ contract Badges is
 
   function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
-    require(raftOwner == msg.sender, "createSpecAsRaftOwner: unauthorized");
-    require(!specDataHolder.specIsRegistered(specUri), "createSpecAsRaftOwner: spec already registered");
+    if(raftOwner != msg.sender){revert createSpecAsRaftOwner_unauthorized();}
+    if(specDataHolder.specIsRegistered(specUri)){revert createSpecAsRaftOwner_specAlreadyRegistered();}
 
     specDataHolder.setSpecToRaft(specUri, raftTokenId);
 
@@ -129,24 +139,24 @@ contract Badges is
   }
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-    require(_exists(tokenId), "tokenURI: token doesn't exist");
+    if(!_exists(tokenId)){revert tokenURI_tokenDoesNotExist();}
     return _tokenURIs[tokenId];
   }
 
   function unequip(uint256 tokenId) public virtual override {
-    require(msg.sender == ownerOf(tokenId), "unequip: sender must be owner");
+    if(msg.sender != ownerOf(tokenId)){revert unequip_senderMustBeOwner();}
     _usedHashes.unset(tokenId);
     _burn(tokenId);
   }
 
   function balanceOf(address owner_) public view virtual override returns (uint256) {
-    require(owner_ != address(0), "balanceOf: address zero is not a valid owner_");
+    if(owner_ == address(0)){revert balanceOf_AddressZeroIsNotValid_owner_();}
     return _balances[owner_];
   }
 
   function ownerOf(uint256 tokenId_) public view virtual returns (address) {
     address owner_ = _owners[tokenId_];
-    require(owner_ != address(0), "ownerOf: token doesn't exist");
+    if(owner_ == address(0)){revert ownerOf_tokenDoesNotExist();}
     return owner_;
   }
 
@@ -155,7 +165,7 @@ contract Badges is
     string calldata uri,
     bytes calldata signature
   ) external virtual returns (uint256) {
-    require(msg.sender != to, "give: cannot give from self");
+    if(msg.sender == to){revert give_cannotGiveFromSelf();}
     uint256 tokenId = _safeCheckAgreement(msg.sender, to, uri, signature);
     _mint(to, tokenId, uri);
     _usedHashes.set(tokenId);
@@ -167,7 +177,7 @@ contract Badges is
     string calldata uri,
     bytes calldata signature
   ) external virtual returns (uint256) {
-    require(msg.sender != from, "take: cannot take from self");
+    if(msg.sender == from){revert take_cannotTakeFromSelf();}
     uint256 tokenId = _safeCheckAgreement(msg.sender, from, uri, signature);
     _mint(msg.sender, tokenId, uri);
     _usedHashes.set(tokenId);
