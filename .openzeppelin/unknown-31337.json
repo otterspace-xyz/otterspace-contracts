@@ -2,86 +2,6 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "txHash": "0xd9dd9702902ae94165e67df767f9b4c932c542617e4467fa3d07ddbc081d5104",
-      "kind": "uups"
-    },
-    {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-      "txHash": "0xa490da350d4ff386b10d79476f9c803f0d48954d503626d2548dbd896cbc50b9",
-      "kind": "uups"
-    },
-    {
-      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-      "txHash": "0x0ac50005f4f4bcae6dce97cb2e78c6e897ab87ef40912978707f5484c62b795f",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
-      "txHash": "0xd078ffc49a5381a700410b148a818bad3f8963e7c6e682761b84412771331a63",
-      "kind": "uups"
-    },
-    {
-      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-      "txHash": "0x7f95474de8e74e845065d784557aa7337def2ca448c9b6e7aac2e9c1aba3dec8",
-      "kind": "uups"
-    },
-    {
-      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-      "txHash": "0x153f595dad350941ae6d824c1716ba6e8320a4b82ab8d1219486f8f1c7f8a2a2",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-      "txHash": "0x2b6a1455a8242680771dc63e73d1b0bb32b509efc285480cba73b6eb20d00ee5",
-      "kind": "uups"
-    },
-    {
-      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0xd674718c9010c88ee674e89c6052825da589d8cad3fecee0d8165bba46791373",
-      "kind": "uups"
-    },
-    {
-      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
-      "txHash": "0x1cfa343e3d788b8f6b1b7531b5c17c8300f0c2a4928a95c911719c41444b5a37",
-      "kind": "uups"
-    },
-    {
-      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
-      "txHash": "0x275483e387d670bf8c306b09f0bc64149bbdea2a58297c2d7014ef38b08a443f",
-      "kind": "uups"
-    },
-    {
-      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
-      "txHash": "0x72350213233e8856adf88788dc620eec64509c6b4ddb10b1716c8ebd070b2c18",
-      "kind": "uups"
-    },
-    {
-      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
-      "txHash": "0xa9f57e3badf7794fe98c8f391f631f66474424b8085e172123bfd17f55e77f36",
-      "kind": "uups"
-    },
-    {
-      "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
-      "txHash": "0x96c326fa9277787d707d12e92e7564419bdef952424d8188ea95fca325205049",
-      "kind": "uups"
-    },
-    {
-      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
-      "txHash": "0xb1b02ac52430a136dfc9605f2e7886d07f3eb1c35d1f1e2be7e1acd7896dd8b8",
-      "kind": "uups"
-    },
-    {
-      "address": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
-      "txHash": "0x3500be30510030c0e040844a150188260a2b411d3cd380acbcd58a2254efd0b5",
-      "kind": "uups"
-    },
-    {
-      "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
-      "txHash": "0xd1917d01933f17c5b060f1ca2133a9d7331ba21e64ec4854b98362f2d5fffaf6",
-      "kind": "uups"
-    },
-    {
       "address": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
       "txHash": "0x199d7b19d84980522c8cfa7b72c57a5bfa350f0febc40ce1bcc97dacd0430423",
       "kind": "uups"
@@ -550,12 +470,92 @@
       "address": "0xaca81583840B1bf2dDF6CDe824ada250C1936B4D",
       "txHash": "0x7d6ce7a23208b41161b0f73817849ce47a163f5e114610dc9538e295f6ad54b5",
       "kind": "uups"
+    },
+    {
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "txHash": "0xd9dd9702902ae94165e67df767f9b4c932c542617e4467fa3d07ddbc081d5104",
+      "kind": "uups"
+    },
+    {
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0xa490da350d4ff386b10d79476f9c803f0d48954d503626d2548dbd896cbc50b9",
+      "kind": "uups"
+    },
+    {
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x0ac50005f4f4bcae6dce97cb2e78c6e897ab87ef40912978707f5484c62b795f",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "txHash": "0xd078ffc49a5381a700410b148a818bad3f8963e7c6e682761b84412771331a63",
+      "kind": "uups"
+    },
+    {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0x7f95474de8e74e845065d784557aa7337def2ca448c9b6e7aac2e9c1aba3dec8",
+      "kind": "uups"
+    },
+    {
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "txHash": "0x153f595dad350941ae6d824c1716ba6e8320a4b82ab8d1219486f8f1c7f8a2a2",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+      "txHash": "0x2b6a1455a8242680771dc63e73d1b0bb32b509efc285480cba73b6eb20d00ee5",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "txHash": "0xd674718c9010c88ee674e89c6052825da589d8cad3fecee0d8165bba46791373",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "txHash": "0x1cfa343e3d788b8f6b1b7531b5c17c8300f0c2a4928a95c911719c41444b5a37",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "txHash": "0x275483e387d670bf8c306b09f0bc64149bbdea2a58297c2d7014ef38b08a443f",
+      "kind": "uups"
+    },
+    {
+      "address": "0x59b670e9fA9D0A427751Af201D676719a970857b",
+      "txHash": "0x72350213233e8856adf88788dc620eec64509c6b4ddb10b1716c8ebd070b2c18",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      "txHash": "0xa9f57e3badf7794fe98c8f391f631f66474424b8085e172123bfd17f55e77f36",
+      "kind": "uups"
+    },
+    {
+      "address": "0x09635F643e140090A9A8Dcd712eD6285858ceBef",
+      "txHash": "0x96c326fa9277787d707d12e92e7564419bdef952424d8188ea95fca325205049",
+      "kind": "uups"
+    },
+    {
+      "address": "0xc5a5C42992dECbae36851359345FE25997F5C42d",
+      "txHash": "0xb1b02ac52430a136dfc9605f2e7886d07f3eb1c35d1f1e2be7e1acd7896dd8b8",
+      "kind": "uups"
+    },
+    {
+      "address": "0x67d269191c92Caf3cD7723F116c85e6E9bf55933",
+      "txHash": "0x3500be30510030c0e040844a150188260a2b411d3cd380acbcd58a2254efd0b5",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+      "txHash": "0xd1917d01933f17c5b060f1ca2133a9d7331ba21e64ec4854b98362f2d5fffaf6",
+      "kind": "uups"
     }
   ],
   "impls": {
     "5c00aa7aa7bfaf7ec6514b31daa0c69149dac6e41fe5839927a35b74d5122e61": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x48a2a62f4bd04bbdeba4ffcc099104d7633b487f64a64dcec122fca08a19021c",
+      "txHash": "0x8e8f402e96046662993afbd1a502097c1a3395f4cdc3b24bf1a79e5da51f340b",
       "layout": {
         "storage": [
           {
@@ -739,7 +739,7 @@
             "label": "_tokenIds",
             "offset": 0,
             "slot": "401",
-            "type": "t_struct(Counter)3833_storage",
+            "type": "t_struct(Counter)3892_storage",
             "contract": "Raft",
             "src": "src/Raft.sol:19"
           },
@@ -813,7 +813,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Counter)3833_storage": {
+          "t_struct(Counter)3892_storage": {
             "label": "struct Counters.Counter",
             "members": [
               {
@@ -838,7 +838,7 @@
     },
     "a768899ff96fff9181d29d3128421639b006ce0f1eff86494e35940dfa7322ab": {
       "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "txHash": "0x82f3b0adf23c18bea9d3e368019e80518f8b8d686d42b6e021fa665ce2d6965f",
+      "txHash": "0x317711ac29ce8da4c6aef89c4480e512142a61c5e0002521da045de6c9b51f51",
       "layout": {
         "storage": [
           {
@@ -918,7 +918,7 @@
             "label": "raft",
             "offset": 0,
             "slot": "203",
-            "type": "t_contract(Raft)4999",
+            "type": "t_contract(Raft)4963",
             "contract": "SpecDataHolder",
             "src": "src/SpecDataHolder.sol:15"
           }
@@ -940,7 +940,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(Raft)4999": {
+          "t_contract(Raft)4963": {
             "label": "contract Raft",
             "numberOfBytes": "20"
           },
@@ -972,7 +972,7 @@
     },
     "9641551734569751d5572cb3e31f27083b940f83398c83d4e0881502d6ccfa45": {
       "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-      "txHash": "0xb83b12722f02e3d7e9bb4648bd1ae4c57bbc48d7850238724e86f22941aeeeaa",
+      "txHash": "0xc5f4c4274cfeb0868fc02c603180cff8ad7e448b15fdec7d28b6e8efef06ffe9",
       "layout": {
         "storage": [
           {
@@ -1068,7 +1068,7 @@
             "label": "_usedHashes",
             "offset": 0,
             "slot": "303",
-            "type": "t_struct(BitMap)3909_storage",
+            "type": "t_struct(BitMap)3968_storage",
             "contract": "Badges",
             "src": "src/Badges.sol:25"
           },
@@ -1116,7 +1116,7 @@
             "label": "specDataHolder",
             "offset": 0,
             "slot": "309",
-            "type": "t_contract(SpecDataHolder)5194",
+            "type": "t_contract(SpecDataHolder)5122",
             "contract": "Badges",
             "src": "src/Badges.sol:35"
           }
@@ -1142,7 +1142,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(SpecDataHolder)5194": {
+          "t_contract(SpecDataHolder)5122": {
             "label": "contract SpecDataHolder",
             "numberOfBytes": "20"
           },
@@ -1166,7 +1166,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(BitMap)3909_storage": {
+          "t_struct(BitMap)3968_storage": {
             "label": "struct BitMaps.BitMap",
             "members": [
               {
@@ -1191,7 +1191,7 @@
     },
     "4f89bc2a2535d14984b3203e4c1768c112794cc1f927ca71eaab957b0994ca23": {
       "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
-      "txHash": "0xeb6574494e16a28ed7b9fd6bf27ecb386c1cade9e3dcb470bcb7e6386b7c8aed",
+      "txHash": "0x98d00f63e77814889e37b46c46ec690e8f43e9c40a13c23fa55b651cee3e7f47",
       "layout": {
         "storage": [
           {
@@ -1375,7 +1375,7 @@
             "label": "_tokenIds",
             "offset": 0,
             "slot": "401",
-            "type": "t_struct(Counter)3833_storage",
+            "type": "t_struct(Counter)3892_storage",
             "contract": "Raft",
             "src": "src/Raft.sol:19"
           },
@@ -1393,7 +1393,7 @@
             "slot": "403",
             "type": "t_uint256",
             "contract": "RaftV2",
-            "src": "src/RaftV2.sol:7"
+            "src": "src/test/RaftV2.sol:7"
           },
           {
             "label": "varIsSet",
@@ -1401,7 +1401,7 @@
             "slot": "404",
             "type": "t_bool",
             "contract": "RaftV2",
-            "src": "src/RaftV2.sol:8"
+            "src": "src/test/RaftV2.sol:8"
           }
         ],
         "types": {
@@ -1465,7 +1465,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Counter)3833_storage": {
+          "t_struct(Counter)3892_storage": {
             "label": "struct Counters.Counter",
             "members": [
               {
@@ -1490,7 +1490,7 @@
     },
     "7851c87c8592ecccc45954b5c2d4d6e99202abf72c169b2936af3b2731859443": {
       "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
-      "txHash": "0x5411b5ed6ee3bf5b888aaaecb99a3ba02277bee0c5d1e3c9a50ad329b52c6da1",
+      "txHash": "0x0cdcb1d2b0d6135dcd506df59342ff080f964affcd5d60b5e43fb3726f904fd2",
       "layout": {
         "storage": [
           {
@@ -1586,7 +1586,7 @@
             "label": "_usedHashes",
             "offset": 0,
             "slot": "303",
-            "type": "t_struct(BitMap)3909_storage",
+            "type": "t_struct(BitMap)3968_storage",
             "contract": "Badges",
             "src": "src/Badges.sol:25"
           },
@@ -1634,7 +1634,7 @@
             "label": "specDataHolder",
             "offset": 0,
             "slot": "309",
-            "type": "t_contract(SpecDataHolder)5194",
+            "type": "t_contract(SpecDataHolder)5122",
             "contract": "Badges",
             "src": "src/Badges.sol:35"
           },
@@ -1644,7 +1644,7 @@
             "slot": "310",
             "type": "t_uint256",
             "contract": "BadgesV2",
-            "src": "src/BadgesV2.sol:7"
+            "src": "src/test/BadgesV2.sol:7"
           },
           {
             "label": "varIsSet",
@@ -1652,7 +1652,7 @@
             "slot": "311",
             "type": "t_bool",
             "contract": "BadgesV2",
-            "src": "src/BadgesV2.sol:8"
+            "src": "src/test/BadgesV2.sol:8"
           }
         ],
         "types": {
@@ -1676,7 +1676,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(SpecDataHolder)5194": {
+          "t_contract(SpecDataHolder)5122": {
             "label": "contract SpecDataHolder",
             "numberOfBytes": "20"
           },
@@ -1700,7 +1700,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(BitMap)3909_storage": {
+          "t_struct(BitMap)3968_storage": {
             "label": "struct BitMaps.BitMap",
             "members": [
               {
@@ -1725,7 +1725,7 @@
     },
     "3bcad7db4bb601960d4666c07c3e73d23f8859f2275e22da6b0fd1eb094ef03d": {
       "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
-      "txHash": "0x246da3e56a52f9e274079e0ab7be12097884da9a4d2a2596840b294bc2ba2c78",
+      "txHash": "0xc3e24bb96353e5d4b85f439bd3bf8dc813f559171ea176243f5c87a88ca5ae7b",
       "layout": {
         "storage": [
           {
@@ -1805,7 +1805,7 @@
             "label": "raft",
             "offset": 0,
             "slot": "203",
-            "type": "t_contract(Raft)4999",
+            "type": "t_contract(Raft)4963",
             "contract": "SpecDataHolder",
             "src": "src/SpecDataHolder.sol:15"
           }
@@ -1827,7 +1827,7 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(Raft)4999": {
+          "t_contract(Raft)4963": {
             "label": "contract Raft",
             "numberOfBytes": "20"
           },

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity ^0.8.15;
 
-import "./Badges.sol";
+import "../Badges.sol";
 
 contract BadgesV2 is Badges {
   uint256 public myNewVar;
