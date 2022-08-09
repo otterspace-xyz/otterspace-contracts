@@ -70,6 +70,7 @@ contract BadgesTest is Test {
 
   address passiveAddress = 0x0f6A79A579658E401E0B81c6dde1F2cd51d97176;
   uint256 passivePrivateKey = 0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
+  uint256 randomPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
   string specUri;
 
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -126,20 +127,71 @@ contract BadgesTest is Test {
     address dataHolderAddress = address(specDataHolder);
     assertEq(badges.getDataHolderAddress(), dataHolderAddress);
 
-    address newDataHolderAddress = vm.addr(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80);
+    address newDataHolderAddress = vm.addr(randomPrivateKey);
     badges.setDataHolder(newDataHolderAddress);
     assertEq(badges.getDataHolderAddress(), newDataHolderAddress);
+  }
+
+  function testSetDataHolderAsNonOwner() public {
+    address dataHolderAddress = address(specDataHolder);
+    assertEq(badges.getDataHolderAddress(), dataHolderAddress);
+
+    address newDataHolderAddress = vm.addr(randomPrivateKey);
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    badges.setDataHolder(newDataHolderAddress);
   }
 
   function testTransferOwnership() public {
     address currentOwner = badges.owner();
     assertEq(currentOwner, address(this));
-    address newOwner = vm.addr(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80);
+    address newOwner = vm.addr(randomPrivateKey);
     badges.transferOwnership(newOwner);
     assertEq(badges.owner(), newOwner);
   }
 
-  // // TODO: write test for a non-owner calling transferOwnership
+  function testTransferOwnershipFromNonOwner() public {
+    address currentOwner = badges.owner();
+    assertEq(currentOwner, address(this));
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    badges.transferOwnership(attacker);
+  }
+
+  function testCreateSpecAsNonRaftOwner() public {
+    address to = address(this);
+    address from = address(0);
+
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, raftTokenId);
+
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
+    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+  }
+
+  function testCreateSpecAsRaftOwnerTwice() public {
+    address to = address(this);
+    address from = address(0);
+
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some token uri");
+    emit Transfer(from, to, raftTokenId);
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpecAsRaftOwner: spec already registered"));
+    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+  }
+
+  // TODO: write test for a non-owner calling transferOwnership
+  // tricky because we need to call a proxy to do this
 
   function testIERC721Metadata() public {
     assertTrue(badges.supportsInterface(type(IERC721Metadata).interfaceId));
