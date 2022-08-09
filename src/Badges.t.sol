@@ -70,8 +70,6 @@ contract BadgesTest is Test {
 
   address passiveAddress = 0x0f6A79A579658E401E0B81c6dde1F2cd51d97176;
   uint256 passivePrivateKey = 0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
-  address ownerAddressFromAnvil = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
-
   string specUri;
 
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -91,6 +89,8 @@ contract BadgesTest is Test {
     aa = new AccountAbstraction(true);
 
     specUri = "some spec uri";
+
+    vm.label(passiveAddress, "passive");
   }
 
   // helper function
@@ -121,6 +121,25 @@ contract BadgesTest is Test {
   function testIERC165() public {
     assertTrue(badges.supportsInterface(type(IERC165).interfaceId));
   }
+
+  function testSetDataHolder() public {
+    address dataHolderAddress = address(specDataHolder);
+    assertEq(badges.getDataHolderAddress(), dataHolderAddress);
+
+    address newDataHolderAddress = vm.addr(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80);
+    badges.setDataHolder(newDataHolderAddress);
+    assertEq(badges.getDataHolderAddress(), newDataHolderAddress);
+  }
+
+  function testTransferOwnership() public {
+    address currentOwner = badges.owner();
+    assertEq(currentOwner, address(this));
+    address newOwner = vm.addr(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80);
+    badges.transferOwnership(newOwner);
+    assertEq(badges.owner(), newOwner);
+  }
+
+  // // TODO: write test for a non-owner calling transferOwnership
 
   function testIERC721Metadata() public {
     assertTrue(badges.supportsInterface(type(IERC721Metadata).interfaceId));
@@ -421,10 +440,12 @@ contract BadgesTest is Test {
   function testTakeWithAlreadyUsedVoucher() public {
     createRaftAndRegisterSpec();
     address to = address(this);
-
+    address from = address(0);
     bytes memory signature = getSignature();
+    vm.expectEmit(true, true, true, false);
 
-    badges.take(passiveAddress, specUri, signature);
+    uint256 tokenId = badges.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
 
     vm.expectRevert(bytes("_safeCheckAgreement: already used"));
     badges.take(passiveAddress, specUri, signature);
