@@ -77,12 +77,14 @@ contract BadgesTest is Test {
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
 
   function setUp() public {
+    address to = address(this);
+
     badges = new Badges();
     specDataHolder = new SpecDataHolder();
     raft = new Raft();
-    badges.initialize("Badges", "BADGES", "0.1.0", address(this), address(specDataHolder));
-    raft.initialize(address(this), "Raft", "RAFT");
-    specDataHolder.initialize(address(raft), address(this));
+    badges.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolder));
+    raft.initialize(to, "Raft", "RAFT");
+    specDataHolder.initialize(address(raft), to);
 
     approver = new ERC1271Mock(true);
     rejecter = new ERC1271Mock(false);
@@ -95,7 +97,10 @@ contract BadgesTest is Test {
   function createRaftAndRegisterSpec() internal {
     address to = address(this);
     address from = address(0);
+
+    vm.expectEmit(true, true, true, false);
     uint256 raftTokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
@@ -146,17 +151,28 @@ contract BadgesTest is Test {
   }
 
   function testMintRaftToken() public {
-    uint256 tokenId = raft.mint(address(this), "some uri");
+    address to = address(this);
+    address from = address(0);
+
+    assertEq(raft.balanceOf(to), 0);
+    vm.expectEmit(true, true, true, false);
+    uint256 tokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, tokenId);
+
     assertEq(tokenId, 1);
-    assertEq(raft.balanceOf(address(this)), 1);
+    assertEq(raft.balanceOf(to), 1);
   }
 
   function testBalanceIncreaseAfterMint() public {
     address to = address(this);
+    address from = address(0);
+
     createRaftAndRegisterSpec();
     bytes memory signature = getSignature();
-
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId), specUri);
     assertEq(badges.ownerOf(tokenId), to);
@@ -169,13 +185,17 @@ contract BadgesTest is Test {
     address from = address(0);
 
     createRaftAndRegisterSpec();
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.take(passiveAddress, specUri, signature);
-    // vm.expectEmit(true, true, true, false);
-    // emit Transfer(from, to, tokenId);
-
+    emit Transfer(from, to, tokenId);
     assertEq(badges.balanceOf(to), 1);
-    // badges.unequip(tokenId);
-    // assertEq(badges.balanceOf(to), 0);
+    assertEq(badges.tokenURI(tokenId), specUri);
+    assertEq(badges.ownerOf(tokenId), to);
+
+    vm.expectEmit(true, true, true, false);
+    badges.unequip(tokenId);
+    emit Transfer(to, from, tokenId);
+    assertEq(badges.balanceOf(to), 0);
   }
 
   function testUnequippingAsNonAuthorizedAccount() public {
@@ -183,10 +203,10 @@ contract BadgesTest is Test {
     address from = address(0);
     bytes memory signature = getSignature();
 
-    // vm.expectEmit(true, true, true, false);
-    // emit Transfer(from, to, tokenId);
     createRaftAndRegisterSpec();
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
 
     assertEq(badges.ownerOf(tokenId), to);
     assertEq(badges.tokenURI(tokenId), specUri);
@@ -203,9 +223,9 @@ contract BadgesTest is Test {
     bytes memory signature = getSignature();
 
     createRaftAndRegisterSpec();
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.take(passiveAddress, specUri, signature);
-    // vm.expectEmit(true, true, true, false);
-    // emit Transfer(from, to, tokenId);
+    emit Transfer(from, to, tokenId);
 
     assertEq(badges.ownerOf(tokenId), to);
     assertEq(badges.tokenURI(tokenId), specUri);
@@ -242,10 +262,14 @@ contract BadgesTest is Test {
 
   function testGiveWithApprovingERC1271Contract() public {
     address to = address(approver);
+    address from = address(0);
     bytes memory signature;
     createRaftAndRegisterSpec();
 
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.give(to, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId), specUri);
     assertEq(badges.ownerOf(tokenId), to);
@@ -256,9 +280,10 @@ contract BadgesTest is Test {
     address to = address(this);
     address from = address(approver);
     bytes memory signature;
+
     createRaftAndRegisterSpec();
-    console.logBytes(signature);
     uint256 tokenId = badges.take(from, specUri, signature);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId), specUri);
     assertEq(badges.ownerOf(tokenId), to);
@@ -274,6 +299,7 @@ contract BadgesTest is Test {
 
     vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
     uint256 tokenId = badges.take(passiveAddress, specUri, signature);
+
     assertEq(0, tokenId);
   }
 
@@ -287,6 +313,7 @@ contract BadgesTest is Test {
     bytes memory signature = abi.encodePacked(r, s, v);
 
     vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+
     uint256 tokenId = badges.give(to, specUri, signature);
     assertEq(0, tokenId);
   }
@@ -322,15 +349,26 @@ contract BadgesTest is Test {
     createRaftAndRegisterSpec();
     string memory tokenURI = "some spec uri";
     address to = address(aa);
-    bytes memory signature;
+    address from = address(0);
 
+    bytes memory signature;
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.give(to, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId), tokenURI);
     assertEq(badges.ownerOf(tokenId), to);
+
+    vm.expectEmit(true, true, true, false);
     aa.unequip(address(badges), tokenId);
+    emit Transfer(to, from, tokenId);
     assertEq(badges.balanceOf(to), 0);
+
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId2 = badges.give(to, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId2), tokenURI);
     assertEq(badges.ownerOf(tokenId2), to);
@@ -339,15 +377,27 @@ contract BadgesTest is Test {
   function testTakeAndUnequipAndRetake() public {
     createRaftAndRegisterSpec();
     address to = address(this);
+    address from = address(0);
+
     bytes memory signature = getSignature();
 
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId = badges.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId), specUri);
     assertEq(badges.ownerOf(tokenId), to);
+
+    vm.expectEmit(true, true, true, false);
     badges.unequip(tokenId);
+    emit Transfer(to, from, tokenId);
     assertEq(badges.balanceOf(to), 0);
+
+    vm.expectEmit(true, true, true, false);
     uint256 tokenId2 = badges.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
     assertEq(badges.balanceOf(to), 1);
     assertEq(badges.tokenURI(tokenId2), specUri);
     assertEq(badges.ownerOf(tokenId2), to);
