@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.9;
+// import "../node_modules/hardhat/console.sol";
 
 import "./SpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
@@ -35,9 +36,9 @@ contract Badges is
   SpecDataHolder private specDataHolder;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  constructor() {
-    _disableInitializers();
-  }
+  // constructor() {
+  //   _disableInitializers();
+  // }
 
   function initialize(
     string memory name_,
@@ -74,7 +75,7 @@ contract Badges is
     address from,
     address to,
     string calldata tokenURI_
-  ) public view returns (bytes32) {
+  ) public view virtual returns (bytes32) {
     return _getHash(from, to, tokenURI_);
   }
 

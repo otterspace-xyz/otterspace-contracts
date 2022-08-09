@@ -7,7 +7,7 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgrad
 import "../lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
-// import "hardhat/console.sol";
+// import "../node_modules/hardhat/console.sol";
 
 /// @title RAFT Contract
 /// @author Otterspace
@@ -21,9 +21,9 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   mapping(uint256 => string) private _tokenURIs;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  constructor() {
-    _disableInitializers();
-  }
+  // constructor() {
+  //   _disableInitializers();
+  // }
 
   function _authorizeUpgrade(address) internal override onlyOwner {}
 

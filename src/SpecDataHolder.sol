@@ -6,7 +6,7 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initiali
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
-// import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+// import "../node_modules/hardhat/console.sol";
 
 contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   mapping(string => uint256) private _specToRaft;
@@ -15,9 +15,9 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   Raft private raft;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  constructor() {
-    _disableInitializers();
-  }
+  // constructor() {
+  //   _disableInitializers();
+  // }
 
   // The {_authorizeUpgrade} function must be overridden to include access restriction to the upgrade mechanism.
   // Not implementing this function because it is used to check who is authorized
