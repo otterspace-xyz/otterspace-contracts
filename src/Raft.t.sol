@@ -67,10 +67,66 @@ contract RaftTest is Test {
   }
 
   // TODO: set tokenURI as owner
+  function testSetTokenURI() public {
+    address to = address(this);
+    address from = address(0);
+
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, raftTokenId);
+
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+    raft.setTokenURI(raftTokenId, "some new uri");
+    assertEq(raft.tokenURI(raftTokenId), "some new uri");
+  }
+
+  function testSetTokenURIOfNonExistentToken() public {
+    address to = address(this);
+    address from = address(0);
+
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, raftTokenId);
+
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+    vm.expectRevert(bytes("_setTokenURI: URI set of nonexistent token"));
+    raft.setTokenURI(999999999, "some new uri");
+  }
 
   // TODO: set tokenURI as non-owner
+  function testSetTokenURIAsNonOwner() public {
+    address to = address(this);
+    address from = address(0);
+    address attacker = vm.addr(randomPrivateKey);
 
-  // TODO: test transferring ownership
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, raftTokenId);
 
-  // TODO: test transferring ownership as attacker
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+
+    vm.prank(attacker);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    raft.setTokenURI(raftTokenId, "some new uri");
+  }
+
+  function testTransferOwnership() public {
+    address currentOwner = raft.owner();
+    assertEq(currentOwner, address(this));
+    address newOwner = vm.addr(randomPrivateKey);
+    raft.transferOwnership(newOwner);
+    assertEq(raft.owner(), newOwner);
+  }
+
+  function testTransferOwnershipFromNonOwner() public {
+    address currentOwner = raft.owner();
+    assertEq(currentOwner, address(this));
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    raft.transferOwnership(attacker);
+  }
 }
