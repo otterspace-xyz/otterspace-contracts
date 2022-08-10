@@ -29,7 +29,7 @@ contract RaftTest is Test {
     vm.label(passiveAddress, "passive");
   }
 
-  function testCreateRaft() public {
+  function testMintRaft() public {
     address to = address(this);
     address from = address(0);
 
@@ -41,7 +41,7 @@ contract RaftTest is Test {
     assertEq(raft.balanceOf(to), 1);
   }
 
-  function testCreateRaftAsNonOwnerWhilePaused() public {
+  function testMintRaftAsNonOwnerWhilePaused() public {
     address to = address(this);
     bool paused = raft.paused();
     assertEq(paused, true);

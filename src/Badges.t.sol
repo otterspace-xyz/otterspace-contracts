@@ -123,44 +123,41 @@ contract BadgesTest is Test {
     assertTrue(badges.supportsInterface(type(IERC165).interfaceId));
   }
 
-  function testSetDataHolder() public {
+  function testSetDataHolder(address fuzzAddress) public {
     address dataHolderAddress = address(specDataHolder);
     assertEq(badges.getDataHolderAddress(), dataHolderAddress);
 
-    address newDataHolderAddress = vm.addr(randomPrivateKey);
-    badges.setDataHolder(newDataHolderAddress);
-    assertEq(badges.getDataHolderAddress(), newDataHolderAddress);
+    badges.setDataHolder(fuzzAddress);
+    assertEq(badges.getDataHolderAddress(), fuzzAddress);
   }
 
-  function testSetDataHolderAsNonOwner() public {
+  function testSetDataHolderAsNonOwner(address fuzzAddress) public {
     address dataHolderAddress = address(specDataHolder);
     assertEq(badges.getDataHolderAddress(), dataHolderAddress);
 
-    address newDataHolderAddress = vm.addr(randomPrivateKey);
-    address attacker = vm.addr(randomPrivateKey);
-    vm.prank(attacker);
+    vm.prank(fuzzAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    badges.setDataHolder(newDataHolderAddress);
+    badges.setDataHolder(fuzzAddress);
   }
 
-  function testTransferOwnership() public {
+  function testTransferOwnership(address fuzzAddress) public {
+    vm.assume(fuzzAddress != address(0));
     address currentOwner = badges.owner();
     assertEq(currentOwner, address(this));
-    address newOwner = vm.addr(randomPrivateKey);
-    badges.transferOwnership(newOwner);
-    assertEq(badges.owner(), newOwner);
+    badges.transferOwnership(fuzzAddress);
+    assertEq(badges.owner(), fuzzAddress);
   }
 
-  function testTransferOwnershipFromNonOwner() public {
+  function testTransferOwnershipFromNonOwner(address fuzzAddress) public {
     address currentOwner = badges.owner();
     assertEq(currentOwner, address(this));
-    address attacker = vm.addr(randomPrivateKey);
-    vm.prank(attacker);
+
+    vm.prank(fuzzAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    badges.transferOwnership(attacker);
+    badges.transferOwnership(fuzzAddress);
   }
 
-  function testCreateSpecAsNonRaftOwner() public {
+  function testCreateSpecAsNonRaftOwner(address fuzzAddress) public {
     address to = address(this);
     address from = address(0);
 
@@ -170,12 +167,13 @@ contract BadgesTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
-    address attacker = vm.addr(randomPrivateKey);
-    vm.prank(attacker);
+    vm.prank(fuzzAddress);
     vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
     badges.createSpecAsRaftOwner(specUri, raftTokenId);
   }
 
+  // can't test this one with fuzzing because the owner is set in the "setup"
+  // function above, so replacing "to" with "fuzzAddress" will always fail
   function testCreateSpecAsRaftOwnerTwice() public {
     address to = address(this);
     address from = address(0);
@@ -208,8 +206,9 @@ contract BadgesTest is Test {
     assertEq(badges.symbol(), "BADGES");
   }
 
-  function testIfEmptyAddressReturnsBalanceZero() public {
-    assertEq(badges.balanceOf(address(1337)), 0);
+  function testIfEmptyAddressReturnsBalanceZero(address fuzzAddress) public {
+    vm.assume(fuzzAddress != address(0));
+    assertEq(badges.balanceOf(address(fuzzAddress)), 0);
   }
 
   function testThrowOnZeroAddress() public {
@@ -219,19 +218,6 @@ contract BadgesTest is Test {
 
   function testGetOwnerOfContract() public {
     assertEq(badges.owner(), address(this));
-  }
-
-  function testMintRaftToken() public {
-    address to = address(this);
-    address from = address(0);
-
-    assertEq(raft.balanceOf(to), 0);
-    vm.expectEmit(true, true, true, false);
-    uint256 tokenId = raft.mint(to, "some uri");
-    emit Transfer(from, to, tokenId);
-
-    assertEq(tokenId, 1);
-    assertEq(raft.balanceOf(to), 1);
   }
 
   function testBalanceIncreaseAfterMint() public {
@@ -249,6 +235,7 @@ contract BadgesTest is Test {
     assertEq(badges.ownerOf(tokenId), to);
   }
 
+  // can't prank the "to" address because the owner is set in the "setup" function above
   function testBalanceIncreaseAfterMintAndUnequip() public {
     address to = address(this);
     assertEq(badges.balanceOf(to), 0);
@@ -307,12 +294,12 @@ contract BadgesTest is Test {
     nac.unequip(address(badges), 1337);
   }
 
-  function testFailRequestingNonExistentTokenURI() public view {
-    badges.tokenURI(1337);
+  function testFailRequestingNonExistentTokenURI(uint256 uri) public view {
+    badges.tokenURI(uri);
   }
 
-  function testFailGetBonderOfNonExistentTokenId() public view {
-    badges.ownerOf(1337);
+  function testFailGetBonderOfNonExistentTokenId(uint256 tokenId) public view {
+    badges.ownerOf(tokenId);
   }
 
   function testGiveWithRejectingERC1271Contract() public {
@@ -374,11 +361,10 @@ contract BadgesTest is Test {
     assertEq(0, tokenId);
   }
 
-  function testGiveWithDifferentTokenURI() public {
+  function testGiveWithDifferentTokenURI(string memory falseTokenURI) public {
     address from = address(this);
     address to = passiveAddress;
 
-    string memory falseTokenURI = "https://badstuff.com";
     bytes32 hash = badges.getHash(from, to, falseTokenURI);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
@@ -389,7 +375,7 @@ contract BadgesTest is Test {
     assertEq(0, tokenId);
   }
 
-  function testGiveWithUnauthorizedSender() public {
+  function testGiveWithUnauthorizedSender(address unauthorizedAddress) public {
     address from = address(this);
     address to = passiveAddress;
 
@@ -399,7 +385,7 @@ contract BadgesTest is Test {
     address unauthorizedTo = address(1337);
 
     vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
-    uint256 tokenId = badges.give(unauthorizedTo, specUri, signature);
+    uint256 tokenId = badges.give(unauthorizedAddress, specUri, signature);
     assertEq(0, tokenId);
   }
 
@@ -418,7 +404,6 @@ contract BadgesTest is Test {
 
   function testGiveAndUnequipAndRegive() public {
     createRaftAndRegisterSpec();
-    string memory tokenURI = "some spec uri";
     address to = address(aa);
     address from = address(0);
 
@@ -428,7 +413,7 @@ contract BadgesTest is Test {
     emit Transfer(from, to, tokenId);
 
     assertEq(badges.balanceOf(to), 1);
-    assertEq(badges.tokenURI(tokenId), tokenURI);
+    assertEq(badges.tokenURI(tokenId), specUri);
     assertEq(badges.ownerOf(tokenId), to);
 
     vm.expectEmit(true, true, true, false);
@@ -441,7 +426,7 @@ contract BadgesTest is Test {
     emit Transfer(from, to, tokenId);
 
     assertEq(badges.balanceOf(to), 1);
-    assertEq(badges.tokenURI(tokenId2), tokenURI);
+    assertEq(badges.tokenURI(tokenId2), specUri);
     assertEq(badges.ownerOf(tokenId2), to);
   }
 
