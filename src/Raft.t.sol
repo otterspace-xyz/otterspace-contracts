@@ -66,7 +66,6 @@ contract RaftTest is Test {
     raft.unpause();
   }
 
-  // TODO: set tokenURI as owner
   function testSetTokenURI() public {
     address to = address(this);
     address from = address(0);
@@ -95,7 +94,6 @@ contract RaftTest is Test {
     raft.setTokenURI(999999999, "some new uri");
   }
 
-  // TODO: set tokenURI as non-owner
   function testSetTokenURIAsNonOwner() public {
     address to = address(this);
     address from = address(0);
