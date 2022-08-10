@@ -25,8 +25,6 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   //   _disableInitializers();
   // }
 
-  function _authorizeUpgrade(address) internal override onlyOwner {}
-
   function initialize(
     address nextOwner,
     string memory name_,
@@ -72,4 +70,6 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     return _tokenURIs[tokenId];
   }
+
+  function _authorizeUpgrade(address) internal override onlyOwner {}
 }
