@@ -134,6 +134,7 @@ contract BadgesTest is Test {
   function testSetDataHolderAsNonOwner(address fuzzAddress) public {
     address dataHolderAddress = address(specDataHolder);
     assertEq(badges.getDataHolderAddress(), dataHolderAddress);
+    vm.assume(fuzzAddress != address(0));
 
     vm.prank(fuzzAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
@@ -151,7 +152,7 @@ contract BadgesTest is Test {
   function testTransferOwnershipFromNonOwner(address fuzzAddress) public {
     address currentOwner = badges.owner();
     assertEq(currentOwner, address(this));
-
+    vm.assume(fuzzAddress != address(0));
     vm.prank(fuzzAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
     badges.transferOwnership(fuzzAddress);
@@ -382,11 +383,15 @@ contract BadgesTest is Test {
     bytes32 hash = badges.getHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
-    address unauthorizedTo = address(1337);
-
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
-    uint256 tokenId = badges.give(unauthorizedAddress, specUri, signature);
-    assertEq(0, tokenId);
+    if (unauthorizedAddress == address(this)) {
+      vm.expectRevert(bytes("give: cannot give from self"));
+      uint256 tokenId = badges.give(unauthorizedAddress, specUri, signature);
+      assertEq(0, tokenId);
+    } else {
+      vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+      uint256 tokenId = badges.give(unauthorizedAddress, specUri, signature);
+      assertEq(0, tokenId);
+    }
   }
 
   function testTakeWithUnauthorizedSender() public {
