@@ -67,7 +67,7 @@ contract Badges is
     address to,
     string calldata uri,
     bytes calldata signature
-  ) external virtual returns (uint256) {
+  ) external virtual override returns (uint256) {
     require(msg.sender != to, "give: cannot give from self");
     uint256 tokenId = _safeCheckAgreement(msg.sender, to, uri, signature);
     _mint(to, tokenId, uri);
@@ -79,7 +79,7 @@ contract Badges is
     address from,
     string calldata uri,
     bytes calldata signature
-  ) external virtual returns (uint256) {
+  ) external virtual override returns (uint256) {
     require(msg.sender != from, "take: cannot take from self");
     uint256 tokenId = _safeCheckAgreement(msg.sender, from, uri, signature);
     _mint(msg.sender, tokenId, uri);
@@ -140,7 +140,7 @@ contract Badges is
     return _balances[owner_];
   }
 
-  function ownerOf(uint256 tokenId_) public view virtual returns (address) {
+  function ownerOf(uint256 tokenId_) public view virtual override returns (address) {
     address owner_ = _owners[tokenId_];
     require(owner_ != address(0), "ownerOf: token doesn't exist");
     return owner_;
