@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity 0.8.15;
+pragma solidity 0.8.9;
+// import "../node_modules/hardhat/console.sol";
 
 import "./SpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
@@ -35,9 +36,9 @@ contract Badges is
   SpecDataHolder private specDataHolder;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  constructor() {
-    _disableInitializers();
-  }
+  // constructor() {
+  //   _disableInitializers();
+  // }
 
   function initialize(
     string memory name_,
@@ -56,46 +57,38 @@ contract Badges is
     specDataHolder = SpecDataHolder(specDataHolderAddress);
   }
 
-  // Not implementing this function because it is used to check who is authorized
-  // to update the contract, we're using onlyOwner for this purpose.
-  function _authorizeUpgrade(address) internal override onlyOwner {}
-
   // The owner can call this once only. They should call this when the contract is first deployed.
   function setDataHolder(address _dataHolder) external onlyOwner {
     // require(address(dataHolder) == address(0x0));
     specDataHolder = SpecDataHolder(_dataHolder);
   }
 
+  function give(
+    address to,
+    string calldata uri,
+    bytes calldata signature
+  ) external virtual returns (uint256) {
+    require(msg.sender != to, "give: cannot give from self");
+    uint256 tokenId = _safeCheckAgreement(msg.sender, to, uri, signature);
+    _mint(to, tokenId, uri);
+    _usedHashes.set(tokenId);
+    return tokenId;
+  }
+
+  function take(
+    address from,
+    string calldata uri,
+    bytes calldata signature
+  ) external virtual returns (uint256) {
+    require(msg.sender != from, "take: cannot take from self");
+    uint256 tokenId = _safeCheckAgreement(msg.sender, from, uri, signature);
+    _mint(msg.sender, tokenId, uri);
+    _usedHashes.set(tokenId);
+    return tokenId;
+  }
+
   function getDataHolderAddress() public view returns (address) {
     return address(specDataHolder);
-  }
-
-  function getHash(
-    address from,
-    address to,
-    string calldata tokenURI_
-  ) public view returns (bytes32) {
-    return _getHash(from, to, tokenURI_);
-  }
-
-  function _mint(
-    address to,
-    uint256 tokenId,
-    string memory uri
-  ) internal returns (uint256) {
-    uint256 raftTokenId = specDataHolder.getRaftTokenId(uri);
-
-    // only registered specs can be used for minting
-    require(raftTokenId != 0, "_mint: spec is not registered");
-
-    require(!_exists(tokenId), "mint: tokenID exists");
-    _balances[to] += 1;
-    _owners[tokenId] = to;
-    _tokenURIs[tokenId] = uri;
-    emit Transfer(address(0), to, tokenId);
-
-    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
-    return tokenId;
   }
 
   function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
@@ -106,6 +99,14 @@ contract Badges is
     specDataHolder.setSpecToRaft(specUri, raftTokenId);
 
     emit SpecCreated(msg.sender, specUri, raftTokenId, specDataHolder.getRaftAddress());
+  }
+
+  function getHash(
+    address from,
+    address to,
+    string calldata tokenURI_
+  ) public view virtual returns (bytes32) {
+    return _getHash(from, to, tokenURI_);
   }
 
   function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
@@ -145,27 +146,23 @@ contract Badges is
     return owner_;
   }
 
-  function give(
+  function _mint(
     address to,
-    string calldata uri,
-    bytes calldata signature
-  ) external virtual returns (uint256) {
-    require(msg.sender != to, "give: cannot give from self");
-    uint256 tokenId = _safeCheckAgreement(msg.sender, to, uri, signature);
-    _mint(to, tokenId, uri);
-    _usedHashes.set(tokenId);
-    return tokenId;
-  }
+    uint256 tokenId,
+    string memory uri
+  ) internal returns (uint256) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(uri);
 
-  function take(
-    address from,
-    string calldata uri,
-    bytes calldata signature
-  ) external virtual returns (uint256) {
-    require(msg.sender != from, "take: cannot take from self");
-    uint256 tokenId = _safeCheckAgreement(msg.sender, from, uri, signature);
-    _mint(msg.sender, tokenId, uri);
-    _usedHashes.set(tokenId);
+    // only registered specs can be used for minting
+    require(raftTokenId != 0, "_mint: spec is not registered");
+
+    require(!_exists(tokenId), "mint: tokenID exists");
+    _balances[to] += 1;
+    _owners[tokenId] = to;
+    _tokenURIs[tokenId] = uri;
+    emit Transfer(address(0), to, tokenId);
+
+    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
     return tokenId;
   }
 
@@ -208,4 +205,8 @@ contract Badges is
 
     emit Transfer(owner_, address(0), tokenId);
   }
+
+  // Not implementing this function because it is used to check who is authorized
+  // to update the contract, we're using onlyOwner for this purpose.
+  function _authorizeUpgrade(address) internal override onlyOwner {}
 }
