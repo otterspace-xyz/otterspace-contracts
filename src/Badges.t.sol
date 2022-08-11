@@ -131,14 +131,13 @@ contract BadgesTest is Test {
     assertEq(badges.getDataHolderAddress(), fuzzAddress);
   }
 
-  function testSetDataHolderAsNonOwner(address fuzzAddress) public {
+  function testSetDataHolderAsNonOwner() public {
     address dataHolderAddress = address(specDataHolder);
     assertEq(badges.getDataHolderAddress(), dataHolderAddress);
-    vm.assume(fuzzAddress != address(0));
-
-    vm.prank(fuzzAddress);
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(randomAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    badges.setDataHolder(fuzzAddress);
+    badges.setDataHolder(randomAddress);
   }
 
   function testTransferOwnership(address fuzzAddress) public {
@@ -149,13 +148,13 @@ contract BadgesTest is Test {
     assertEq(badges.owner(), fuzzAddress);
   }
 
-  function testTransferOwnershipFromNonOwner(address fuzzAddress) public {
+  function testTransferOwnershipFromNonOwner() public {
     address currentOwner = badges.owner();
     assertEq(currentOwner, address(this));
-    vm.assume(fuzzAddress != address(0));
-    vm.prank(fuzzAddress);
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(randomAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    badges.transferOwnership(fuzzAddress);
+    badges.transferOwnership(randomAddress);
   }
 
   function testCreateSpecAsNonRaftOwner(address fuzzAddress) public {
@@ -376,22 +375,17 @@ contract BadgesTest is Test {
     assertEq(0, tokenId);
   }
 
-  function testGiveWithUnauthorizedSender(address unauthorizedAddress) public {
+  function testGiveWithUnauthorizedSender() public {
     address from = address(this);
     address to = passiveAddress;
-
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(randomAddress);
     bytes32 hash = badges.getHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
-    if (unauthorizedAddress == address(this)) {
-      vm.expectRevert(bytes("give: cannot give from self"));
-      uint256 tokenId = badges.give(unauthorizedAddress, specUri, signature);
-      assertEq(0, tokenId);
-    } else {
-      vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
-      uint256 tokenId = badges.give(unauthorizedAddress, specUri, signature);
-      assertEq(0, tokenId);
-    }
+    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    uint256 tokenId = badges.give(randomAddress, specUri, signature);
+    assertEq(0, tokenId);
   }
 
   function testTakeWithUnauthorizedSender() public {
