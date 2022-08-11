@@ -17,14 +17,6 @@ contract ERC1271Mock {
   constructor(bool pass_) {
     pass = pass_;
   }
-
-  function isValidSignature(bytes32 hash, bytes memory signature) public view returns (bytes4) {
-    if (pass) {
-      return MAGICVALUE;
-    } else {
-      revert("permit not granted");
-    }
-  }
 }
 
 contract AccountAbstraction is ERC1271Mock {

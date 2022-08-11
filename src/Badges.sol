@@ -46,7 +46,7 @@ contract Badges is
     string memory version_,
     address nextOwner,
     address specDataHolderAddress
-  ) external initializer {
+  ) public initializer {
     _name = name_;
     _symbol = symbol_;
     __ERC165_init();
@@ -87,7 +87,7 @@ contract Badges is
     return tokenId;
   }
 
-  function getDataHolderAddress() public view returns (address) {
+  function getDataHolderAddress() external view returns (address) {
     return address(specDataHolder);
   }
 
@@ -105,7 +105,7 @@ contract Badges is
     address from,
     address to,
     string calldata tokenURI_
-  ) public view virtual returns (bytes32) {
+  ) external view virtual returns (bytes32) {
     return _getHash(from, to, tokenURI_);
   }
 
@@ -116,26 +116,26 @@ contract Badges is
       super.supportsInterface(interfaceId);
   }
 
-  function name() public view virtual override returns (string memory) {
+  function name() external view virtual override returns (string memory) {
     return _name;
   }
 
-  function symbol() public view virtual override returns (string memory) {
+  function symbol() external view virtual override returns (string memory) {
     return _symbol;
   }
 
-  function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+  function tokenURI(uint256 tokenId) external view virtual override returns (string memory) {
     require(_exists(tokenId), "tokenURI: token doesn't exist");
     return _tokenURIs[tokenId];
   }
 
-  function unequip(uint256 tokenId) public virtual override {
+  function unequip(uint256 tokenId) external virtual override {
     require(msg.sender == ownerOf(tokenId), "unequip: sender must be owner");
     _usedHashes.unset(tokenId);
     _burn(tokenId);
   }
 
-  function balanceOf(address owner_) public view virtual override returns (uint256) {
+  function balanceOf(address owner_) external view virtual override returns (uint256) {
     require(owner_ != address(0), "balanceOf: address zero is not a valid owner_");
     return _balances[owner_];
   }

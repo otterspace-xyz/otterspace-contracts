@@ -29,7 +29,7 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
     address nextOwner,
     string memory name_,
     string memory symbol_
-  ) external initializer {
+  ) public initializer {
     __ERC721Enumerable_init();
     __ERC721_init(name_, symbol_);
     __UUPSUpgradeable_init();
