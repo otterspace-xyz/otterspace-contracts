@@ -119,106 +119,106 @@ contract BadgesTest is Test {
     return signature;
   }
 
-  // function testIERC165() public {
-  //   assertTrue(badges.supportsInterface(type(IERC165).interfaceId));
-  // }
+  function testIERC165() public {
+    assertTrue(badges.supportsInterface(type(IERC165).interfaceId));
+  }
 
-  // function testSetDataHolder(address fuzzAddress) public {
-  //   address dataHolderAddress = address(specDataHolder);
-  //   assertEq(badges.getDataHolderAddress(), dataHolderAddress);
+  function testSetDataHolder(address fuzzAddress) public {
+    address dataHolderAddress = address(specDataHolder);
+    assertEq(badges.getDataHolderAddress(), dataHolderAddress);
 
-  //   badges.setDataHolder(fuzzAddress);
-  //   assertEq(badges.getDataHolderAddress(), fuzzAddress);
-  // }
+    badges.setDataHolder(fuzzAddress);
+    assertEq(badges.getDataHolderAddress(), fuzzAddress);
+  }
 
-  // function testSetDataHolderAsNonOwner() public {
-  //   address dataHolderAddress = address(specDataHolder);
-  //   assertEq(badges.getDataHolderAddress(), dataHolderAddress);
-  //   address randomAddress = vm.addr(randomPrivateKey);
-  //   vm.prank(randomAddress);
-  //   vm.expectRevert(bytes("Ownable: caller is not the owner"));
-  //   badges.setDataHolder(randomAddress);
-  // }
+  function testSetDataHolderAsNonOwner() public {
+    address dataHolderAddress = address(specDataHolder);
+    assertEq(badges.getDataHolderAddress(), dataHolderAddress);
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(randomAddress);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    badges.setDataHolder(randomAddress);
+  }
 
-  // function testTransferOwnership(address fuzzAddress) public {
-  //   vm.assume(fuzzAddress != address(0));
-  //   address currentOwner = badges.owner();
-  //   assertEq(currentOwner, address(this));
-  //   badges.transferOwnership(fuzzAddress);
-  //   assertEq(badges.owner(), fuzzAddress);
-  // }
+  function testTransferOwnership(address fuzzAddress) public {
+    vm.assume(fuzzAddress != address(0));
+    address currentOwner = badges.owner();
+    assertEq(currentOwner, address(this));
+    badges.transferOwnership(fuzzAddress);
+    assertEq(badges.owner(), fuzzAddress);
+  }
 
-  // function testTransferOwnershipFromNonOwner() public {
-  //   address currentOwner = badges.owner();
-  //   assertEq(currentOwner, address(this));
-  //   address randomAddress = vm.addr(randomPrivateKey);
-  //   vm.prank(randomAddress);
-  //   vm.expectRevert(bytes("Ownable: caller is not the owner"));
-  //   badges.transferOwnership(randomAddress);
-  // }
+  function testTransferOwnershipFromNonOwner() public {
+    address currentOwner = badges.owner();
+    assertEq(currentOwner, address(this));
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(randomAddress);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    badges.transferOwnership(randomAddress);
+  }
 
-  // function testCreateSpecAsNonRaftOwner(address fuzzAddress) public {
-  //   address to = address(this);
-  //   address from = address(0);
+  function testCreateSpecAsNonRaftOwner(address fuzzAddress) public {
+    address to = address(this);
+    address from = address(0);
 
-  //   vm.expectEmit(true, true, true, false);
-  //   uint256 raftTokenId = raft.mint(to, "some uri");
-  //   emit Transfer(from, to, raftTokenId);
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some uri");
+    emit Transfer(from, to, raftTokenId);
 
-  //   assertEq(raftTokenId, 1);
-  //   assertEq(raft.balanceOf(to), 1);
-  //   vm.prank(fuzzAddress);
-  //   vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
-  //   badges.createSpecAsRaftOwner(specUri, raftTokenId);
-  // }
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+    vm.prank(fuzzAddress);
+    vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
+    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+  }
 
-  // // can't test this one with fuzzing because the owner is set in the "setup"
-  // // function above, so replacing "to" with "fuzzAddress" will always fail
-  // function testCreateSpecAsRaftOwnerTwice() public {
-  //   address to = address(this);
-  //   address from = address(0);
+  // can't test this one with fuzzing because the owner is set in the "setup"
+  // function above, so replacing "to" with "fuzzAddress" will always fail
+  function testCreateSpecAsRaftOwnerTwice() public {
+    address to = address(this);
+    address from = address(0);
 
-  //   vm.expectEmit(true, true, true, false);
-  //   uint256 raftTokenId = raft.mint(to, "some token uri");
-  //   emit Transfer(from, to, raftTokenId);
-  //   assertEq(raftTokenId, 1);
-  //   assertEq(raft.balanceOf(to), 1);
-  //   badges.createSpecAsRaftOwner(specUri, raftTokenId);
-  //   vm.expectRevert(bytes("createSpecAsRaftOwner: spec already registered"));
-  //   badges.createSpecAsRaftOwner(specUri, raftTokenId);
-  // }
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raft.mint(to, "some token uri");
+    emit Transfer(from, to, raftTokenId);
+    assertEq(raftTokenId, 1);
+    assertEq(raft.balanceOf(to), 1);
+    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpecAsRaftOwner: spec already registered"));
+    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+  }
 
-  // // TODO: write test for a non-owner calling transferOwnership
-  // // tricky because we need to call a proxy to do this
+  // TODO: write test for a non-owner calling transferOwnership
+  // tricky because we need to call a proxy to do this
 
-  // function testIERC721Metadata() public {
-  //   assertTrue(badges.supportsInterface(type(IERC721Metadata).interfaceId));
-  // }
+  function testIERC721Metadata() public {
+    assertTrue(badges.supportsInterface(type(IERC721Metadata).interfaceId));
+  }
 
-  // function testIERC4973() public {
-  //   bytes4 interfaceId = type(IERC4973).interfaceId;
-  //   assertEq(interfaceId, bytes4(0x8d7bac72));
-  //   assertTrue(badges.supportsInterface(interfaceId));
-  // }
+  function testIERC4973() public {
+    bytes4 interfaceId = type(IERC4973).interfaceId;
+    assertEq(interfaceId, bytes4(0x8d7bac72));
+    assertTrue(badges.supportsInterface(interfaceId));
+  }
 
-  // function testCheckMetadata() public {
-  //   assertEq(badges.name(), "Badges");
-  //   assertEq(badges.symbol(), "BADGES");
-  // }
+  function testCheckMetadata() public {
+    assertEq(badges.name(), "Badges");
+    assertEq(badges.symbol(), "BADGES");
+  }
 
-  // function testIfEmptyAddressReturnsBalanceZero(address fuzzAddress) public {
-  //   vm.assume(fuzzAddress != address(0));
-  //   assertEq(badges.balanceOf(address(fuzzAddress)), 0);
-  // }
+  function testIfEmptyAddressReturnsBalanceZero(address fuzzAddress) public {
+    vm.assume(fuzzAddress != address(0));
+    assertEq(badges.balanceOf(address(fuzzAddress)), 0);
+  }
 
-  // function testThrowOnZeroAddress() public {
-  //   vm.expectRevert(bytes("balanceOf: address zero is not a valid owner_"));
-  //   badges.balanceOf(address(0));
-  // }
+  function testThrowOnZeroAddress() public {
+    vm.expectRevert(bytes("balanceOf: address zero is not a valid owner_"));
+    badges.balanceOf(address(0));
+  }
 
-  // function testGetOwnerOfContract() public {
-  //   assertEq(badges.owner(), address(this));
-  // }
+  function testGetOwnerOfContract() public {
+    assertEq(badges.owner(), address(this));
+  }
 
   function testBalanceIncreaseAfterMint() public {
     address to = address(this);
