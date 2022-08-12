@@ -13,6 +13,12 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   mapping(uint256 => uint256) private _badgeToRaft;
 
   Raft private raft;
+  address badgesAddress;
+
+  modifier onlyBadgesContract() {
+    require(msg.sender == badgesAddress, "unauthorized");
+    _;
+  }
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   // constructor() {
@@ -32,6 +38,10 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     __UUPSUpgradeable_init();
   }
 
+  function setBadgesAddress(address _badgesAddress) public {
+    badgesAddress = _badgesAddress;
+  }
+
   function setRaft(address _raftAddress) public onlyOwner {
     raft = Raft(_raftAddress);
   }
@@ -44,7 +54,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return _specToRaft[_specUri];
   }
 
-  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) public {
+  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) public onlyBadgesContract {
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
