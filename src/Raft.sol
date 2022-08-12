@@ -40,7 +40,7 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
     _pause();
   }
 
-  function mint(address recipient, string memory uri) external returns (uint256) {
+  function mint(address recipient, string memory uri) public returns (uint256) {
     // owners can always mint tokens
     // non-owners can only mint when the contract is unpaused
     require(msg.sender == owner() || !paused(), "mint: unauthorized to mint");
@@ -53,11 +53,11 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
     return newItemId;
   }
 
-  function pause() external onlyOwner {
+  function pause() public onlyOwner {
     _pause();
   }
 
-  function unpause() external onlyOwner {
+  function unpause() public onlyOwner {
     _unpause();
   }
 
