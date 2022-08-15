@@ -6,7 +6,7 @@ import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initiali
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
 
-import "../node_modules/hardhat/console.sol";
+// import "../node_modules/hardhat/console.sol";
 
 contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   mapping(string => uint256) private _specToRaft;
@@ -39,7 +39,6 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   function setBadgesAddress(address _badgesAddress) public onlyOwner {
-    console.log("_badgesAddress === ", _badgesAddress);
     badgesAddress = _badgesAddress;
   }
 
