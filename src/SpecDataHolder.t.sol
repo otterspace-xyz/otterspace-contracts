@@ -72,13 +72,27 @@ contract SpecDataHolderTest is Test {
     assertEq(specDataHolder.getRaftAddress(), address(raft));
   }
 
-  // getRaftTokenId
-
   function testGetRaftTokenId() public {
     uint256 raftTokenId = createRaft();
     badges.createSpecAsRaftOwner(specUri, raftTokenId);
     assertEq(specDataHolder.specIsRegistered(specUri), true);
     assertEq(specDataHolder.getRaftTokenId(specUri), 1);
+  }
+
+  function testSetBadgesAddress() public {
+    assertEq(specDataHolder.getBadgesAddress(), address(0));
+    address randomAddress = vm.addr(randomPrivateKey);
+
+    specDataHolder.setBadgesAddress(randomAddress);
+    assertEq(specDataHolder.getBadgesAddress(), randomAddress);
+  }
+
+  function testSetBadgesAddressAsNonOwner() public {
+    assertEq(specDataHolder.getBadgesAddress(), address(0));
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(randomAddress);
+    vm.expectRevert(bytes("Ownable: caller is not the owner"));
+    specDataHolder.setBadgesAddress(randomAddress);
   }
 
   // setBadgeToRaft
