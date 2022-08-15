@@ -31,6 +31,7 @@ contract BadgesTest is Test {
     badges.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolder));
     raft.initialize(to, "Raft", "RAFT");
     specDataHolder.initialize(address(raft), to);
+    specDataHolder.setBadgesAddress(address(badges));
     specUri = "some spec uri";
 
     vm.label(passiveAddress, "passive");
