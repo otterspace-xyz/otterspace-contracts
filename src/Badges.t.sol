@@ -140,7 +140,7 @@ contract BadgesTest is Test {
 
   // CREATE SPEC TESTS
 
-  function testCreateSpecAsNonRaftOwner(address fuzzAddress) public {
+  function testCreateSpecAsNonRaftOwner() public {
     address to = address(this);
     address from = address(0);
 
@@ -150,7 +150,10 @@ contract BadgesTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
-    vm.prank(fuzzAddress);
+    address randomAddress = vm.addr(randomPrivateKey);
+
+    vm.prank(randomAddress);
+
     vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
     badges.createSpecAsRaftOwner(specUri, raftTokenId);
   }
