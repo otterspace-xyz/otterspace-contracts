@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity ^0.8.6;
+pragma solidity 0.8.7;
 
 import "forge-std/Test.sol";
 import { IERC165 } from "./IERC165.sol";

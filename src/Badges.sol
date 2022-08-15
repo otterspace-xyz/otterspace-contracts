@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity 0.8.9;
+pragma solidity 0.8.7;
 // import "../node_modules/hardhat/console.sol";
 
 import "./SpecDataHolder.sol";
@@ -46,7 +46,7 @@ contract Badges is
     string memory version_,
     address nextOwner,
     address specDataHolderAddress
-  ) external initializer {
+  ) public initializer {
     _name = name_;
     _symbol = symbol_;
     __ERC165_init();
@@ -67,7 +67,7 @@ contract Badges is
     address to,
     string calldata uri,
     bytes calldata signature
-  ) external virtual returns (uint256) {
+  ) external virtual override returns (uint256) {
     require(msg.sender != to, "give: cannot give from self");
     uint256 tokenId = _safeCheckAgreement(msg.sender, to, uri, signature);
     _mint(to, tokenId, uri);
@@ -79,7 +79,7 @@ contract Badges is
     address from,
     string calldata uri,
     bytes calldata signature
-  ) external virtual returns (uint256) {
+  ) external virtual override returns (uint256) {
     require(msg.sender != from, "take: cannot take from self");
     uint256 tokenId = _safeCheckAgreement(msg.sender, from, uri, signature);
     _mint(msg.sender, tokenId, uri);
@@ -87,7 +87,7 @@ contract Badges is
     return tokenId;
   }
 
-  function getDataHolderAddress() public view returns (address) {
+  function getDataHolderAddress() external view returns (address) {
     return address(specDataHolder);
   }
 
@@ -105,7 +105,7 @@ contract Badges is
     address from,
     address to,
     string calldata tokenURI_
-  ) public view virtual returns (bytes32) {
+  ) external view virtual returns (bytes32) {
     return _getHash(from, to, tokenURI_);
   }
 
@@ -116,31 +116,31 @@ contract Badges is
       super.supportsInterface(interfaceId);
   }
 
-  function name() public view virtual override returns (string memory) {
+  function name() external view virtual override returns (string memory) {
     return _name;
   }
 
-  function symbol() public view virtual override returns (string memory) {
+  function symbol() external view virtual override returns (string memory) {
     return _symbol;
   }
 
-  function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+  function tokenURI(uint256 tokenId) external view virtual override returns (string memory) {
     require(_exists(tokenId), "tokenURI: token doesn't exist");
     return _tokenURIs[tokenId];
   }
 
-  function unequip(uint256 tokenId) public virtual override {
+  function unequip(uint256 tokenId) external virtual override {
     require(msg.sender == ownerOf(tokenId), "unequip: sender must be owner");
     _usedHashes.unset(tokenId);
     _burn(tokenId);
   }
 
-  function balanceOf(address owner_) public view virtual override returns (uint256) {
+  function balanceOf(address owner_) external view virtual override returns (uint256) {
     require(owner_ != address(0), "balanceOf: address zero is not a valid owner_");
     return _balances[owner_];
   }
 
-  function ownerOf(uint256 tokenId_) public view virtual returns (address) {
+  function ownerOf(uint256 tokenId_) public view virtual override returns (address) {
     address owner_ = _owners[tokenId_];
     require(owner_ != address(0), "ownerOf: token doesn't exist");
     return owner_;

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity 0.8.9;
+pragma solidity 0.8.7;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import { Raft } from "./Raft.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
@@ -31,7 +31,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   function _authorizeUpgrade(address) internal override onlyOwner {}
 
   // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
-  function initialize(address _raftAddress, address nextOwner) external initializer {
+  function initialize(address _raftAddress, address nextOwner) public initializer {
     __Ownable_init();
     setRaft(_raftAddress);
     transferOwnership(nextOwner);
