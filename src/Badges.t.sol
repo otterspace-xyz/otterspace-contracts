@@ -28,6 +28,7 @@ contract BadgesTest is Test {
     badges = new Badges();
     specDataHolder = new SpecDataHolder();
     raft = new Raft();
+
     badges.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolder));
     raft.initialize(to, "Raft", "RAFT");
     specDataHolder.initialize(address(raft), to);

@@ -36,9 +36,9 @@ contract Badges is
   SpecDataHolder private specDataHolder;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  // constructor() {
-  //   _disableInitializers();
-  // }
+  constructor() {
+    _disableInitializers();
+  }
 
   function initialize(
     string memory name_,
