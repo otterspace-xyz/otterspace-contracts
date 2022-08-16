@@ -610,13 +610,13 @@
         21646
       ],
       "Raft": [
-        29676
+        29462
       ],
       "SignatureCheckerUpgradeable": [
         25001
       ],
       "SpecDataHolder": [
-        30420
+        30206
       ],
       "StorageSlotUpgradeable": [
         24285
@@ -649,7 +649,7 @@
         "file": "./SpecDataHolder.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 27189,
-        "sourceUnit": 30421,
+        "sourceUnit": 30207,
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1278,7 +1278,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+              "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
               "typeString": "contract SpecDataHolder"
             },
             "typeName": {
@@ -1288,13 +1288,13 @@
                 "id": 26587,
                 "name": "SpecDataHolder",
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 30420,
+                "referencedDeclaration": 30206,
                 "src": "1535:14:42"
               },
-              "referencedDeclaration": 30420,
+              "referencedDeclaration": 30206,
               "src": "1535:14:42",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                 "typeString": "contract SpecDataHolder"
               }
             },
@@ -1711,7 +1711,7 @@
                       "referencedDeclaration": 26589,
                       "src": "2051:14:42",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                        "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                         "typeString": "contract SpecDataHolder"
                       }
                     },
@@ -1743,10 +1743,10 @@
                         "name": "SpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 30420,
+                        "referencedDeclaration": 30206,
                         "src": "2068:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_SpecDataHolder_$30420_$",
+                          "typeIdentifier": "t_type$_t_contract$_SpecDataHolder_$30206_$",
                           "typeString": "type(contract SpecDataHolder)"
                         }
                       },
@@ -1761,13 +1761,13 @@
                       "src": "2068:37:42",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                        "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                         "typeString": "contract SpecDataHolder"
                       }
                     },
                     "src": "2051:54:42",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                      "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                       "typeString": "contract SpecDataHolder"
                     }
                   },
@@ -1976,7 +1976,7 @@
                       "referencedDeclaration": 26589,
                       "src": "2335:14:42",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                        "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                         "typeString": "contract SpecDataHolder"
                       }
                     },
@@ -2008,10 +2008,10 @@
                         "name": "SpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 30420,
+                        "referencedDeclaration": 30206,
                         "src": "2352:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_SpecDataHolder_$30420_$",
+                          "typeIdentifier": "t_type$_t_contract$_SpecDataHolder_$30206_$",
                           "typeString": "type(contract SpecDataHolder)"
                         }
                       },
@@ -2026,13 +2026,13 @@
                       "src": "2352:27:42",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                        "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                         "typeString": "contract SpecDataHolder"
                       }
                     },
                     "src": "2335:44:42",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                      "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                       "typeString": "contract SpecDataHolder"
                     }
                   },
@@ -3326,7 +3326,7 @@
                         "referencedDeclaration": 26589,
                         "src": "3203:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                          "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                           "typeString": "contract SpecDataHolder"
                         }
                       }
@@ -3334,7 +3334,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                          "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                           "typeString": "contract SpecDataHolder"
                         }
                       ],
@@ -3505,7 +3505,7 @@
                         "referencedDeclaration": 26589,
                         "src": "3337:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                          "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                           "typeString": "contract SpecDataHolder"
                         }
                       },
@@ -3516,7 +3516,7 @@
                       "lValueRequested": false,
                       "memberName": "getRaftOwner",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30419,
+                      "referencedDeclaration": 30205,
                       "src": "3337:27:42",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -3704,7 +3704,7 @@
                               "referencedDeclaration": 26589,
                               "src": "3469:14:42",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                                "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                                 "typeString": "contract SpecDataHolder"
                               }
                             },
@@ -3715,7 +3715,7 @@
                             "lValueRequested": false,
                             "memberName": "specIsRegistered",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 30392,
+                            "referencedDeclaration": 30178,
                             "src": "3469:31:42",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_bool_$",
@@ -3850,7 +3850,7 @@
                         "referencedDeclaration": 26589,
                         "src": "3567:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                          "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                           "typeString": "contract SpecDataHolder"
                         }
                       },
@@ -3861,7 +3861,7 @@
                       "lValueRequested": false,
                       "memberName": "setSpecToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30406,
+                      "referencedDeclaration": 30192,
                       "src": "3567:28:42",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_uint256_$returns$__$",
@@ -3952,7 +3952,7 @@
                             "referencedDeclaration": 26589,
                             "src": "3675:14:42",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                              "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                               "typeString": "contract SpecDataHolder"
                             }
                           },
@@ -3963,7 +3963,7 @@
                           "lValueRequested": false,
                           "memberName": "getRaftAddress",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 30350,
+                          "referencedDeclaration": 30136,
                           "src": "3675:29:42",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -6232,7 +6232,7 @@
                         "referencedDeclaration": 26589,
                         "src": "5309:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                          "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                           "typeString": "contract SpecDataHolder"
                         }
                       },
@@ -6243,7 +6243,7 @@
                       "lValueRequested": false,
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30362,
+                      "referencedDeclaration": 30148,
                       "src": "5309:29:42",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -6893,7 +6893,7 @@
                         "referencedDeclaration": 26589,
                         "src": "5651:14:42",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_SpecDataHolder_$30420",
+                          "typeIdentifier": "t_contract$_SpecDataHolder_$30206",
                           "typeString": "contract SpecDataHolder"
                         }
                       },
@@ -6904,7 +6904,7 @@
                       "lValueRequested": false,
                       "memberName": "setBadgeToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 30378,
+                      "referencedDeclaration": 30164,
                       "src": "5651:29:42",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",

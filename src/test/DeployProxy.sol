@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 // Import OZ Proxy contracts
 import { ERC1967Proxy } from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import { TransparentUpgradeableProxy } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import { console } from "forge-std/console.sol";
 
 import { Vm } from "forge-std/Vm.sol";
 
@@ -64,6 +65,7 @@ contract DeployProxy {
     address admin,
     bytes memory data
   ) public returns (address) {
+    console.logBytes(data);
     uups = new TransparentUpgradeableProxy(implementation, admin, data);
     proxyAddress = address(uups);
     vm.label(proxyAddress, "UUPS Proxy");
