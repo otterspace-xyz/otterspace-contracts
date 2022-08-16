@@ -31,6 +31,7 @@ contract BadgesTest is Test {
     badges.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolder));
     raft.initialize(to, "Raft", "RAFT");
     specDataHolder.initialize(address(raft), to);
+    specDataHolder.setBadgesAddress(address(badges));
     specUri = "some spec uri";
 
     vm.label(passiveAddress, "passive");
@@ -139,7 +140,7 @@ contract BadgesTest is Test {
 
   // CREATE SPEC TESTS
 
-  function testCreateSpecAsNonRaftOwner(address fuzzAddress) public {
+  function testCreateSpecAsNonRaftOwner() public {
     address to = address(this);
     address from = address(0);
 
@@ -149,7 +150,10 @@ contract BadgesTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
-    vm.prank(fuzzAddress);
+    address randomAddress = vm.addr(randomPrivateKey);
+
+    vm.prank(randomAddress);
+
     vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
     badges.createSpecAsRaftOwner(specUri, raftTokenId);
   }

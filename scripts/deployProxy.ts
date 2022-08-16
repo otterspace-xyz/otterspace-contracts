@@ -32,6 +32,7 @@ async function main() {
     }
   )
   await badgesContract.deployed()
+  await specDataHolder.setBadgesAddress(badgesContract.address)
   console.log('badges contract deployed to address = ', badgesContract.address)
   console.log("All contracts are deployed. Next, go verify them! Here's the code to do that")
   console.log('npx hardhat verify --network ${networkName} ${contractAddress}')
