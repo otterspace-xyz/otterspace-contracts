@@ -58,7 +58,7 @@ contract Badges is
   }
 
   // The owner can call this once only. They should call this when the contract is first deployed.
-  function setDataHolder(address _dataHolder) external onlyOwner {
+  function setDataHolder(address _dataHolder) external virtual onlyOwner {
     // require(address(dataHolder) == address(0x0));
     specDataHolder = SpecDataHolder(_dataHolder);
   }
@@ -91,7 +91,7 @@ contract Badges is
     return address(specDataHolder);
   }
 
-  function createSpecAsRaftOwner(string memory specUri, uint256 raftTokenId) external {
+  function createSpec(string memory specUri, uint256 raftTokenId) external virtual {
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == msg.sender, "createSpecAsRaftOwner: unauthorized");
     require(!specDataHolder.specIsRegistered(specUri), "createSpecAsRaftOwner: spec already registered");
@@ -150,7 +150,7 @@ contract Badges is
     address to,
     uint256 tokenId,
     string memory uri
-  ) internal returns (uint256) {
+  ) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(uri);
 
     // only registered specs can be used for minting
@@ -187,7 +187,7 @@ contract Badges is
     address active,
     address passive,
     string calldata uri
-  ) internal view returns (bytes32) {
+  ) internal view virtual returns (bytes32) {
     bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, active, passive, keccak256(bytes(uri))));
     return _hashTypedDataV4(structHash);
   }

@@ -21,9 +21,9 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   mapping(uint256 => string) private _tokenURIs;
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  // constructor() {
-  //   _disableInitializers();
-  // }
+  constructor() {
+    _disableInitializers();
+  }
 
   function initialize(
     address nextOwner,
@@ -40,7 +40,7 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
     _pause();
   }
 
-  function mint(address recipient, string memory uri) public returns (uint256) {
+  function mint(address recipient, string memory uri) public virtual returns (uint256) {
     // owners can always mint tokens
     // non-owners can only mint when the contract is unpaused
     require(msg.sender == owner() || !paused(), "mint: unauthorized to mint");
@@ -62,12 +62,12 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   }
 
   // we are basically implementing the functionality of ERC721URIStorage ourselves here
-  function setTokenURI(uint256 tokenId, string memory uri) public onlyOwner {
+  function setTokenURI(uint256 tokenId, string memory uri) public virutal onlyOwner {
     require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
   }
 
-  function tokenURI(uint256 tokenId) public view override returns (string memory) {
+  function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     return _tokenURIs[tokenId];
   }
 
