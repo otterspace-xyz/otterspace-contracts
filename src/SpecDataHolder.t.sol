@@ -74,7 +74,7 @@ contract SpecDataHolderTest is Test {
 
   function testGetRaftTokenId() public {
     uint256 raftTokenId = createRaft();
-    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    badges.createSpec(specUri, raftTokenId);
     assertEq(specDataHolder.specIsRegistered(specUri), true);
     assertEq(specDataHolder.getRaftTokenId(specUri), 1);
   }

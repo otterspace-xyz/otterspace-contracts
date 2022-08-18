@@ -21,9 +21,9 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   /// @custom:oz-upgrades-unsafe-allow constructor
-  // constructor() {
-  //   _disableInitializers();
-  // }
+  constructor() {
+    _disableInitializers();
+  }
 
   // The {_authorizeUpgrade} function must be overridden to include access restriction to the upgrade mechanism.
   // Not implementing this function because it is used to check who is authorized
@@ -38,7 +38,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     __UUPSUpgradeable_init();
   }
 
-  function setBadgesAddress(address _badgesAddress) public onlyOwner {
+  function setBadgesAddress(address _badgesAddress) public virtual onlyOwner {
     badgesAddress = _badgesAddress;
   }
 
@@ -46,7 +46,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return address(badgesAddress);
   }
 
-  function setRaft(address _raftAddress) public onlyOwner {
+  function setRaft(address _raftAddress) public virtual onlyOwner {
     raft = Raft(_raftAddress);
   }
 
@@ -58,7 +58,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return _specToRaft[_specUri];
   }
 
-  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) public onlyBadgesContract {
+  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) public virtual onlyBadgesContract {
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
@@ -66,7 +66,7 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     return _specToRaft[_specUri] != 0;
   }
 
-  function setSpecToRaft(string memory _specUri, uint256 _raftTokenId) public {
+  function setSpecToRaft(string memory _specUri, uint256 _raftTokenId) public virtual {
     _specToRaft[_specUri] = _raftTokenId;
   }
 
