@@ -49,7 +49,7 @@ contract BadgesTest is Test {
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
 
-    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    badges.createSpec(specUri, raftTokenId);
     assertEq(specDataHolder.specIsRegistered(specUri), true);
   }
 
@@ -154,13 +154,13 @@ contract BadgesTest is Test {
 
     vm.prank(randomAddress);
 
-    vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
-    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpec: unauthorized"));
+    badges.createSpec(specUri, raftTokenId);
   }
 
   // can't test this one with fuzzing because the owner is set in the "setup"
   // function above, so replacing "to" with "fuzzAddress" will always fail
-  function testCreateSpecAsRaftOwnerTwice() public {
+  function testCreateSpecTwice() public {
     address to = address(this);
     address from = address(0);
 
@@ -169,9 +169,9 @@ contract BadgesTest is Test {
     emit Transfer(from, to, raftTokenId);
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
-    badges.createSpecAsRaftOwner(specUri, raftTokenId);
-    vm.expectRevert(bytes("createSpecAsRaftOwner: spec already registered"));
-    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    badges.createSpec(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpec: spec already registered"));
+    badges.createSpec(specUri, raftTokenId);
   }
 
   function testSenderIsntRaftOwner() public {
@@ -184,8 +184,8 @@ contract BadgesTest is Test {
     assertEq(raftTokenId, 1);
     assertEq(raft.balanceOf(to), 1);
     vm.prank(address(0));
-    vm.expectRevert(bytes("createSpecAsRaftOwner: unauthorized"));
-    badges.createSpecAsRaftOwner(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpec: unauthorized"));
+    badges.createSpec(specUri, raftTokenId);
   }
 
   // TODO: write test for a non-owner calling transferOwnership

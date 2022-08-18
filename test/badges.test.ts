@@ -17,15 +17,15 @@ const specUri = 'some spec uri'
 
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = '_mint: spec is not registered'
-const errSpecAlreadyRegistered = 'createSpecAsRaftOwner: spec already registered'
-const errNotRaftOwner = 'createSpecAsRaftOwner: unauthorized'
+const errSpecAlreadyRegistered = 'createSpec: spec already registered'
+const errNotRaftOwner = 'createSpec: unauthorized'
 const errInvalidSig = '_safeCheckAgreement: invalid signature'
 
 let deployed: any
 
 // fix ts badgesProxy: any
 async function createSpec(badgesProxy: any, specUri: string, raftTokenId: BigNumberish, signer: SignerWithAddress) {
-  const txn = await badgesProxy.connect(signer).createSpecAsRaftOwner(specUri, raftTokenId)
+  const txn = await badgesProxy.connect(signer).createSpec(specUri, raftTokenId)
   const txReceipt = await txn.wait()
   expect(txReceipt.status).equal(1)
   return await getSpecCreatedEventLogData(txn.hash, badgesProxy)

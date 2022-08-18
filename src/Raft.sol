@@ -62,7 +62,7 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   }
 
   // we are basically implementing the functionality of ERC721URIStorage ourselves here
-  function setTokenURI(uint256 tokenId, string memory uri) public virutal onlyOwner {
+  function setTokenURI(uint256 tokenId, string memory uri) public virtual onlyOwner {
     require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
   }
