@@ -44,7 +44,6 @@ contract RaftTest is Test {
     wrappedProxyV1 = Raft(address(proxy));
 
     wrappedProxyV1.initialize(to, "Raft", "RAFT");
-    bool paused = wrappedProxyV1.paused();
   }
 
   function testMintRaft() public {
