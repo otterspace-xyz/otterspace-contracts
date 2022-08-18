@@ -9,11 +9,24 @@ import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";
 import { Raft } from "./Raft.sol";
+import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+
+contract UUPSProxy is ERC1967Proxy {
+  constructor(address _implementation, bytes memory _data) ERC1967Proxy(_implementation, _data) {}
+}
 
 contract SpecDataHolderTest is Test {
-  Raft raft;
-  Badges badges;
-  SpecDataHolder specDataHolder;
+  Badges badgesImplementationV1;
+  SpecDataHolder specDataHolderImplementationV1;
+  Raft raftImplementationV1;
+
+  UUPSProxy badgesProxy;
+  UUPSProxy raftProxy;
+  UUPSProxy specDataHolderProxy;
+
+  Badges badgesWrappedProxyV1;
+  Raft raftWrappedProxyV1;
+  SpecDataHolder specDataHolderWrappedProxyV1;
 
   address passiveAddress = 0x0f6A79A579658E401E0B81c6dde1F2cd51d97176;
   uint256 passivePrivateKey = 0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
@@ -24,16 +37,21 @@ contract SpecDataHolderTest is Test {
 
   function setUp() public {
     address to = address(this);
-    raft = new Raft();
-    raft.initialize(to, "Raft", "RAFT");
-    specUri = "some spec uri";
-    badges = new Badges();
+    badgesImplementationV1 = new Badges();
+    specDataHolderImplementationV1 = new SpecDataHolder();
+    raftImplementationV1 = new Raft();
 
-    vm.label(passiveAddress, "passive");
-    specDataHolder = new SpecDataHolder();
+    badgesProxy = new UUPSProxy(address(badgesImplementationV1), "");
+    raftProxy = new UUPSProxy(address(raftImplementationV1), "");
+    specDataHolderProxy = new UUPSProxy(address(specDataHolderImplementationV1), "");
 
-    specDataHolder.initialize(address(raft), to);
-    badges.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolder));
+    badgesWrappedProxyV1 = Badges(address(badgesProxy));
+    raftWrappedProxyV1 = Raft(address(raftProxy));
+    specDataHolderWrappedProxyV1 = SpecDataHolder(address(specDataHolderProxy));
+
+    badgesWrappedProxyV1.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolderProxy));
+    raftWrappedProxyV1.initialize(to, "Raft", "RAFT");
+    specDataHolderWrappedProxyV1.initialize(address(raftProxy), to);
   }
 
   function createRaft() public returns (uint256) {
@@ -41,11 +59,11 @@ contract SpecDataHolderTest is Test {
     address from = address(0);
 
     vm.expectEmit(true, true, true, false);
-    uint256 raftTokenId = raft.mint(to, "some uri");
+    uint256 raftTokenId = raftWrappedProxyV1.mint(to, "some uri");
     emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
-    assertEq(raft.balanceOf(to), 1);
+    assertEq(raftWrappedProxyV1.balanceOf(to), 1);
     return raftTokenId;
   }
 
@@ -53,8 +71,8 @@ contract SpecDataHolderTest is Test {
   function testSetRaft() public {
     createRaft();
     address newRaftAddress = vm.addr(randomPrivateKey);
-    specDataHolder.setRaft(newRaftAddress);
-    assertEq(specDataHolder.getRaftAddress(), newRaftAddress);
+    specDataHolderWrappedProxyV1.setRaft(newRaftAddress);
+    assertEq(specDataHolderWrappedProxyV1.getRaftAddress(), newRaftAddress);
   }
 
   function testSetRaftAsNonOwner() public {
@@ -63,36 +81,36 @@ contract SpecDataHolderTest is Test {
     address attacker = vm.addr(randomPrivateKey);
     vm.prank(attacker);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    specDataHolder.setRaft(newRaftAddress);
+    specDataHolderWrappedProxyV1.setRaft(newRaftAddress);
   }
 
   function testGetRaft() public {
     createRaft();
-    specDataHolder.getRaftAddress();
-    assertEq(specDataHolder.getRaftAddress(), address(raft));
+    specDataHolderWrappedProxyV1.getRaftAddress();
+    assertEq(specDataHolderWrappedProxyV1.getRaftAddress(), address(raftProxy));
   }
 
   function testGetRaftTokenId() public {
     uint256 raftTokenId = createRaft();
-    badges.createSpec(specUri, raftTokenId);
-    assertEq(specDataHolder.specIsRegistered(specUri), true);
-    assertEq(specDataHolder.getRaftTokenId(specUri), 1);
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
+    assertEq(specDataHolderWrappedProxyV1.specIsRegistered(specUri), true);
+    assertEq(specDataHolderWrappedProxyV1.getRaftTokenId(specUri), 1);
   }
 
   function testSetBadgesAddress() public {
-    assertEq(specDataHolder.getBadgesAddress(), address(0));
+    assertEq(specDataHolderWrappedProxyV1.getBadgesAddress(), address(0));
     address randomAddress = vm.addr(randomPrivateKey);
 
-    specDataHolder.setBadgesAddress(randomAddress);
-    assertEq(specDataHolder.getBadgesAddress(), randomAddress);
+    specDataHolderWrappedProxyV1.setBadgesAddress(randomAddress);
+    assertEq(specDataHolderWrappedProxyV1.getBadgesAddress(), randomAddress);
   }
 
   function testSetBadgesAddressAsNonOwner() public {
-    assertEq(specDataHolder.getBadgesAddress(), address(0));
+    assertEq(specDataHolderWrappedProxyV1.getBadgesAddress(), address(0));
     address randomAddress = vm.addr(randomPrivateKey);
     vm.prank(randomAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    specDataHolder.setBadgesAddress(randomAddress);
+    specDataHolderWrappedProxyV1.setBadgesAddress(randomAddress);
   }
 
   // setBadgeToRaft
