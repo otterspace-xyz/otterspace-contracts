@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 1.0.1
+
+- Add `/out/Raft.sol/Raft.json` to repo
+
 ## 1.0.0
 
 - Initial release on Optimism
