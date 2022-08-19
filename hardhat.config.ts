@@ -19,6 +19,7 @@ const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
 // const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
 // const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
+const ETHERSCAN_API_KEY_GOERLI = process.env.ETHERSCAN_API_KEY_GOERLI
 function getRemappings() {
   return fs
     .readFileSync('remappings.txt', 'utf8')
@@ -75,6 +76,7 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       optimisticEthereum: ETHERSCAN_API_KEY!,
+      goerli: ETHERSCAN_API_KEY_GOERLI!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

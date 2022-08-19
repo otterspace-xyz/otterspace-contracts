@@ -2,20 +2,14 @@
 
 [![unit tests](https://github.com/otterspace-xyz/otterspace-contracts/actions/workflows/main.yml/badge.svg)](https://github.com/otterspace-xyz/otterspace-contracts/actions/workflows/main.yml)
 
-### An [EIP-4973](https://github.com/ethereum/EIPs/pull/4973)-compliant Account-bound token to otterify Ethereum.
-
----
-
-## Project Information
-
-This repository hosts the code for Otterspace Badges and the Otterspace RAFT NFT.
+### Otterspace’s [EIP-4973](https://github.com/ethereum/EIPs/pull/4973)-compliant non-transferable badge protocol helps DAOs create better incentive systems, automate permissions and enable non-financialized governance ✨ 🦦 🚀
 
 ---
 
 # Project setup
 
 - Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
-- Requires Node `v16` and Solidity `0.8.15`
+- Requires Node `v16` and Solidity `0.8.7`
 
 ```bash
 git clone git@github.com:otterspace-xyz/otterspace-contracts.git
@@ -28,15 +22,23 @@ npx hardhat typechain
 npx hardhat test
 ```
 
-Live contract on:
+### Live contracts on Optimism:
 
-- [Badges contract on Goerli](https://goerli.etherscan.io/address/0xABcc616572C623ec77284b5A6bc45E169AF4bf7B)
-- [Raft contract on Goerli](https://goerli.etherscan.io/address/0xe620d9CACA4C2B02601C08095a0d5aA14C59270E)
-- [SpecDataHolder contract on Goerli](https://goerli.etherscan.io/address/0xFF57347602c5aD85B0A478317b5B40426b76f059)
+- [Badges.sol](https://optimistic.etherscan.io/address/0x639a1703CfdeDaE61A535d53890130b4257f15eb)
+- [Raft.sol](https://optimistic.etherscan.io/address/0xa74caa864a2562999faf38280a3aa3d09c248daa)
+- [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
+
+---
+
+Live contracts on Goerli:
+
+- [Badges.sol](https://goerli.etherscan.io/address/0xABcc616572C623ec77284b5A6bc45E169AF4bf7B)
+- [Raft.sol](https://goerli.etherscan.io/address/0xe620d9CACA4C2B02601C08095a0d5aA14C59270E)
+- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0xFF57347602c5aD85B0A478317b5B40426b76f059)
 
 ### Use ABIs with JavaScript
 
-We're publishing this repository at `@otterspace-xyz/contracts`.
+We're publishing this repository at [@otterspace-xyz/contracts](https://www.npmjs.com/package/@otterspace-xyz/contracts)
 
 ```bash
 npm i @otterspace-xyz/contracts
@@ -56,14 +58,18 @@ Raft ABI
 import Raft from '@otterspace-xyz/contracts/out/Raft.sol/Raft.json' assert { type: 'json' }
 ```
 
+We're exporting specific `.sol` files using the `"files"` property in
+`package.json`. Please familiarize yourself with the `.sol` files we're
+exporting by looking into `package.json`.
+
 ---
 
 ## Tech Stack
 
 We use **Foundry** and **Hardhat** together. With this setup we get:
 
-- Unit tests written in Solidity
-- Integration tests written in JavaScript
+- Unit tests written in Solidity (Forge)
+- Integration tests written in JavaScript (Mocha)
 
 ---
 
@@ -77,7 +83,7 @@ Foundry consists of:
 - [**Cast**](https://book.getfoundry.sh/cast/): Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
 - [**Anvil**](https://book.getfoundry.sh/anvil/): local Ethereum node, akin to Ganache, Hardhat Network.
 
-**Need help getting started with Foundry? Read the [📖 Foundry Book][foundry-book] (WIP)!**
+**Need help getting started with Foundry? Read the [📖 Foundry Book](https://book.getfoundry.sh/)!**
 
 ### Hardhat
 
@@ -91,33 +97,23 @@ On [Hardhat's website](https://hardhat.org) you will find:
 
 ## Deploying and verifying the contract
 
-- create an `.env.network.contractName` file matching the variables seen in `.env.network.contract.example`
-- run `./scripts/deploy_and_verify.sh .env.network.contract`
-- Forge will build, verify, and confirm verification
+- create a `.env` file matching the variables seen in `.env.example`
+- run `./scripts/deployProxy.ts .env`
+- Hardhat will deploy the SpecDataHolder, Raft, and Badges contracts, then deploy a proxy for each one.
+- Once deployed, follow the logged instructions in your terminal to verify the contracts.
+- **VERY IMPORTANT**: call `setBadgesAddress` on the `SpecDataHolder` contract. Without this, it won't work.
 
-#### Foundry setup for VS Code Users
+## Foundry setup for VS Code Users
 
-Add a .vscode file under the root
+Add a `.vscode` file under the root
 
 ```json
 {
   "solidity.packageDefaultDependenciesContractsDirectory": "src",
   "solidity.packageDefaultDependenciesDirectory": "lib",
-  "solidity.compileUsingRemoteVersion": "v0.8.15"
+  "solidity.compileUsingRemoteVersion": "v0.8.7"
 }
 ```
-
-## Hardhat without Foundry
-
-Alternatively, this repository is available for importing with npm/hardhat:
-
-```bash
-npm i @otterspacexyz/contracts
-```
-
-We're exporting specific `.sol` files using the `"files"` property in
-`package.json`. Please familiarize yourself with the `.sol` files we're
-exporting by looking into `package.json`.
 
 ## Changelog
 

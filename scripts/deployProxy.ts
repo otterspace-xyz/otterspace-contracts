@@ -5,7 +5,6 @@ async function main() {
   const { BADGES_NAME, BADGES_SYMBOL, BADGES_VERSION, RAFT_NAME, RAFT_SYMBOL, GNOSIS_MULTISIG } = process.env
 
   const [deployer] = await ethers.getSigners()
-  console.log('🚀 ~ main ~ deployer.address', deployer.address)
 
   const raft = await ethers.getContractFactory('Raft')
   const raftContract = await upgrades.deployProxy(raft, [GNOSIS_MULTISIG, RAFT_NAME, RAFT_SYMBOL], {

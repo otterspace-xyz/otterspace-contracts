@@ -2,6 +2,21 @@
 
 We're using https://semver.org/
 
+## 1.0.0
+
+- Initial release on Optimism
+- Contracts upgradeable using [UUPS pattern](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable)
+- Add unit tests with Forge
+- Fix security vulnerabilites
+- Live contracts on **Optimism**
+- - [Badges.sol](https://optimistic.etherscan.io/address/0x639a1703CfdeDaE61A535d53890130b4257f15eb)
+- - [Raft.sol](https://optimistic.etherscan.io/address/0xa74caa864a2562999faf38280a3aa3d09c248daa)
+- - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
+- Live contracts on **Goerli**
+- - [Badges.sol](https://goerli.etherscan.io/address/0x835bD6b20206417ff9168B174cE67D812D746dc5)
+- - [Raft.sol](https://goerli.etherscan.io/address/0xcfe741a4e6820a331Ca1B613f9F395Df980eDa1b)
+- - [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x147e0dF40fdD1340C604726c670329c08176F208)
+
 ## 0.6.0
 
 - Make contracts upgradeable
