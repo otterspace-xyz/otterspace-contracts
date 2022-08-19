@@ -14,7 +14,7 @@ We're using https://semver.org/
 - - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
 - Live contracts on **Goerli**
 - - [Badges.sol](https://goerli.etherscan.io/address/0x835bD6b20206417ff9168B174cE67D812D746dc5)
-- - [Raft.sol](https://goerli.etherscan.io/address/0xcfe741a4e6820a331Ca1B613f9F395Df980eDa1b)
+- - [Raft.sol](https://goerli.etherscan.io/address/0xe620d9CACA4C2B02601C08095a0d5aA14C59270E)
 - - [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x147e0dF40fdD1340C604726c670329c08176F208)
 
 ## 0.6.0

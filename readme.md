@@ -32,9 +32,9 @@ npx hardhat test
 
 Live contracts on Goerli:
 
-- [Badges.sol](https://goerli.etherscan.io/address/0xABcc616572C623ec77284b5A6bc45E169AF4bf7B)
+- [Badges.sol](https://goerli.etherscan.io/address/0x835bD6b20206417ff9168B174cE67D812D746dc5)
 - [Raft.sol](https://goerli.etherscan.io/address/0xe620d9CACA4C2B02601C08095a0d5aA14C59270E)
-- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0xFF57347602c5aD85B0A478317b5B40426b76f059)
+- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x147e0dF40fdD1340C604726c670329c08176F208)
 
 ### Use ABIs with JavaScript
 
