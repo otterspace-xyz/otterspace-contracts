@@ -50,6 +50,12 @@ const config: HardhatUserConfig = {
       chainId: 5,
       timeout: 20000,
     },
+    optimisticEthereum: {
+      url: `${process.env.OPTIMISM_URL}`,
+      accounts: [`0x${PRIVATE_KEY_1}`],
+      chainId: 10,
+      timeout: 20000,
+    },
   },
   paths: {
     sources: './src', // Use ./src rather than ./contracts as Hardhat expects
@@ -68,7 +74,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      goerli: ETHERSCAN_API_KEY!,
+      optimisticEthereum: ETHERSCAN_API_KEY!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat
