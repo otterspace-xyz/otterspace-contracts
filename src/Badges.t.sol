@@ -2,8 +2,6 @@
 pragma solidity 0.8.7;
 
 import "forge-std/Test.sol";
-import { IERC165 } from "./IERC165.sol";
-
 import { IERC721Metadata } from "./IERC721Metadata.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { Badges } from "./Badges.sol";
@@ -83,10 +81,6 @@ contract BadgesTest is Test {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     return signature;
-  }
-
-  function testIERC165() public {
-    assertTrue(badgesWrappedProxyV1.supportsInterface(type(IERC165).interfaceId));
   }
 
   function testIERC721Metadata() public {

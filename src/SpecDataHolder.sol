@@ -38,39 +38,39 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable {
     __UUPSUpgradeable_init();
   }
 
-  function setBadgesAddress(address _badgesAddress) public virtual onlyOwner {
+  function setBadgesAddress(address _badgesAddress) external virtual onlyOwner {
     badgesAddress = _badgesAddress;
   }
 
-  function getBadgesAddress() public view returns (address) {
+  function getBadgesAddress() external view returns (address) {
     return badgesAddress;
   }
 
-  function setRaftAddress(address _raftAddress) public virtual onlyOwner {
+  function setRaftAddress(address _raftAddress) external virtual onlyOwner {
     raftAddress = _raftAddress;
   }
 
-  function getRaftAddress() public view returns (address) {
+  function getRaftAddress() external view returns (address) {
     return raftAddress;
   }
 
-  function getRaftTokenId(string memory _specUri) public view returns (uint256) {
+  function getRaftTokenId(string memory _specUri) external view returns (uint256) {
     return _specToRaft[_specUri];
   }
 
-  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) public virtual onlyBadgesContract {
+  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) external virtual onlyBadgesContract {
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
-  function specIsRegistered(string memory _specUri) public view returns (bool) {
+  function specIsRegistered(string memory _specUri) external view returns (bool) {
     return _specToRaft[_specUri] != 0;
   }
 
-  function setSpecToRaft(string memory _specUri, uint256 _raftTokenId) public virtual {
+  function setSpecToRaft(string memory _specUri, uint256 _raftTokenId) external virtual {
     _specToRaft[_specUri] = _raftTokenId;
   }
 
-  function getRaftOwner(uint256 _raftTokenId) public view returns (address) {
+  function getRaftOwner(uint256 _raftTokenId) external view returns (address) {
     IERC721 raftInterface = IERC721(raftAddress);
     return raftInterface.ownerOf(_raftTokenId);
   }
