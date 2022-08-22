@@ -2,7 +2,6 @@
 pragma solidity 0.8.7;
 
 import "forge-std/Test.sol";
-import { IERC721Metadata } from "./IERC721Metadata.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";

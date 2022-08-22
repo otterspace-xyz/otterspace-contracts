@@ -10,7 +10,8 @@ import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
-import { IERC721Metadata } from "./IERC721Metadata.sol";
+import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
 contract Badges is

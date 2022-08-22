@@ -5,10 +5,11 @@ import "@openzeppelin-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "./interfaces/ISpecDataHolder.sol";
 
 // import "../../node_modules/hardhat/console.sol";
 
-contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable {
+contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder {
   mapping(string => uint256) private _specToRaft;
   mapping(uint256 => uint256) private _badgeToRaft;
 
