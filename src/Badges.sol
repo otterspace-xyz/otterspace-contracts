@@ -16,7 +16,6 @@ bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address pa
 contract Badges is
   IERC721Metadata,
   IERC4973,
-  Initializable,
   ERC165Upgradeable,
   UUPSUpgradeable,
   OwnableUpgradeable,
