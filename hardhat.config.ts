@@ -51,6 +51,12 @@ const config: HardhatUserConfig = {
       chainId: 5,
       timeout: 20000,
     },
+    rinkeby: {
+      url: `${process.env.ETH_RINKEBY_URL}`,
+      accounts: [`0x${PRIVATE_KEY_1}`],
+      chainId: 4,
+      timeout: 20000,
+    },
     optimisticEthereum: {
       url: `${process.env.OPTIMISM_URL}`,
       accounts: [`0x${PRIVATE_KEY_1}`],
@@ -77,6 +83,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       optimisticEthereum: ETHERSCAN_API_KEY!,
       goerli: ETHERSCAN_API_KEY_GOERLI!,
+      rinkeby: ETHERSCAN_API_KEY_GOERLI!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat
