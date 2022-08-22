@@ -232,7 +232,7 @@ contract BadgesTest is Test {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert(bytes("safeCheckAgreement: invalid signature"));
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
 
     assertEq(0, tokenId);
@@ -246,7 +246,7 @@ contract BadgesTest is Test {
     bytes memory signature = abi.encodePacked(r, s, v);
     address unauthorizedFrom = address(1337);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert(bytes("safeCheckAgreement: invalid signature"));
     uint256 tokenId = badgesWrappedProxyV1.take(unauthorizedFrom, specUri, signature);
     assertEq(0, tokenId);
   }
@@ -290,7 +290,7 @@ contract BadgesTest is Test {
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
     emit Transfer(from, to, tokenId);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: already used"));
+    vm.expectRevert(bytes("safeCheckAgreement: already used"));
     badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
   }
 
@@ -326,7 +326,7 @@ contract BadgesTest is Test {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert(bytes("safeCheckAgreement: invalid signature"));
 
     uint256 tokenId = badgesWrappedProxyV1.give(to, specUri, signature);
     assertEq(0, tokenId);
@@ -340,7 +340,7 @@ contract BadgesTest is Test {
     bytes32 hash = badgesWrappedProxyV1.getHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
-    vm.expectRevert(bytes("_safeCheckAgreement: invalid signature"));
+    vm.expectRevert(bytes("safeCheckAgreement: invalid signature"));
     uint256 tokenId = badgesWrappedProxyV1.give(randomAddress, specUri, signature);
     assertEq(0, tokenId);
   }
@@ -389,7 +389,7 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.give(to, specUri, signature);
 
-    vm.expectRevert(bytes("_safeCheckAgreement: already used"));
+    vm.expectRevert(bytes("safeCheckAgreement: already used"));
     badgesWrappedProxyV1.give(to, specUri, signature);
   }
 
@@ -453,8 +453,7 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
 
-    vm.expectRevert(bytes("ownerOf: token doesn't exist"));
-
+    vm.expectRevert(bytes("unequip: token doesn't exist"));
     badgesWrappedProxyV1.unequip(1337);
   }
 }
