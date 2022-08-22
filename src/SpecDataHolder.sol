@@ -54,7 +54,7 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder 
     return _specToRaft[_specUri];
   }
 
-  function specIsRegistered(string memory _specUri) external view returns (bool) {
+  function isSpecRegistered(string memory _specUri) external view returns (bool) {
     return _specToRaft[_specUri] != 0;
   }
 

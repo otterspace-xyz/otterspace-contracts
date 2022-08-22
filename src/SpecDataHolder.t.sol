@@ -90,7 +90,7 @@ contract SpecDataHolderTest is Test {
   function testGetRaftTokenId() public {
     uint256 raftTokenId = createRaft();
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
-    assertEq(specDataHolderWrappedProxyV1.specIsRegistered(specUri), true);
+    assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
     assertEq(specDataHolderWrappedProxyV1.getRaftTokenId(specUri), 1);
   }
 
@@ -112,7 +112,7 @@ contract SpecDataHolderTest is Test {
 
   // setBadgeToRaft
 
-  // specIsRegistered
+  // isSpecRegistered
 
   // setSpecToRaft
 

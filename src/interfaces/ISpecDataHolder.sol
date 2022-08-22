@@ -4,7 +4,7 @@ pragma solidity 0.8.16;
 interface ISpecDataHolder {
   function getRaftOwner(uint256) external view returns (address);
 
-  function specIsRegistered(string memory) external view returns (bool);
+  function isSpecRegistered(string memory) external view returns (bool);
 
   function setSpecToRaft(string memory, uint256) external;
 

@@ -71,7 +71,7 @@ contract BadgesTest is Test {
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
 
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
-    assertEq(specDataHolderWrappedProxyV1.specIsRegistered(specUri), true);
+    assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
   }
 
   // helper function
