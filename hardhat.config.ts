@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
     apiSecret: process.env.DEFENDER_TEAM_API_SECRET_KEY!,
   },
   solidity: {
-    version: '0.8.7',
+    version: '0.8.16',
     settings: {
       optimizer: {
         enabled: true,

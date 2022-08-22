@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity 0.8.7;
+pragma solidity 0.8.16;
 
 import "forge-std/Test.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
