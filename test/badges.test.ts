@@ -311,7 +311,7 @@ describe('Badges', async function () {
       kind: 'uups',
     })
     await newRaftProxy.deployed()
-    const tx = await specDataHolderProxy.setRaft(newRaftProxy.address)
+    const tx = await specDataHolderProxy.setRaftAddress(newRaftProxy.address)
     await tx.wait()
     const raftAddress = await specDataHolderProxy.getRaftAddress()
     expect(raftAddress).to.equal(newRaftProxy.address)
@@ -324,7 +324,7 @@ describe('Badges', async function () {
       kind: 'uups',
     })
     await newRaftProxy.deployed()
-    await expect(specDataHolderProxy.connect(randomSigner).setRaft(newRaftProxy.address)).to.be.revertedWith(
+    await expect(specDataHolderProxy.connect(randomSigner).setRaftAddress(newRaftProxy.address)).to.be.revertedWith(
       errNotOwner
     )
   })

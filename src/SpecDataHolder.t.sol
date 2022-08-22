@@ -71,7 +71,7 @@ contract SpecDataHolderTest is Test {
   function testSetRaft() public {
     createRaft();
     address newRaftAddress = vm.addr(randomPrivateKey);
-    specDataHolderWrappedProxyV1.setRaft(newRaftAddress);
+    specDataHolderWrappedProxyV1.setRaftAddress(newRaftAddress);
     assertEq(specDataHolderWrappedProxyV1.getRaftAddress(), newRaftAddress);
   }
 
@@ -81,7 +81,7 @@ contract SpecDataHolderTest is Test {
     address attacker = vm.addr(randomPrivateKey);
     vm.prank(attacker);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    specDataHolderWrappedProxyV1.setRaft(newRaftAddress);
+    specDataHolderWrappedProxyV1.setRaftAddress(newRaftAddress);
   }
 
   function testGetRaft() public {

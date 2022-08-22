@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.7;
 import "@openzeppelin/contracts/access/Ownable.sol";
-import { Raft } from "./Raft.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
 import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-// import "../node_modules/hardhat/console.sol";
+// import "../../node_modules/hardhat/console.sol";
 
-contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
+contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable {
   mapping(string => uint256) private _specToRaft;
   mapping(uint256 => uint256) private _badgeToRaft;
 
-  Raft private raft;
-  address badgesAddress;
+  address private badgesAddress;
+  address private raftAddress;
 
   modifier onlyBadgesContract() {
     require(msg.sender == badgesAddress, "unauthorized");
@@ -30,11 +30,11 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   // to update the contract, we're using onlyOwnerfor this purpose.
   function _authorizeUpgrade(address) internal override onlyOwner {}
 
-  // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
-  function initialize(address _raftAddress, address nextOwner) public initializer {
+  // // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
+  function initialize(address _raftAddress, address _nextOwner) public initializer {
     __Ownable_init();
-    setRaft(_raftAddress);
-    transferOwnership(nextOwner);
+    raftAddress = _raftAddress;
+    transferOwnership(_nextOwner);
     __UUPSUpgradeable_init();
   }
 
@@ -43,15 +43,15 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
   }
 
   function getBadgesAddress() public view returns (address) {
-    return address(badgesAddress);
+    return badgesAddress;
   }
 
-  function setRaft(address _raftAddress) public virtual onlyOwner {
-    raft = Raft(_raftAddress);
+  function setRaftAddress(address _raftAddress) public virtual onlyOwner {
+    raftAddress = _raftAddress;
   }
 
   function getRaftAddress() public view returns (address) {
-    return address(raft);
+    return raftAddress;
   }
 
   function getRaftTokenId(string memory _specUri) public view returns (uint256) {
@@ -70,7 +70,8 @@ contract SpecDataHolder is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     _specToRaft[_specUri] = _raftTokenId;
   }
 
-  function getRaftOwner(uint256 raftTokenId) public view returns (address) {
-    return raft.ownerOf(raftTokenId);
+  function getRaftOwner(uint256 _raftTokenId) public view returns (address) {
+    IERC721 raftInterface = IERC721(raftAddress);
+    return raftInterface.ownerOf(_raftTokenId);
   }
 }
