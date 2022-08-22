@@ -4,7 +4,12 @@ We're using https://semver.org/
 
 ## 1.0.1
 
-- Add `/out/Raft.sol/Raft.json` to repo
+- Added `/out/Raft.sol/Raft.json` to repo
+- Live contracts on Optimism
+- Live contracts on **Optimism**
+- - [Badges.sol](https://optimistic.etherscan.io/address/0x639a1703CfdeDaE61A535d53890130b4257f15eb)
+- - [Raft.sol](https://optimistic.etherscan.io/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
+- - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
 
 ## 1.0.0
 
