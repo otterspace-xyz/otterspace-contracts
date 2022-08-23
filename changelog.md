@@ -2,6 +2,22 @@
 
 We're using https://semver.org/
 
+## 2.0.0
+
+- Refactor SpecDataHolder and Badges to use interfaces instead of importing whole contracts
+- uncomment constructor in Badges
+- improve consistency with variable naming
+
+- Live contracts on **Optimism**
+- - [Badges.sol](https://optimistic.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+- - [Raft.sol](https://optimistic.etherscan.io/address/0xa74caa864a2562999faf38280a3aa3d09c248daa)
+- - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xEE0c743A3E50133B63eDFcc0006aA331Adf1e4BC)
+
+- Live contracts on **Goerli**
+- - [Badges.sol](https://goerli.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
+- - [Raft.sol](https://goerli.etherscan.io/address/0xe620d9CACA4C2B02601C08095a0d5aA14C59270E)
+- - [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+
 ## 1.0.1
 
 - Added `/out/Raft.sol/Raft.json` to repo
