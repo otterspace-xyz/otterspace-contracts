@@ -2,6 +2,20 @@
 
 We're using https://semver.org/
 
+## 2.0.1
+
+- Update Solidity version in Raft.sol
+
+- Live contracts on **Optimism**
+- - [Badges.sol](https://optimistic.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+- - [Raft.sol](https://optimistic.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
+- - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xEE0c743A3E50133B63eDFcc0006aA331Adf1e4BC)
+
+- Live contracts on **Goerli**
+- - [Badges.sol](https://goerli.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
+- - [Raft.sol](https://goerli.etherscan.io/address/0xBb8997048e5F0bFe6C9D6BEe63Ede53BD0236Bb2)
+- - [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+
 ## 2.0.0
 
 - Refactor SpecDataHolder and Badges to use interfaces instead of importing whole contracts
