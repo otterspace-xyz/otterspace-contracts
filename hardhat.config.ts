@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
     apiSecret: process.env.DEFENDER_TEAM_API_SECRET_KEY!,
   },
   solidity: {
-    version: '0.8.7',
+    version: '0.8.16',
     settings: {
       optimizer: {
         enabled: true,
@@ -49,6 +49,12 @@ const config: HardhatUserConfig = {
       url: `${process.env.ETH_GOERLI_URL}`,
       accounts: [`0x${PRIVATE_KEY_1}`],
       chainId: 5,
+      timeout: 20000,
+    },
+    rinkeby: {
+      url: `${process.env.ETH_RINKEBY_URL}`,
+      accounts: [`0x${PRIVATE_KEY_1}`],
+      chainId: 4,
       timeout: 20000,
     },
     optimisticEthereum: {
@@ -77,6 +83,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       optimisticEthereum: ETHERSCAN_API_KEY!,
       goerli: ETHERSCAN_API_KEY_GOERLI!,
+      rinkeby: ETHERSCAN_API_KEY_GOERLI!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

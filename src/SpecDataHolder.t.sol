@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: CC0-1.0
-pragma solidity 0.8.7;
+pragma solidity 0.8.16;
 
 import "forge-std/Test.sol";
-import { IERC165 } from "./IERC165.sol";
-
-import { IERC721Metadata } from "./IERC721Metadata.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";
@@ -71,7 +68,7 @@ contract SpecDataHolderTest is Test {
   function testSetRaft() public {
     createRaft();
     address newRaftAddress = vm.addr(randomPrivateKey);
-    specDataHolderWrappedProxyV1.setRaft(newRaftAddress);
+    specDataHolderWrappedProxyV1.setRaftAddress(newRaftAddress);
     assertEq(specDataHolderWrappedProxyV1.getRaftAddress(), newRaftAddress);
   }
 
@@ -81,7 +78,7 @@ contract SpecDataHolderTest is Test {
     address attacker = vm.addr(randomPrivateKey);
     vm.prank(attacker);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
-    specDataHolderWrappedProxyV1.setRaft(newRaftAddress);
+    specDataHolderWrappedProxyV1.setRaftAddress(newRaftAddress);
   }
 
   function testGetRaft() public {
@@ -93,7 +90,7 @@ contract SpecDataHolderTest is Test {
   function testGetRaftTokenId() public {
     uint256 raftTokenId = createRaft();
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
-    assertEq(specDataHolderWrappedProxyV1.specIsRegistered(specUri), true);
+    assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
     assertEq(specDataHolderWrappedProxyV1.getRaftTokenId(specUri), 1);
   }
 
@@ -115,7 +112,7 @@ contract SpecDataHolderTest is Test {
 
   // setBadgeToRaft
 
-  // specIsRegistered
+  // isSpecRegistered
 
   // setSpecToRaft
 

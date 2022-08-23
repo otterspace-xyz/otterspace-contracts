@@ -1,89 +1,99 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity 0.8.7;
+pragma solidity 0.8.16;
 // import "../node_modules/hardhat/console.sol";
 
-import "./SpecDataHolder.sol";
+import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
-import { SignatureCheckerUpgradeable } from "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol";
+import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
-import "../lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
-import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/draft-EIP712Upgradeable.sol";
-import "../lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol";
-import "../lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/ERC165Upgradeable.sol";
-import { IERC721Metadata } from "./IERC721Metadata.sol";
+import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
+import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
 contract Badges is
   IERC721Metadata,
   IERC4973,
-  Initializable,
   ERC165Upgradeable,
   UUPSUpgradeable,
   OwnableUpgradeable,
   EIP712Upgradeable
 {
   using BitMaps for BitMaps.BitMap;
-  BitMaps.BitMap private _usedHashes;
-  string private _name;
-  string private _symbol;
+  BitMaps.BitMap private usedHashes;
+  string private name_;
+  string private symbol_;
 
-  mapping(uint256 => address) private _owners;
-  mapping(uint256 => string) private _tokenURIs;
-  mapping(address => uint256) private _balances;
+  mapping(uint256 => address) private owners;
+  mapping(uint256 => string) private tokenURIs;
+  mapping(address => uint256) private balances;
+
+  ISpecDataHolder private specDataHolder;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
-  SpecDataHolder private specDataHolder;
-
   /// @custom:oz-upgrades-unsafe-allow constructor
-  // constructor() {
-  //   _disableInitializers();
-  // }
+  constructor() {
+    _disableInitializers();
+  }
 
   function initialize(
-    string memory name_,
-    string memory symbol_,
-    string memory version_,
-    address nextOwner,
-    address specDataHolderAddress
+    string memory _name,
+    string memory _symbol,
+    string memory _version,
+    address _nextOwner,
+    address _specDataHolderAddress
   ) public initializer {
-    _name = name_;
-    _symbol = symbol_;
+    name_ = _name;
+    symbol_ = _symbol;
+    specDataHolder = ISpecDataHolder(_specDataHolderAddress);
+
     __ERC165_init();
     __Ownable_init();
-    __EIP712_init(name_, version_);
+    __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
-    transferOwnership(nextOwner);
-    specDataHolder = SpecDataHolder(specDataHolderAddress);
+    transferOwnership(_nextOwner);
+  }
+
+  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+    return
+      _interfaceId == type(IERC721Metadata).interfaceId ||
+      _interfaceId == type(IERC4973).interfaceId ||
+      super.supportsInterface(_interfaceId);
   }
 
   // The owner can call this once only. They should call this when the contract is first deployed.
   function setDataHolder(address _dataHolder) external virtual onlyOwner {
     // require(address(dataHolder) == address(0x0));
-    specDataHolder = SpecDataHolder(_dataHolder);
+    specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
   function give(
-    address to,
-    string calldata uri,
-    bytes calldata signature
+    address _to,
+    string calldata _uri,
+    bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != to, "give: cannot give from self");
-    uint256 tokenId = _safeCheckAgreement(msg.sender, to, uri, signature);
-    _mint(to, tokenId, uri);
-    _usedHashes.set(tokenId);
+    require(msg.sender != _to, "give: cannot give from self");
+    uint256 tokenId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
+    mint(_to, tokenId, _uri);
+    usedHashes.set(tokenId);
     return tokenId;
   }
 
   function take(
-    address from,
-    string calldata uri,
-    bytes calldata signature
+    address _from,
+    string calldata _uri,
+    bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != from, "take: cannot take from self");
-    uint256 tokenId = _safeCheckAgreement(msg.sender, from, uri, signature);
-    _mint(msg.sender, tokenId, uri);
-    _usedHashes.set(tokenId);
+    require(msg.sender != _from, "take: cannot take from self");
+
+    uint256 tokenId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
+    mint(msg.sender, tokenId, _uri);
+    usedHashes.set(tokenId);
+
     return tokenId;
   }
 
@@ -91,119 +101,105 @@ contract Badges is
     return address(specDataHolder);
   }
 
-  function createSpec(string memory specUri, uint256 raftTokenId) external virtual {
-    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
-    require(raftOwner == msg.sender, "createSpec: unauthorized");
-    require(!specDataHolder.specIsRegistered(specUri), "createSpec: spec already registered");
+  function createSpec(string memory _specUri, uint256 _raftTokenId) external virtual {
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
+    require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
 
-    specDataHolder.setSpecToRaft(specUri, raftTokenId);
+    specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
 
-    emit SpecCreated(msg.sender, specUri, raftTokenId, specDataHolder.getRaftAddress());
-  }
-
-  function getHash(
-    address from,
-    address to,
-    string calldata tokenURI_
-  ) external view virtual returns (bytes32) {
-    return _getHash(from, to, tokenURI_);
-  }
-
-  function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
-    return
-      interfaceId == type(IERC721Metadata).interfaceId ||
-      interfaceId == type(IERC4973).interfaceId ||
-      super.supportsInterface(interfaceId);
+    emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
   }
 
   function name() external view virtual override returns (string memory) {
-    return _name;
+    return name_;
   }
 
   function symbol() external view virtual override returns (string memory) {
-    return _symbol;
+    return symbol_;
   }
 
-  function tokenURI(uint256 tokenId) external view virtual override returns (string memory) {
-    require(_exists(tokenId), "tokenURI: token doesn't exist");
-    return _tokenURIs[tokenId];
+  function tokenURI(uint256 _tokenId) external view virtual override returns (string memory) {
+    require(exists(_tokenId), "tokenURI: token doesn't exist");
+    return tokenURIs[_tokenId];
   }
 
-  function unequip(uint256 tokenId) external virtual override {
-    require(msg.sender == ownerOf(tokenId), "unequip: sender must be owner");
-    _usedHashes.unset(tokenId);
-    _burn(tokenId);
+  function unequip(uint256 _tokenId) external virtual override {
+    require(owners[_tokenId] != address(0), "unequip: token doesn't exist");
+    require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
+    usedHashes.unset(_tokenId);
+    burn(_tokenId);
   }
 
-  function balanceOf(address owner_) external view virtual override returns (uint256) {
-    require(owner_ != address(0), "balanceOf: address zero is not a valid owner_");
-    return _balances[owner_];
+  function balanceOf(address _owner) external view virtual override returns (uint256) {
+    require(_owner != address(0), "balanceOf: address zero is not a valid owner_");
+    return balances[_owner];
   }
 
-  function ownerOf(uint256 tokenId_) public view virtual override returns (address) {
-    address owner_ = _owners[tokenId_];
+  function ownerOf(uint256 _tokenId) external view virtual override returns (address) {
+    address owner_ = owners[_tokenId];
     require(owner_ != address(0), "ownerOf: token doesn't exist");
     return owner_;
   }
 
-  function _mint(
-    address to,
-    uint256 tokenId,
-    string memory uri
+  function mint(
+    address _to,
+    uint256 _tokenId,
+    string memory _uri
   ) internal virtual returns (uint256) {
-    uint256 raftTokenId = specDataHolder.getRaftTokenId(uri);
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
 
     // only registered specs can be used for minting
-    require(raftTokenId != 0, "_mint: spec is not registered");
+    require(raftTokenId != 0, "mint: spec is not registered");
+    require(!exists(_tokenId), "mint: tokenID exists");
 
-    require(!_exists(tokenId), "mint: tokenID exists");
-    _balances[to] += 1;
-    _owners[tokenId] = to;
-    _tokenURIs[tokenId] = uri;
-    emit Transfer(address(0), to, tokenId);
+    balances[_to] += 1;
+    owners[_tokenId] = _to;
+    tokenURIs[_tokenId] = _uri;
 
-    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
-    return tokenId;
+    emit Transfer(address(0), _to, _tokenId);
+
+    specDataHolder.setBadgeToRaft(_tokenId, raftTokenId);
+    return _tokenId;
   }
 
-  function _safeCheckAgreement(
-    address active,
-    address passive,
-    string calldata uri,
-    bytes calldata signature
+  function safeCheckAgreement(
+    address _active,
+    address _passive,
+    string calldata _uri,
+    bytes calldata _signature
   ) internal virtual returns (uint256) {
-    bytes32 hash = _getHash(active, passive, uri);
+    bytes32 hash = getHash(_active, _passive, _uri);
     uint256 tokenId = uint256(hash);
 
     require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(passive, hash, signature),
-      "_safeCheckAgreement: invalid signature"
+      SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
+      "safeCheckAgreement: invalid signature"
     );
-    require(!_usedHashes.get(tokenId), "_safeCheckAgreement: already used");
+    require(!usedHashes.get(tokenId), "safeCheckAgreement: already used");
     return tokenId;
   }
 
-  function _getHash(
-    address active,
-    address passive,
-    string calldata uri
-  ) internal view virtual returns (bytes32) {
-    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, active, passive, keccak256(bytes(uri))));
+  function getHash(
+    address _from,
+    address _to,
+    string calldata _uri
+  ) public view virtual returns (bytes32) {
+    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
     return _hashTypedDataV4(structHash);
   }
 
-  function _exists(uint256 tokenId) internal view virtual returns (bool) {
-    return _owners[tokenId] != address(0);
+  function exists(uint256 _tokenId) internal view virtual returns (bool) {
+    return owners[_tokenId] != address(0);
   }
 
-  function _burn(uint256 tokenId) internal virtual {
-    address owner_ = ownerOf(tokenId);
+  function burn(uint256 _tokenId) internal virtual {
+    address _owner = owners[_tokenId];
 
-    _balances[owner_] -= 1;
-    delete _owners[tokenId];
-    delete _tokenURIs[tokenId];
+    balances[_owner] -= 1;
+    delete owners[_tokenId];
+    delete tokenURIs[_tokenId];
 
-    emit Transfer(owner_, address(0), tokenId);
+    emit Transfer(_owner, address(0), _tokenId);
   }
 
   // Not implementing this function because it is used to check who is authorized
