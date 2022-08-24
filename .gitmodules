@@ -10,3 +10,6 @@
 [submodule "lib/ERC4973"]
 	path = lib/ERC4973
 	url = https://github.com/otterspace-xyz/ERC4973
+[submodule "lib/optimism"]
+	path = lib/optimism
+	url = https://github.com/ethereum-optimism/optimism

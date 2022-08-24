@@ -11,6 +11,7 @@ import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+import "../lib/optimism/packages/contracts/contracts/L1/messaging/IL1StandardBridge.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -32,7 +33,10 @@ contract Badges is
   mapping(address => uint256) private balances;
 
   ISpecDataHolder private specDataHolder;
+  // // mainnet: 0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1
 
+  // uint32 l2Gas;
+  // IL1StandardBridge bridge;
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
   /// @custom:oz-upgrades-unsafe-allow constructor
@@ -56,6 +60,14 @@ contract Badges is
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+  }
+
+  function sendEthToL2() public payable {
+    IL1StandardBridge(0x636Af16bf2f682dD3109e60102b8E1A089FedAa8).depositETHTo{ value: msg.value }(
+      msg.sender,
+      200_000,
+      ""
+    );
   }
 
   function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
