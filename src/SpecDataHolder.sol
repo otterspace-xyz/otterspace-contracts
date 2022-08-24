@@ -6,6 +6,7 @@ import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./interfaces/ISpecDataHolder.sol";
+import "@openzeppelin-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
 // import "../../node_modules/hardhat/console.sol";
 
@@ -26,8 +27,25 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder 
     _disableInitializers();
   }
 
-  function isUserOwnerOfAnAllowedBadge(address _specCreator, uint256 _raftTokenId) public view returns (bool) {
-    // make sure that msg.sender owns a badge that's
+  // check to see if the _specCreator (msg.sender) owns a badge that's associated with _raftTokenId
+  function doesSenderOwnADaosBadge(address _specCreator, uint256 _raftTokenId) public view returns (bool) {
+    ERC721EnumerableUpgradeable badgesInterface = ERC721EnumerableUpgradeable(badgesAddress);
+    // return badgesInterface.ownerOf(_raftTokenId);
+    // call `balanceOf(_specCreator)` to get the number of badges owned by _specCreator
+    uint256 numBadges = badgesInterface.balanceOf(_specCreator);
+    // for each badge owned by _specCreator, check if it's associated with _raftTokenId
+    for (uint256 i = 0; i < numBadges; i++) {
+      // get the tokenId of the badge
+      uint256 tokenId = badgesInterface.tokenOfOwnerByIndex(_specCreator, i);
+      // check to see if the tokenId is associated with _raftTokenId
+      uint256 raftTokenId = _badgeToRaft[tokenId];
+      // if the raft token id of the badge at index i is equal to _raftTokenId, return true
+      // "true" means this means they mint a badge
+      // otherwise, check the next badge
+      if (raftTokenId == _raftTokenId) {
+        return true;
+      }
+    }
   }
 
   function setBadgesAddress(address _badgesAddress) external virtual onlyOwner {

@@ -37,7 +37,7 @@ contract Badges is
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
-  /// @custom:oz-upgrades-unsafe-allow constructorp
+  /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
     _disableInitializers();
   }
