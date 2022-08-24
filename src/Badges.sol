@@ -11,6 +11,7 @@ import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+import "@openzeppelin-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -20,7 +21,8 @@ contract Badges is
   ERC165Upgradeable,
   UUPSUpgradeable,
   OwnableUpgradeable,
-  EIP712Upgradeable
+  EIP712Upgradeable,
+  ERC721EnumerableUpgradeable
 {
   using BitMaps for BitMaps.BitMap;
   BitMaps.BitMap private usedHashes;
@@ -35,7 +37,7 @@ contract Badges is
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
-  /// @custom:oz-upgrades-unsafe-allow constructor
+  /// @custom:oz-upgrades-unsafe-allow constructorp
   constructor() {
     _disableInitializers();
   }
@@ -53,12 +55,20 @@ contract Badges is
 
     __ERC165_init();
     __Ownable_init();
+    // change to "Badges"
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+    __ERC721Enumerable_init();
   }
 
-  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+  function supportsInterface(bytes4 _interfaceId)
+    public
+    view
+    virtual
+    override(ERC165Upgradeable, ERC721EnumerableUpgradeable)
+    returns (bool)
+  {
     return
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
@@ -102,6 +112,12 @@ contract Badges is
   }
 
   function createSpec(string memory _specUri, uint256 _raftTokenId) external virtual {
+    // replace the check that msg.sender is the owner of a RAFT
+    // with a check to see that msg.sender owns a badge associated with the given raftTokenId
+    require(
+      specDataHolder.doesSenderOwnADaosBadge(msg.sender, _raftTokenId),
+      "createSpec: sender does not own a badge with this DAO"
+    );
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
     require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
 

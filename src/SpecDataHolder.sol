@@ -26,6 +26,10 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder 
     _disableInitializers();
   }
 
+  function isUserOwnerOfAnAllowedBadge(address _specCreator, uint256 _raftTokenId) public view returns (bool) {
+    // make sure that msg.sender owns a badge that's
+  }
+
   function setBadgesAddress(address _badgesAddress) external virtual onlyOwner {
     badgesAddress = _badgesAddress;
   }
