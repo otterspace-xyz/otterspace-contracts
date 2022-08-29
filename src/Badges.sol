@@ -80,6 +80,8 @@ contract Badges is
   // 1: all badge holders associated with that RAFT
   // 2: only specific badge holders
   function setBadgeSpecCreationPermissions(uint256 raftTokenId, uint256 permissionInt) external {
+    // this function will only be called when a DAO is created
+    // would it be helpful in any way to emit an event here?
     raftToBadgeSpecCreationPermissions[raftTokenId] = permissionInt;
   }
 
@@ -119,7 +121,7 @@ contract Badges is
     return address(specDataHolder);
   }
 
-  function createSpec(string memory _specUri, uint256 _raftTokenId) external virtual {
+  function createSpecAsRaftHolder(string memory _specUri, uint256 _raftTokenId) external virtual {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
     require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
 

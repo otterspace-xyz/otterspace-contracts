@@ -24,8 +24,13 @@ const errInvalidSig = 'safeCheckAgreement: invalid signature'
 let deployed: any
 
 // fix ts badgesProxy: any
-async function createSpec(badgesProxy: any, specUri: string, raftTokenId: BigNumberish, signer: SignerWithAddress) {
-  const txn = await badgesProxy.connect(signer).createSpec(specUri, raftTokenId)
+async function createSpecAsRaftHolder(
+  badgesProxy: any,
+  specUri: string,
+  raftTokenId: BigNumberish,
+  signer: SignerWithAddress
+) {
+  const txn = await badgesProxy.connect(signer).createSpecAsRaftHolder(specUri, raftTokenId)
   const txReceipt = await txn.wait()
   expect(txReceipt.status).equal(1)
   return await getSpecCreatedEventLogData(txn.hash, badgesProxy)
@@ -38,7 +43,7 @@ async function mintBadge() {
   // mint raft
   const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
   // create spec
-  await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+  await createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)
   // get signature
   const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
   // take's "from" is the issuer
@@ -248,7 +253,7 @@ describe('Badge Specs', () => {
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
 
     // create spec
-    const specCreatedEventData = await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+    const specCreatedEventData = await createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)
 
     expect(specCreatedEventData.to).equal(issuer.address)
     expect(specCreatedEventData.specUri).equal(specUri)
@@ -269,10 +274,12 @@ describe('Badge Specs', () => {
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
 
     // create spec 1st time
-    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+    await createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)
 
     // create spec 2nd time time
-    await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(errSpecAlreadyRegistered)
+    await expect(createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(
+      errSpecAlreadyRegistered
+    )
   })
 
   it('should fail to register a spec if the caller is not a raft token owner', async () => {
@@ -284,7 +291,7 @@ describe('Badge Specs', () => {
     const { raftTokenId } = await mintRaftToken(raftProxy, randomSigner.address, specUri, owner)
 
     // create spec when issuer has not minted raft token
-    await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(errNotRaftOwner)
+    await expect(createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(errNotRaftOwner)
   })
 })
 
@@ -351,7 +358,7 @@ describe('Badges', async function () {
     // mint raft
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
     // create spec
-    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+    await createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)
     // get signature
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
     // unauthorized claimant
@@ -367,7 +374,7 @@ describe('Badges', async function () {
     // mint raft
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
     // create spec
-    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+    await createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)
     // get signature by random signer
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, randomSigner)
     await expect(badgesProxy.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
@@ -381,7 +388,7 @@ describe('Badges', async function () {
     // mint raft
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
     // create spec
-    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+    await createSpecAsRaftHolder(badgesProxy, specUri, raftTokenId, issuer)
     // prep incorrect uri to be signed
     typedData.value.tokenURI = 'http://icorrect-uri'
     // get signature
