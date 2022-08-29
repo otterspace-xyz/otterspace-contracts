@@ -60,6 +60,7 @@ async function mintBadge() {
   const ownerOfMintedToken = await badgesProxy.ownerOf(transferEventData.tokenId)
   expect(ownerOfMintedToken).to.equal(claimant.address)
   const balanceOfClaimant = await badgesProxy.balanceOf(claimant.address)
+  console.log('🚀 ~ mintBadge ~ balanceOfClaimant', balanceOfClaimant)
   expect(balanceOfClaimant).to.equal(1)
   const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
   expect(uriOfToken).to.equal(typedData.value.tokenURI)
@@ -243,6 +244,30 @@ describe('Proxy upgrades', () => {
 })
 
 describe('Badge Specs', () => {
+  it.only('should register a badge spec as a general badge holder', async function () {
+    // deploy contracts
+    const { badgesProxy, raftProxy, typedData, issuer, owner, specDataHolderProxy, claimant } = deployed
+    console.log('🚀 ~ claimant.address', claimant.address)
+
+    await mintBadge()
+    // check to see how many badges the current user has
+    const numBadges = await badgesProxy.balanceOf(claimant.address)
+    console.log('🚀 ~ numBadges', numBadges)
+
+    // get all the tokenIds that the current user has
+    let promiseArray = []
+    for (let i = 0; i < numBadges; i++) {
+      promiseArray.push(badgesProxy.tokenByIndex(i))
+    }
+
+    const badgeIds = await Promise.all(promiseArray)
+    console.log('🚀 ~ badgeIds', badgeIds)
+
+    // for each badgeId, see which raftTokenId it is associated with
+
+    // if its the correct raftTokenId, take the badgeId that's found
+    // and pass it into createSpecAsHolderOfAnyBadge
+  })
   it('should register a spec successfully', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, owner, specDataHolderProxy } = deployed

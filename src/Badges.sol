@@ -124,9 +124,17 @@ contract Badges is
   function createSpecAsRaftHolder(string memory _specUri, uint256 _raftTokenId) external virtual {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpecAsRaftHolder: unauthorized");
     require(!specDataHolder.isSpecRegistered(_specUri), "createSpecAsRaftHolder: spec already registered");
-
     specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
+    emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
+  }
 
+  function createSpecAsHolderOfAnyBadge(
+    string memory _specUri,
+    uint256 _raftTokenId,
+    uint256 badgeId
+  ) external virtual {
+    require(owners[badgeId] == msg.sender, "createSpecAsHolderOfAnyBadge: unauthorized");
+    specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
     emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
   }
 
