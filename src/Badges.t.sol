@@ -171,7 +171,7 @@ contract BadgesTest is Test {
     address randomAddress = vm.addr(randomPrivateKey);
     vm.prank(randomAddress);
 
-    vm.expectRevert(bytes("createSpec: unauthorized"));
+    vm.expectRevert(bytes("createSpecAsRaftHolder: unauthorized"));
     badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
   }
 
@@ -187,7 +187,7 @@ contract BadgesTest is Test {
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
     badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
-    vm.expectRevert(bytes("createSpec: spec already registered"));
+    vm.expectRevert(bytes("createSpecAsRaftHolder: spec already registered"));
     badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
   }
 
@@ -201,7 +201,7 @@ contract BadgesTest is Test {
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
     vm.prank(address(0));
-    vm.expectRevert(bytes("createSpec: unauthorized"));
+    vm.expectRevert(bytes("createSpecAsRaftHolder: unauthorized"));
     badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
   }
 
