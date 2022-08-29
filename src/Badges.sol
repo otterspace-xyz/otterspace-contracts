@@ -34,6 +34,7 @@ contract Badges is
   mapping(address => uint256) private balances;
 
   ISpecDataHolder private specDataHolder;
+  mapping(uint256 => uint256) raftToBadgeSpecCreationPermissions;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
@@ -72,6 +73,14 @@ contract Badges is
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
       super.supportsInterface(_interfaceId);
+  }
+
+  // permissionInt:
+  // 0: only raft owner
+  // 1: all badge holders associated with that RAFT
+  // 2: only specific badge holders
+  function setBadgeSpecCreationPermissions(uint256 raftTokenId, uint256 permissionInt) external {
+    raftToBadgeSpecCreationPermissions[raftTokenId] = permissionInt;
   }
 
   // The owner can call this once only. They should call this when the contract is first deployed.
