@@ -3,7 +3,7 @@ pragma solidity 0.8.16;
 // import "../node_modules/hardhat/console.sol";
 
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
-import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
+import { IERC4973 } from "./interfaces/IERC4973.sol";
 import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
@@ -11,6 +11,7 @@ import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+import "@openzeppelin-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -20,7 +21,8 @@ contract Badges is
   ERC165Upgradeable,
   UUPSUpgradeable,
   OwnableUpgradeable,
-  EIP712Upgradeable
+  EIP712Upgradeable,
+  ERC721EnumerableUpgradeable
 {
   using BitMaps for BitMaps.BitMap;
   BitMaps.BitMap private usedHashes;
@@ -56,9 +58,16 @@ contract Badges is
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+    __ERC721Enumerable_init();
   }
 
-  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+  function supportsInterface(bytes4 _interfaceId)
+    public
+    view
+    virtual
+    override(ERC165Upgradeable, ERC721EnumerableUpgradeable)
+    returns (bool)
+  {
     return
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
@@ -110,15 +119,21 @@ contract Badges is
     emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
   }
 
-  function name() external view virtual override returns (string memory) {
+  function name() public view virtual override(ERC721Upgradeable, IERC721Metadata) returns (string memory) {
     return name_;
   }
 
-  function symbol() external view virtual override returns (string memory) {
+  function symbol() public view virtual override(ERC721Upgradeable, IERC721Metadata) returns (string memory) {
     return symbol_;
   }
 
-  function tokenURI(uint256 _tokenId) external view virtual override returns (string memory) {
+  function tokenURI(uint256 _tokenId)
+    public
+    view
+    virtual
+    override(ERC721Upgradeable, IERC721Metadata)
+    returns (string memory)
+  {
     require(exists(_tokenId), "tokenURI: token doesn't exist");
     return tokenURIs[_tokenId];
   }
@@ -130,12 +145,24 @@ contract Badges is
     burn(_tokenId);
   }
 
-  function balanceOf(address _owner) external view virtual override returns (uint256) {
+  function balanceOf(address _owner)
+    public
+    view
+    virtual
+    override(IERC721Upgradeable, ERC721Upgradeable, IERC4973)
+    returns (uint256)
+  {
     require(_owner != address(0), "balanceOf: address zero is not a valid owner_");
     return balances[_owner];
   }
 
-  function ownerOf(uint256 _tokenId) external view virtual override returns (address) {
+  function ownerOf(uint256 _tokenId)
+    public
+    view
+    virtual
+    override(IERC721Upgradeable, ERC721Upgradeable, IERC4973)
+    returns (address)
+  {
     address owner_ = owners[_tokenId];
     require(owner_ != address(0), "ownerOf: token doesn't exist");
     return owner_;
