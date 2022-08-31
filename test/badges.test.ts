@@ -347,13 +347,13 @@ describe('Badges', async function () {
   it.only('should fail to mint a second badge after the claimant gets permission from another Raft owner under the same spec', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
-    const specUri = typedData.value.tokenURI
+    // first we issue the Raft token to the issuer
+    const raftOwner = issuer
+    const { raftTokenId } = await mintRaftToken(raftProxy, raftOwner.address, specUri, owner)
 
-    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+    await createSpec(badgesProxy, specUri, raftTokenId, raftOwner)
 
-    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
-    // get signature
-    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, raftOwner)
 
     const txn = await badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
     await txn.wait()
@@ -369,15 +369,18 @@ describe('Badges', async function () {
     const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
     expect(uriOfToken).to.equal(typedData.value.tokenURI)
 
+    // transfer the Raft token to someone else so that we can test the second minting
     const newRaftOwner = owner
     // raft owner should approve the transfer to "owner"
-    await raftProxy.connect(issuer).approve(newRaftOwner.address, raftTokenId)
+    await raftProxy.connect(raftOwner).approve(newRaftOwner.address, raftTokenId)
 
     // make the transfer
-    await raftProxy.connect(issuer).transferFrom(issuer.address, newRaftOwner.address, raftTokenId)
+    await raftProxy.connect(raftOwner).transferFrom(raftOwner.address, newRaftOwner.address, raftTokenId)
     const ownerOfTransferredToken = await raftProxy.ownerOf(raftTokenId)
     expect(ownerOfTransferredToken).to.equal(newRaftOwner.address)
+    // for TX2 the raft owner is the issuer
 
+    typedData.value.passive = newRaftOwner.address
     // new owner should create a signature
     const { compact: compactSig2 } = await getSignature(
       typedData.domain,
@@ -388,7 +391,7 @@ describe('Badges', async function () {
 
     // claimant should again try to mint a badge
     await expect(
-      badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
+      badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compactSig2)
     ).to.be.revertedWith(tokenExistsErr)
   })
 
