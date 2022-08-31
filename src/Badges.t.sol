@@ -290,7 +290,7 @@ contract BadgesTest is Test {
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
     emit Transfer(from, to, tokenId);
 
-    vm.expectRevert(bytes("safeCheckAgreement: already used"));
+    vm.expectRevert(bytes("mint: tokenID exists"));
     badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
   }
 
@@ -389,7 +389,7 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.give(to, specUri, signature);
 
-    vm.expectRevert(bytes("safeCheckAgreement: already used"));
+    vm.expectRevert(bytes("mint: tokenID exists"));
     badgesWrappedProxyV1.give(to, specUri, signature);
   }
 
