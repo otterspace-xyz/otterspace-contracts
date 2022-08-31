@@ -71,18 +71,23 @@ contract Badges is
     specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
+  // Give is called by someone who has authority to create badge specs
+  // Prior to calling "Give", the "to" address would have alrady requested
+  // the badge (like joining a wait list)
   function give(
     address _to,
     string calldata _uri,
     bytes calldata _signature
   ) external virtual override returns (uint256) {
     require(msg.sender != _to, "give: cannot give from self");
-    uint256 tokenId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
-    mint(_to, tokenId, _uri);
+    safeCheckAgreement(msg.sender, _to, _uri, _signature);
+    uint256 tokenId = mint(_to, _uri);
     usedHashes.set(tokenId);
     return tokenId;
   }
 
+  // Take is called by somebody who has already been added to an allow list.
+  // The "from" address is the person who issued the voucher, who is permitting them to mint the badge.
   function take(
     address _from,
     string calldata _uri,
@@ -90,8 +95,8 @@ contract Badges is
   ) external virtual override returns (uint256) {
     require(msg.sender != _from, "take: cannot take from self");
 
-    uint256 tokenId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
-    mint(msg.sender, tokenId, _uri);
+    safeCheckAgreement(msg.sender, _from, _uri, _signature);
+    uint256 tokenId = mint(msg.sender, _uri);
     usedHashes.set(tokenId);
 
     return tokenId;
@@ -141,25 +146,22 @@ contract Badges is
     return owner_;
   }
 
-  function mint(
-    address _to,
-    uint256 _tokenId,
-    string memory _uri
-  ) internal virtual returns (uint256) {
+  function mint(address _to, string memory _uri) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
-
+    bytes32 hash = getBadgeIdHash(_to, _uri);
+    uint256 tokenId = uint256(hash);
     // only registered specs can be used for minting
     require(raftTokenId != 0, "mint: spec is not registered");
-    require(!exists(_tokenId), "mint: tokenID exists");
+    require(!exists(tokenId), "mint: tokenID exists");
 
     balances[_to] += 1;
-    owners[_tokenId] = _to;
-    tokenURIs[_tokenId] = _uri;
+    owners[tokenId] = _to;
+    tokenURIs[tokenId] = _uri;
 
-    emit Transfer(address(0), _to, _tokenId);
+    emit Transfer(address(0), _to, tokenId);
 
-    specDataHolder.setBadgeToRaft(_tokenId, raftTokenId);
-    return _tokenId;
+    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
+    return tokenId;
   }
 
   function safeCheckAgreement(
@@ -167,25 +169,28 @@ contract Badges is
     address _passive,
     string calldata _uri,
     bytes calldata _signature
-  ) internal virtual returns (uint256) {
-    bytes32 hash = getHash(_active, _passive, _uri);
-    uint256 tokenId = uint256(hash);
+  ) internal virtual {
+    bytes32 hash = getAgreementHash(_active, _passive, _uri);
+    uint256 voucherHashId = uint256(hash);
 
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
-    require(!usedHashes.get(tokenId), "safeCheckAgreement: already used");
-    return tokenId;
+    require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
   }
 
-  function getHash(
+  function getAgreementHash(
     address _from,
     address _to,
     string calldata _uri
   ) public view virtual returns (bytes32) {
     bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
     return _hashTypedDataV4(structHash);
+  }
+
+  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
+    return keccak256(abi.encode(_to, bytes(_uri)));
   }
 
   function exists(uint256 _tokenId) internal view virtual returns (bool) {

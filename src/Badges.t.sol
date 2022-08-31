@@ -77,7 +77,7 @@ contract BadgesTest is Test {
   // helper function
   function getSignature() internal returns (bytes memory) {
     address to = address(this);
-    bytes32 hash = badgesWrappedProxyV1.getHash(to, passiveAddress, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(to, passiveAddress, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     return signature;
@@ -228,7 +228,7 @@ contract BadgesTest is Test {
   function testTakeWithDifferentTokenURI() public {
     address to = address(this);
     string memory falseTokenURI = "https://badstuff.com";
-    bytes32 hash = badgesWrappedProxyV1.getHash(passiveAddress, to, falseTokenURI);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(passiveAddress, to, falseTokenURI);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
@@ -241,7 +241,7 @@ contract BadgesTest is Test {
   function testTakeWithUnauthorizedSender() public {
     address to = address(this);
 
-    bytes32 hash = badgesWrappedProxyV1.getHash(passiveAddress, to, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(passiveAddress, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     address unauthorizedFrom = address(1337);
@@ -308,7 +308,7 @@ contract BadgesTest is Test {
     address from = address(this);
     address to = passiveAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getHash(from, to, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
@@ -322,7 +322,7 @@ contract BadgesTest is Test {
     address from = address(this);
     address to = passiveAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getHash(from, to, falseTokenURI);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(from, to, falseTokenURI);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
@@ -337,7 +337,7 @@ contract BadgesTest is Test {
     address to = passiveAddress;
     address randomAddress = vm.addr(randomPrivateKey);
     vm.prank(randomAddress);
-    bytes32 hash = badgesWrappedProxyV1.getHash(from, to, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     vm.expectRevert(bytes("safeCheckAgreement: invalid signature"));
@@ -350,7 +350,7 @@ contract BadgesTest is Test {
     address from = address(this);
     address to = passiveAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getHash(from, to, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     vm.expectEmit(true, true, true, false);
@@ -383,7 +383,7 @@ contract BadgesTest is Test {
     address from = address(this);
     address to = passiveAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getHash(from, to, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(from, to, specUri);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
