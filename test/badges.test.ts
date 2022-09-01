@@ -344,7 +344,7 @@ describe('Badges', async function () {
     mintBadge()
   })
 
-  it.only('should fail to mint a second badge after the claimant gets permission from another Raft owner under the same spec', async function () {
+  it.only('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     // first we issue the Raft token to the issuer
