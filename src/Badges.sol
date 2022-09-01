@@ -195,7 +195,7 @@ contract Badges is
   }
 
   function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
-    return keccak256(abi.encode(_to, bytes(_uri)));
+    return keccak256(abi.encode(_to, _uri));
   }
 
   function exists(uint256 _tokenId) internal view virtual returns (bool) {
