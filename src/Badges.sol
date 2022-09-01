@@ -33,6 +33,8 @@ contract Badges is
 
   ISpecDataHolder private specDataHolder;
 
+  mapping(uint256 => uint256) private voucherHashIds;
+
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
   /// @custom:oz-upgrades-unsafe-allow constructor
@@ -80,9 +82,10 @@ contract Badges is
     bytes calldata _signature
   ) external virtual override returns (uint256) {
     require(msg.sender != _to, "give: cannot give from self");
-    safeCheckAgreement(msg.sender, _to, _uri, _signature);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 tokenId = mint(_to, _uri);
-    usedHashes.set(tokenId);
+    usedHashes.set(voucherHashId);
+    voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
 
@@ -95,10 +98,10 @@ contract Badges is
   ) external virtual override returns (uint256) {
     require(msg.sender != _from, "take: cannot take from self");
 
-    safeCheckAgreement(msg.sender, _from, _uri, _signature);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
     uint256 tokenId = mint(msg.sender, _uri);
-    usedHashes.set(tokenId);
-
+    usedHashes.set(voucherHashId);
+    voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
 
@@ -131,7 +134,8 @@ contract Badges is
   function unequip(uint256 _tokenId) external virtual override {
     require(owners[_tokenId] != address(0), "unequip: token doesn't exist");
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
-    usedHashes.unset(_tokenId);
+    uint256 voucherHashId = voucherHashIds[_tokenId];
+    usedHashes.unset(voucherHashId);
     burn(_tokenId);
   }
 
@@ -169,7 +173,7 @@ contract Badges is
     address _passive,
     string calldata _uri,
     bytes calldata _signature
-  ) internal virtual {
+  ) internal virtual returns (uint256) {
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
     uint256 voucherHashId = uint256(hash);
 
@@ -178,6 +182,7 @@ contract Badges is
       "safeCheckAgreement: invalid signature"
     );
     require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
+    return voucherHashId;
   }
 
   function getAgreementHash(
@@ -203,8 +208,12 @@ contract Badges is
     balances[_owner] -= 1;
     delete owners[_tokenId];
     delete tokenURIs[_tokenId];
-
+    delete voucherHashIds[_tokenId];
     emit Transfer(_owner, address(0), _tokenId);
+  }
+
+  function getVoucherHash(uint256 _tokenId) public view virtual returns (uint256) {
+    return voucherHashIds[_tokenId];
   }
 
   // Not implementing this function because it is used to check who is authorized

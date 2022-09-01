@@ -58,7 +58,7 @@ contract BadgesTest is Test {
     vm.label(passiveAddress, "passive");
   }
 
-  // helper function
+  // // helper function
   function createRaftAndRegisterSpec() internal {
     address to = address(this);
     address from = address(0);
@@ -74,7 +74,7 @@ contract BadgesTest is Test {
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
   }
 
-  // helper function
+  // // helper function
   function getSignature() internal returns (bytes memory) {
     address to = address(this);
     bytes32 hash = badgesWrappedProxyV1.getAgreementHash(to, passiveAddress, specUri);
@@ -290,7 +290,7 @@ contract BadgesTest is Test {
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
     emit Transfer(from, to, tokenId);
 
-    vm.expectRevert(bytes("mint: tokenID exists"));
+    vm.expectRevert(bytes("safeCheckAgreement: already used"));
     badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
   }
 
@@ -389,7 +389,7 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.give(to, specUri, signature);
 
-    vm.expectRevert(bytes("mint: tokenID exists"));
+    vm.expectRevert(bytes("safeCheckAgreement: already used"));
     badgesWrappedProxyV1.give(to, specUri, signature);
   }
 
