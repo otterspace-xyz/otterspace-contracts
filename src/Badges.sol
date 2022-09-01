@@ -60,13 +60,6 @@ contract Badges is
     transferOwnership(_nextOwner);
   }
 
-  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
-    return
-      _interfaceId == type(IERC721Metadata).interfaceId ||
-      _interfaceId == type(IERC4973).interfaceId ||
-      super.supportsInterface(_interfaceId);
-  }
-
   // The owner can call this once only. They should call this when the contract is first deployed.
   function setDataHolder(address _dataHolder) external virtual onlyOwner {
     // require(address(dataHolder) == address(0x0));
@@ -150,6 +143,30 @@ contract Badges is
     return owner_;
   }
 
+  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+    return
+      _interfaceId == type(IERC721Metadata).interfaceId ||
+      _interfaceId == type(IERC4973).interfaceId ||
+      super.supportsInterface(_interfaceId);
+  }
+
+  function getVoucherHash(uint256 _tokenId) public view virtual returns (uint256) {
+    return voucherHashIds[_tokenId];
+  }
+
+  function getAgreementHash(
+    address _from,
+    address _to,
+    string calldata _uri
+  ) public view virtual returns (bytes32) {
+    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
+    return _hashTypedDataV4(structHash);
+  }
+
+  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
+    return keccak256(abi.encode(_to, _uri));
+  }
+
   function mint(address _to, string memory _uri) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
@@ -185,19 +202,6 @@ contract Badges is
     return voucherHashId;
   }
 
-  function getAgreementHash(
-    address _from,
-    address _to,
-    string calldata _uri
-  ) public view virtual returns (bytes32) {
-    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
-    return _hashTypedDataV4(structHash);
-  }
-
-  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
-    return keccak256(abi.encode(_to, _uri));
-  }
-
   function exists(uint256 _tokenId) internal view virtual returns (bool) {
     return owners[_tokenId] != address(0);
   }
@@ -210,10 +214,6 @@ contract Badges is
     delete tokenURIs[_tokenId];
     delete voucherHashIds[_tokenId];
     emit Transfer(_owner, address(0), _tokenId);
-  }
-
-  function getVoucherHash(uint256 _tokenId) public view virtual returns (uint256) {
-    return voucherHashIds[_tokenId];
   }
 
   // Not implementing this function because it is used to check who is authorized

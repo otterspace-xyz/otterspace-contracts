@@ -422,6 +422,32 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(to), 0);
   }
 
+  function testVoucherHashIdsWithUnequip() public {
+    address to = address(this);
+    assertEq(badgesWrappedProxyV1.balanceOf(to), 0);
+    bytes memory signature = getSignature();
+    address from = address(0);
+
+    createRaftAndRegisterSpec();
+    vm.expectEmit(true, true, true, false);
+    uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
+    assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+
+    uint256 voucherIdAfterTake = badgesWrappedProxyV1.getVoucherHash(tokenId);
+    assertTrue(voucherIdAfterTake != 0);
+
+    vm.expectEmit(true, true, true, false);
+    badgesWrappedProxyV1.unequip(tokenId);
+    emit Transfer(to, from, tokenId);
+    assertEq(badgesWrappedProxyV1.balanceOf(to), 0);
+
+    uint256 voucherIdAfterUnequip = badgesWrappedProxyV1.getVoucherHash(tokenId);
+    assertTrue(voucherIdAfterUnequip == 0);
+  }
+
   function testUnequippingAsNonAuthorizedAccount() public {
     address to = address(this);
     address from = address(0);
