@@ -6,6 +6,8 @@ import type { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { waffle } from 'hardhat'
 import { LogDescription, splitSignature, _TypedDataEncoder } from 'ethers/lib/utils'
 import { AnyNaptrRecord } from 'dns'
+import { MerkleTree } from 'merkletreejs'
+import keccak256 from 'keccak256'
 
 const name = 'Otter'
 const symbol = 'OTTR'
@@ -131,7 +133,7 @@ const setup = async () => {
 beforeEach(setup)
 
 const deployContractFixture = async () => {
-  const [owner, issuer, claimant, randomSigner] = await ethers.getSigners()
+  const [owner, issuer, claimant, randomSigner, merkleIssuer] = await ethers.getSigners()
 
   const raft = await ethers.getContractFactory('Raft')
   const raftProxy = await upgrades.deployProxy(raft, [owner.address, 'Raft', 'RAFT'], {
@@ -179,8 +181,84 @@ const deployContractFixture = async () => {
     },
   }
 
-  deployed = { badgesProxy, raftProxy, owner, issuer, claimant, randomSigner, typedData, specDataHolderProxy }
+  deployed = {
+    badgesProxy,
+    raftProxy,
+    owner,
+    issuer,
+    claimant,
+    randomSigner,
+    typedData,
+    specDataHolderProxy,
+  }
 }
+
+describe('Merkle minting', () => {
+  it('Happy path: should allow minting when an address is whitelisted on a merkle tree', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    const specUri = typedData.value.tokenURI
+    // SETUP (step 0)
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    // ===== step 1: the issuer whitelists a bunch of addresses
+    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
+
+    // map over addresses to get leaf nodes
+    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+
+    // create merkle tree
+    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+
+    // create merkle root
+    const merkleRoot = merkleTree.getRoot()
+
+    // create signature
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+    // ===== at this point we will store signature and `whitelistAddresses` in the db
+
+    // ===== step 2: simulate the claimant minting a badge
+
+    // given the claimant's address, get a merkleProof
+    const merkleProof = merkleTree.getHexProof(leafNodes[0])
+
+    // pass merkleRoot and merkleProof to the badges contract
+    // badges contract will check to see if the proof is valid
+    await badgesProxy
+      .connect(claimant)
+      .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+
+    // ===== step 3: check that the claimant has the badge
+    expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
+  })
+
+  it('Should reject minting when someone not on the whitelist tries to mint', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner, randomSigner } = deployed
+    const specUri = typedData.value.tokenURI
+
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
+
+    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+
+    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+
+    const merkleRoot = merkleTree.getRoot()
+
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+
+    const merkleProof = merkleTree.getHexProof(leafNodes[0])
+
+    // calling connect() with a random signer is a "bad actor" trying to mint
+    await expect(
+      badgesProxy
+        .connect(randomSigner)
+        .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+    ).to.be.revertedWith('invalid proof')
+  })
+})
 
 describe('Proxy upgrades', () => {
   it('Should upgrade the Raft contract then create raft/spec/badge', async () => {
@@ -344,7 +422,7 @@ describe('Badges', async function () {
     mintBadge()
   })
 
-  it.only('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
+  it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     // first we issue the Raft token to the issuer
