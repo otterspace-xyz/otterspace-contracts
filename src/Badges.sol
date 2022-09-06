@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.16;
-// import "../node_modules/hardhat/console.sol";
 
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
@@ -11,7 +10,6 @@ import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
-
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
 contract Badges is
@@ -34,6 +32,8 @@ contract Badges is
   ISpecDataHolder private specDataHolder;
 
   mapping(uint256 => uint256) private voucherHashIds;
+  // badgeIdToDeactivationReason[7] = "harrassment"
+  mapping(uint256 => string) public badgeIdToDeactivationReason;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
@@ -141,6 +141,28 @@ contract Badges is
     address owner_ = owners[_tokenId];
     require(owner_ != address(0), "ownerOf: token doesn't exist");
     return owner_;
+  }
+
+  function deactivateBadge(
+    uint256 _raftTokenId,
+    uint256 _badgeId,
+    string memory _reason
+  ) external {
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
+    // check the deactivation permissions
+    badgeIdToDeactivationReason[_badgeId] = _reason;
+  }
+
+  function reactivateBadge(uint256 _raftTokenId, uint256 _badgeId) external {
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
+    delete badgeIdToDeactivationReason[_badgeId];
+  }
+
+  function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
+    // if solidity were friendlier we could do `badgeIdToDeactivationReason[badgeId] == ""`
+    bool isntDeactivated = keccak256(abi.encode(badgeIdToDeactivationReason[_badgeId])) == keccak256("");
+    bool isntExpired = timestamp < block.timestamp;
+    return isntDeactivated && isntExpired;
   }
 
   function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {

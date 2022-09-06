@@ -50,14 +50,16 @@ async function mintBadge() {
   // currently the ERC4973 is hardcoding from to 0 in the event - https://github.com/rugpullindex/ERC4973/issues/39
   // expect(transferEventData.from).equal(typedData.value.passive) // issuer.address,
   expect(transferEventData.to).equal(typedData.value.active) // claimant.address
-  expect(transferEventData.tokenId).gt(0)
+  const badgeId = transferEventData.tokenId
+  expect(badgeId).gt(0)
 
-  const ownerOfMintedToken = await badgesProxy.ownerOf(transferEventData.tokenId)
+  const ownerOfMintedToken = await badgesProxy.ownerOf(badgeId)
   expect(ownerOfMintedToken).to.equal(claimant.address)
   const balanceOfClaimant = await badgesProxy.balanceOf(claimant.address)
   expect(balanceOfClaimant).to.equal(1)
-  const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
+  const uriOfToken = await badgesProxy.tokenURI(badgeId)
   expect(uriOfToken).to.equal(typedData.value.tokenURI)
+  return { raftTokenId, badgeId }
 }
 
 async function mintRaftToken(raftProxy: any, toAddress: string, raftTokenUri: string, signer: SignerWithAddress) {
@@ -344,7 +346,7 @@ describe('Badges', async function () {
     mintBadge()
   })
 
-  it.only('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
+  it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     // first we issue the Raft token to the issuer
@@ -452,5 +454,21 @@ describe('Badges', async function () {
     await expect(badgesProxy.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
       errSpecNotRegistered
     )
+  })
+})
+
+describe('Badge deactivation', () => {
+  it('Deactivate a badge, confirm its deactivated, then reactivate', async () => {
+    const { raftTokenId, badgeId } = await mintBadge()
+    const reasonForRevocation = 'This is a reason for revocation'
+    const { badgesProxy, issuer } = deployed
+    // deactivate the badge
+    await badgesProxy.connect(issuer).deactivateBadge(raftTokenId, badgeId, reasonForRevocation)
+    // test to make sure that deactivation worked
+    expect(await badgesProxy.connect(issuer).badgeIdToDeactivationReason(badgeId)).to.equal(reasonForRevocation)
+    // reactivate the badge
+    await badgesProxy.connect(issuer).reactivateBadge(raftTokenId, badgeId)
+    // test to make sure that reactivation worked
+    expect(await badgesProxy.connect(issuer).badgeIdToDeactivationReason(badgeId)).to.equal('')
   })
 })
