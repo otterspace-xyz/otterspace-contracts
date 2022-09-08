@@ -70,7 +70,7 @@ contract BadgesTest is Test {
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
 
-    badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId, 0);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
   }
 
@@ -171,8 +171,8 @@ contract BadgesTest is Test {
     address randomAddress = vm.addr(randomPrivateKey);
     vm.prank(randomAddress);
 
-    vm.expectRevert(bytes("createSpecAsRaftHolder: unauthorized"));
-    badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpec: unauthorized"));
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId, 0);
   }
 
   // can't test this one with fuzzing because the owner is set in the "setup"
@@ -186,9 +186,9 @@ contract BadgesTest is Test {
     emit Transfer(from, to, raftTokenId);
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
-    badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
-    vm.expectRevert(bytes("createSpecAsRaftHolder: spec already registered"));
-    badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId, 0);
+    vm.expectRevert(bytes("createSpec: spec already registered"));
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId, 0);
   }
 
   function testSenderIsntRaftOwner() public {
@@ -201,8 +201,8 @@ contract BadgesTest is Test {
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
     vm.prank(address(0));
-    vm.expectRevert(bytes("createSpecAsRaftHolder: unauthorized"));
-    badgesWrappedProxyV1.createSpecAsRaftHolder(specUri, raftTokenId);
+    vm.expectRevert(bytes("createSpec: unauthorized"));
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId, 0);
   }
 
   // TODO: write test for a non-owner calling transferOwnership

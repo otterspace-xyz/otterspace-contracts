@@ -32,8 +32,14 @@ contract Badges is
   mapping(address => uint256) private balances;
 
   ISpecDataHolder private specDataHolder;
-  mapping(uint256 => uint256) raftToBadgeSpecCreationPermissions;
+  enum Permission {
+    ONLY_RAFT,
+    ALL_BADGE_HOLDERS,
+    SPECIFIC_BADGE_HOLDERS
+  }
 
+  mapping(uint256 => Permission) public specCreationPermissions;
+  mapping(uint256 => string[]) public raftToPermittedBadgeSpecCreators;
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
   /// @custom:oz-upgrades-unsafe-allow constructor
@@ -66,14 +72,25 @@ contract Badges is
       super.supportsInterface(_interfaceId);
   }
 
-  // permissionInt:
-  // 0: only raft owner
-  // 1: all badge holders associated with that RAFT
-  // 2: only specific badge holders
-  function setBadgeSpecCreationPermissions(uint256 raftTokenId, uint256 permissionInt) external {
-    // this function will only be called when a DAO is created
-    // would it be helpful in any way to emit an event here?
-    raftToBadgeSpecCreationPermissions[raftTokenId] = permissionInt;
+  // this is a org-level function that's called from the settings page on a DAO
+  function setSpecCreationPermissions(
+    uint256 _raftTokenId,
+    Permission permissionInt,
+    string[] memory listOfSpecs
+  ) external {
+    // require that the caller is the owner of the raftTokenId
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "setSpecCreationPermissions: unauthorized");
+
+    // would it be helpful to emit an event here?
+    specCreationPermissions[_raftTokenId] = permissionInt;
+
+    if (permissionInt == Permission.SPECIFIC_BADGE_HOLDERS) {
+      raftToPermittedBadgeSpecCreators[_raftTokenId] = listOfSpecs;
+    }
+  }
+
+  function getBadgesAllowedToCreateSpecs(uint256 _raftTokenId) external view returns (string[] memory) {
+    return raftToPermittedBadgeSpecCreators[_raftTokenId];
   }
 
   // The owner can call this once only. They should call this when the contract is first deployed.
@@ -112,21 +129,45 @@ contract Badges is
     return address(specDataHolder);
   }
 
-  function createSpecAsRaftHolder(string memory _specUri, uint256 _raftTokenId) external virtual {
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpecAsRaftHolder: unauthorized");
-    require(!specDataHolder.isSpecRegistered(_specUri), "createSpecAsRaftHolder: spec already registered");
-    specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
-    emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
-  }
-
-  function createSpecAsHolderOfAnyBadge(
+  function createSpec(
     string memory _specUri,
     uint256 _raftTokenId,
-    uint256 badgeId
+    uint256 _badgeId
   ) external virtual {
-    require(owners[badgeId] == msg.sender, "createSpecAsHolderOfAnyBadge: unauthorized");
-    specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
-    emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
+    require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
+
+    Permission specCreationPermission = specCreationPermissions[_raftTokenId];
+
+    if (specCreationPermission == Permission.ONLY_RAFT) {
+      require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
+
+      specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
+      emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
+    } else if (specCreationPermission == Permission.SPECIFIC_BADGE_HOLDERS) {
+      require(owners[_badgeId] == msg.sender, "createSpec: unauthorized");
+
+      string memory mySpecUri = tokenURIs[_badgeId];
+      string[] memory allowList = raftToPermittedBadgeSpecCreators[_raftTokenId]; // ['specUri 1', 'specUri 2', 'specUri 3']
+
+      // write a test to see worst case scenario that it wont cost too much
+      // loop through the list of badges that are allowed to create specs
+      for (uint256 i = 0; i < allowList.length; i++) {
+        // check the current item to see if it matches my Badge's specUri
+        if (keccak256(abi.encodePacked(allowList[i])) == keccak256(abi.encodePacked(mySpecUri))) {
+          // if it does, then we can create the spec
+          specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
+          emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
+          return;
+        }
+      }
+      // else "all badge holders" is the default
+      // create the spec only checking to see that msg.sender owns the badge they're claiming to own
+    } else {
+      require(owners[_badgeId] == msg.sender, "createSpec: unauthorized");
+
+      specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
+      emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
+    }
   }
 
   function name() external view virtual override returns (string memory) {
