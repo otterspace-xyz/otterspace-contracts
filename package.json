@@ -60,5 +60,7 @@
     "typechain": "^8.1.0",
     "typescript": "^4.6.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "nft.storage": "^7.0.0"
+  }
 }
