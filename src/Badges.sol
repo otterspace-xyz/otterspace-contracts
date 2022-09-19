@@ -33,8 +33,8 @@ contract Badges is
 
   mapping(uint256 => uint256) private voucherHashIds;
 
-  mapping(uint256 => bool) public deactivatedBadges;
-
+  mapping(uint256 => bool) public revokedBadges;
+  mapping(uint256 => uint256) public badgeExpirationDates;
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
   /// @custom:oz-upgrades-unsafe-allow constructor
@@ -145,19 +145,18 @@ contract Badges is
 
   function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "revokeBadge: unauthorized");
-    deactivatedBadges[_badgeId] = true;
+    revokedBadges[_badgeId] = true;
   }
 
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId) external {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "reinstateBadge: unauthorized");
-    delete deactivatedBadges[_badgeId];
+    delete revokedBadges[_badgeId];
   }
 
   function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
-    // if solidity were friendlier we could do `deactivatedBadges[badgeId] == ""`
-    bool isntDeactivated = keccak256(abi.encode(deactivatedBadges[_badgeId])) == keccak256("");
-    bool isntExpired = timestamp < block.timestamp;
-    return isntDeactivated && isntExpired;
+    bool isNotRevoked = revokedBadges[_badgeId] == false;
+    bool isntExpired = badgeExpirationDates[_badgeId] == 0 || timestamp < badgeExpirationDates[_badgeId];
+    return isNotRevoked && isntExpired;
   }
 
   function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {

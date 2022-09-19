@@ -458,17 +458,44 @@ describe('Badges', async function () {
 })
 
 describe('Badge deactivation', () => {
-  it('Deactivate a badge, confirm its deactivated, then reactivate', async () => {
+  it.only('Revoke a badge, confirm its revoked, then reinstate', async () => {
     const { raftTokenId, badgeId } = await mintBadge()
-    const reasonForRevocation = 'This is a reason for revocation'
+    
     const { badgesProxy, issuer } = deployed
     // deactivate the badge
-    await badgesProxy.connect(issuer).deactivateBadge(raftTokenId, badgeId, reasonForRevocation)
+    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId)
     // test to make sure that deactivation worked
-    expect(await badgesProxy.connect(issuer).badgeIdToDeactivationReason(badgeId)).to.equal(reasonForRevocation)
+    expect(await badgesProxy.connect(issuer).revokedBadges(badgeId)).to.equal(true)
     // reactivate the badge
-    await badgesProxy.connect(issuer).reactivateBadge(raftTokenId, badgeId)
+    await badgesProxy.connect(issuer).reinstateBadge(raftTokenId, badgeId)
     // test to make sure that reactivation worked
-    expect(await badgesProxy.connect(issuer).badgeIdToDeactivationReason(badgeId)).to.equal('')
+    expect(await badgesProxy.connect(issuer).revokedBadges(badgeId)).to.equal(false)
+    // check to see if badge is valid
+    expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId, 123)).to.equal(true)
   })
+
+  it.only('Revoke a badge, then confirm that its revoked', async () => {
+    const { raftTokenId, badgeId } = await mintBadge()
+    
+    const { badgesProxy, issuer } = deployed
+    // deactivate the badge
+    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId)
+    // test to make sure that deactivation worked
+    expect(await badgesProxy.connect(issuer).revokedBadges(badgeId)).to.equal(true)
+    // check to see if badge is valid
+    // 123 is a dummy timestamp, doesn't matter what it is
+    expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId, 123)).to.equal(false)
+  })  
+
+  // it.only('Set an old expiration date for a badge, then confirm that not a valid', async () => {
+  //   const { raftTokenId, badgeId } = await mintBadge()
+    
+  //   const { badgesProxy, issuer } = deployed
+  //   // deactivate the badge
+  
+  //   // 123 is a dummy timestamp, doesn't matter what it is
+  //   expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId, 123)).to.equal(false)
+  // })    
+
+  // TODO: make a separate test for badge `isValid` function
 })
