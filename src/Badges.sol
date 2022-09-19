@@ -32,8 +32,8 @@ contract Badges is
   ISpecDataHolder private specDataHolder;
 
   mapping(uint256 => uint256) private voucherHashIds;
-  // badgeIdToDeactivationReason[7] = "harrassment"
-  mapping(uint256 => string) public badgeIdToDeactivationReason;
+
+  mapping(uint256 => bool) public deactivatedBadges;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
 
@@ -143,24 +143,19 @@ contract Badges is
     return owner_;
   }
 
-  function deactivateBadge(
-    uint256 _raftTokenId,
-    uint256 _badgeId,
-    string memory _reason
-  ) external {
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
-    // check the deactivation permissions
-    badgeIdToDeactivationReason[_badgeId] = _reason;
+  function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external {
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "revokeBadge: unauthorized");
+    deactivatedBadges[_badgeId] = true;
   }
 
-  function reactivateBadge(uint256 _raftTokenId, uint256 _badgeId) external {
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
-    delete badgeIdToDeactivationReason[_badgeId];
+  function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId) external {
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "reinstateBadge: unauthorized");
+    delete deactivatedBadges[_badgeId];
   }
 
   function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
-    // if solidity were friendlier we could do `badgeIdToDeactivationReason[badgeId] == ""`
-    bool isntDeactivated = keccak256(abi.encode(badgeIdToDeactivationReason[_badgeId])) == keccak256("");
+    // if solidity were friendlier we could do `deactivatedBadges[badgeId] == ""`
+    bool isntDeactivated = keccak256(abi.encode(deactivatedBadges[_badgeId])) == keccak256("");
     bool isntExpired = timestamp < block.timestamp;
     return isntDeactivated && isntExpired;
   }
