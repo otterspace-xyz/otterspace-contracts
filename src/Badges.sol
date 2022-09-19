@@ -11,6 +11,9 @@ import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
+bytes32 constant AGREEMENT_HASH_2 = keccak256(
+  "AgreementWithExpiration(address active,address passive,string tokenURI,string expirationType, uint256 expirationValue)"
+);
 
 contract Badges is
   IERC721Metadata,
@@ -69,6 +72,72 @@ contract Badges is
   // Give is called by someone who has authority to create badge specs
   // Prior to calling "Give", the "to" address would have alrady requested
   // the badge (like joining a wait list)
+  function giveWithExpiration(
+    address _to,
+    string calldata _uri,
+    bytes calldata _signature,
+    string memory _expirationType,
+    uint256 _expirationValue
+  ) external virtual returns (uint256) {
+    require(msg.sender != _to, "give: cannot give from self");
+    uint256 voucherHashId = safeCheckAgreementWithExpiration(
+      msg.sender,
+      _to,
+      _uri,
+      _signature,
+      _expirationType,
+      _expirationValue
+    );
+    uint256 tokenId = mint(_to, _uri);
+    usedHashes.set(voucherHashId);
+    voucherHashIds[tokenId] = voucherHashId;
+    return tokenId;
+  }
+
+  // Take is called by somebody who has already been added to an allow list.
+  // The "from" address is the person who issued the voucher, who is permitting them to mint the badge.
+  function takeWithExpiration(
+    address _from,
+    string calldata _uri,
+    bytes calldata _signature,
+    string memory _expirationType,
+    uint256 _expirationValue
+  ) external virtual returns (uint256) {
+    require(msg.sender != _from, "take: cannot take from self");
+
+    uint256 voucherHashId = safeCheckAgreementWithExpiration(
+      msg.sender,
+      _from,
+      _uri,
+      _signature,
+      _expirationType,
+      _expirationValue
+    );
+    uint256 tokenId = mint(msg.sender, _uri);
+    usedHashes.set(voucherHashId);
+    voucherHashIds[tokenId] = voucherHashId;
+    return tokenId;
+  }
+
+  function safeCheckAgreementWithExpiration(
+    address _active,
+    address _passive,
+    string calldata _uri,
+    bytes calldata _signature,
+    string memory _expirationType,
+    uint256 _expirationValue
+  ) internal virtual returns (uint256) {
+    bytes32 hash = getAgreementHashWithExpiration(_active, _passive, _uri, _expirationType, _expirationValue);
+    uint256 voucherHashId = uint256(hash);
+
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
+      "safeCheckAgreementWithExpiration: invalid signature"
+    );
+    require(!usedHashes.get(voucherHashId), "safeCheckAgreementWithExpiration: already used");
+    return voucherHashId;
+  }
+
   function give(
     address _to,
     string calldata _uri,
@@ -176,6 +245,27 @@ contract Badges is
     string calldata _uri
   ) public view virtual returns (bytes32) {
     bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
+    return _hashTypedDataV4(structHash);
+  }
+
+  function getAgreementHashWithExpiration(
+    address _from,
+    address _to,
+    string calldata _uri,
+    string memory _expirationType,
+    uint256 _expirationValue
+  ) public view virtual returns (bytes32) {
+    bytes32 structHash = keccak256(
+      abi.encode(
+        AGREEMENT_HASH_2,
+        _from,
+        _to,
+        keccak256(bytes(_uri)),
+        keccak256(bytes(_expirationType)),
+        _expirationValue
+      )
+    );
+
     return _hashTypedDataV4(structHash);
   }
 
