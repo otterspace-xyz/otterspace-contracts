@@ -66,31 +66,49 @@ async function mintBadgeWithExpiration() {
   // deploy contracts
   const { badgesProxy, raftProxy, typedDataWithExpiration, issuer, claimant, owner } = deployed
   const specUri = typedDataWithExpiration.value.tokenURI
+
   // mint raft
   const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+
   // create spec
   await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
   // get signature
-  const { compact } = await getSignature(typedDataWithExpiration.domain, typedDataWithExpiration.types, typedDataWithExpiration.value, issuer)
+  const { compact } = await getSignature(
+    typedDataWithExpiration.domain,
+    typedDataWithExpiration.types,
+    typedDataWithExpiration.value,
+    issuer
+  )
 
-  const txn = await badgesProxy.connect(claimant).takeExpiringBadge(typedDataWithExpiration.value.passive, typedDataWithExpiration.value.tokenURI, compact, typedDataWithExpiration.value.expirationType, typedDataWithExpiration.value.expirationValue)
+  const txn = await badgesProxy
+    .connect(claimant)
+    .takeExpiringBadge(
+      typedDataWithExpiration.value.passive,
+      typedDataWithExpiration.value.tokenURI,
+      compact,
+      typedDataWithExpiration.value.expirationType,
+      typedDataWithExpiration.value.expirationValue
+    )
   await txn.wait()
+
   const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
-
   expect(transferEventData.to).equal(typedDataWithExpiration.value.active) // claimant.address
-  const badgeId = transferEventData.tokenId
 
+  const badgeId = transferEventData.tokenId
   expect(badgeId).gt(0)
 
   const ownerOfMintedToken = await badgesProxy.ownerOf(badgeId)
   expect(ownerOfMintedToken).to.equal(claimant.address)
+
   const balanceOfClaimant = await badgesProxy.balanceOf(claimant.address)
   expect(balanceOfClaimant).to.equal(1)
+
   const uriOfToken = await badgesProxy.tokenURI(badgeId)
   expect(uriOfToken).to.equal(typedDataWithExpiration.value.tokenURI)
+
   return { raftTokenId, badgeId }
 }
-
 
 async function mintRaftToken(raftProxy: any, toAddress: string, raftTokenUri: string, signer: SignerWithAddress) {
   const txn = await raftProxy.connect(signer).mint(toAddress, raftTokenUri)
@@ -219,7 +237,7 @@ const deployContractFixture = async () => {
       verifyingContract: badgesProxy.address,
     },
     types: {
-      AgreementWithExpiration: [
+      ExpiringBadge: [
         { name: 'active', type: 'address' },
         { name: 'passive', type: 'address' },
         { name: 'tokenURI', type: 'string' },
@@ -236,7 +254,17 @@ const deployContractFixture = async () => {
     },
   }
 
-  deployed = { badgesProxy, raftProxy, owner, issuer, claimant, randomSigner, typedData, specDataHolderProxy, typedDataWithExpiration }
+  deployed = {
+    badgesProxy,
+    raftProxy,
+    owner,
+    issuer,
+    claimant,
+    randomSigner,
+    typedData,
+    specDataHolderProxy,
+    typedDataWithExpiration,
+  }
 }
 
 describe('Proxy upgrades', () => {

@@ -14,7 +14,7 @@ import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
 bytes32 constant EXPIRING_BADGE_HASH = keccak256(
-  "ExpiringBadge(address active,address passive,string tokenURI,string expirationType, uint256 expirationValue)"
+  "ExpiringBadge(address active,address passive,string tokenURI,string expirationType,uint256 expirationValue)"
 );
 
 contract Badges is
@@ -78,7 +78,7 @@ contract Badges is
     address _to,
     string calldata _uri,
     bytes calldata _signature,
-    string memory _expirationType,
+    string calldata _expirationType,
     uint256 _expirationValue
   ) external virtual returns (uint256) {
     require(msg.sender != _to, "giveExpiringBadge: cannot give from self");
@@ -104,7 +104,7 @@ contract Badges is
     address _from,
     string calldata _uri,
     bytes calldata _signature,
-    string memory _expirationType,
+    string calldata _expirationType,
     uint256 _expirationValue
   ) external virtual returns (uint256) {
     require(msg.sender != _from, "takeExpiringBadge: cannot take from self");
@@ -129,7 +129,7 @@ contract Badges is
     address _passive,
     string calldata _uri,
     bytes calldata _signature,
-    string memory _expirationType,
+    string calldata _expirationType,
     uint256 _expirationValue
   ) internal virtual returns (uint256) {
     bytes32 hash = getExpiringBadgeHash(_active, _passive, _uri, _expirationType, _expirationValue);
@@ -268,7 +268,7 @@ contract Badges is
     address _from,
     address _to,
     string calldata _uri,
-    string memory _expirationType,
+    string calldata _expirationType,
     uint256 _expirationValue
   ) public view virtual returns (bytes32) {
     bytes32 structHash = keccak256(
