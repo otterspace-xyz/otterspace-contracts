@@ -495,6 +495,7 @@ describe('Badges', async function () {
       errInvalidSig
     )
   })
+
   it('should fail to mint badge when signed by a random issuer', async () => {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner, randomSigner } = deployed
@@ -512,6 +513,7 @@ describe('Badges', async function () {
       errInvalidSig
     )
   })
+
   it('should fail to mint badge when using incorrect token uri', async () => {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
@@ -532,6 +534,7 @@ describe('Badges', async function () {
       errInvalidSig
     )
   })
+
   it('should fail to mint badge when using an unregistered spec', async () => {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed

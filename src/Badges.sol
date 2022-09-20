@@ -10,9 +10,11 @@ import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
-bytes32 constant AGREEMENT_HASH_2 = keccak256(
-  "AgreementWithExpiration(address active,address passive,string tokenURI,string expirationType, uint256 expirationValue)"
+
+bytes32 constant EXPIRING_BADGE_HASH = keccak256(
+  "ExpiringBadge(address active,address passive,string tokenURI,string expirationType, uint256 expirationValue)"
 );
 
 contract Badges is
@@ -72,15 +74,16 @@ contract Badges is
   // Give is called by someone who has authority to create badge specs
   // Prior to calling "Give", the "to" address would have alrady requested
   // the badge (like joining a wait list)
-  function giveWithExpiration(
+  function giveExpiringBadge(
     address _to,
     string calldata _uri,
     bytes calldata _signature,
     string memory _expirationType,
     uint256 _expirationValue
   ) external virtual returns (uint256) {
-    require(msg.sender != _to, "give: cannot give from self");
-    uint256 voucherHashId = safeCheckAgreementWithExpiration(
+    require(msg.sender != _to, "giveExpiringBadge: cannot give from self");
+
+    uint256 voucherHashId = safeCheckExpiringBadge(
       msg.sender,
       _to,
       _uri,
@@ -91,21 +94,22 @@ contract Badges is
     uint256 tokenId = mint(_to, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
+
     return tokenId;
   }
 
   // Take is called by somebody who has already been added to an allow list.
   // The "from" address is the person who issued the voucher, who is permitting them to mint the badge.
-  function takeWithExpiration(
+  function takeExpiringBadge(
     address _from,
     string calldata _uri,
     bytes calldata _signature,
     string memory _expirationType,
     uint256 _expirationValue
   ) external virtual returns (uint256) {
-    require(msg.sender != _from, "take: cannot take from self");
+    require(msg.sender != _from, "takeExpiringBadge: cannot take from self");
 
-    uint256 voucherHashId = safeCheckAgreementWithExpiration(
+    uint256 voucherHashId = safeCheckExpiringBadge(
       msg.sender,
       _from,
       _uri,
@@ -116,10 +120,11 @@ contract Badges is
     uint256 tokenId = mint(msg.sender, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
+
     return tokenId;
   }
 
-  function safeCheckAgreementWithExpiration(
+  function safeCheckExpiringBadge(
     address _active,
     address _passive,
     string calldata _uri,
@@ -127,14 +132,15 @@ contract Badges is
     string memory _expirationType,
     uint256 _expirationValue
   ) internal virtual returns (uint256) {
-    bytes32 hash = getAgreementHashWithExpiration(_active, _passive, _uri, _expirationType, _expirationValue);
+    bytes32 hash = getExpiringBadgeHash(_active, _passive, _uri, _expirationType, _expirationValue);
     uint256 voucherHashId = uint256(hash);
 
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
-      "safeCheckAgreementWithExpiration: invalid signature"
+      "safeCheckExpiringBadge: invalid signature"
     );
-    require(!usedHashes.get(voucherHashId), "safeCheckAgreementWithExpiration: already used");
+    require(!usedHashes.get(voucherHashId), "safeCheckExpiringBadge: already used");
+
     return voucherHashId;
   }
 
@@ -144,10 +150,12 @@ contract Badges is
     bytes calldata _signature
   ) external virtual override returns (uint256) {
     require(msg.sender != _to, "give: cannot give from self");
+
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 tokenId = mint(_to, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
+
     return tokenId;
   }
 
@@ -164,6 +172,7 @@ contract Badges is
     uint256 tokenId = mint(msg.sender, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
+
     return tokenId;
   }
 
@@ -190,12 +199,14 @@ contract Badges is
 
   function tokenURI(uint256 _tokenId) external view virtual override returns (string memory) {
     require(exists(_tokenId), "tokenURI: token doesn't exist");
+
     return tokenURIs[_tokenId];
   }
 
   function unequip(uint256 _tokenId) external virtual override {
     require(owners[_tokenId] != address(0), "unequip: token doesn't exist");
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
+
     uint256 voucherHashId = voucherHashIds[_tokenId];
     usedHashes.unset(voucherHashId);
     burn(_tokenId);
@@ -203,28 +214,33 @@ contract Badges is
 
   function balanceOf(address _owner) external view virtual override returns (uint256) {
     require(_owner != address(0), "balanceOf: address zero is not a valid owner_");
+
     return balances[_owner];
   }
 
   function ownerOf(uint256 _tokenId) external view virtual override returns (address) {
     address owner_ = owners[_tokenId];
     require(owner_ != address(0), "ownerOf: token doesn't exist");
+
     return owner_;
   }
 
   function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "revokeBadge: unauthorized");
+
     revokedBadges[_badgeId] = true;
   }
 
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId) external {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "reinstateBadge: unauthorized");
+
     delete revokedBadges[_badgeId];
   }
 
   function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
     bool isNotRevoked = revokedBadges[_badgeId] == false;
     bool isntExpired = badgeExpirationDates[_badgeId] == 0 || timestamp < badgeExpirationDates[_badgeId];
+
     return isNotRevoked && isntExpired;
   }
 
@@ -248,7 +264,7 @@ contract Badges is
     return _hashTypedDataV4(structHash);
   }
 
-  function getAgreementHashWithExpiration(
+  function getExpiringBadgeHash(
     address _from,
     address _to,
     string calldata _uri,
@@ -257,7 +273,7 @@ contract Badges is
   ) public view virtual returns (bytes32) {
     bytes32 structHash = keccak256(
       abi.encode(
-        AGREEMENT_HASH_2,
+        EXPIRING_BADGE_HASH,
         _from,
         _to,
         keccak256(bytes(_uri)),
@@ -273,10 +289,14 @@ contract Badges is
     return keccak256(abi.encode(_to, _uri));
   }
 
-  function mint(address _to, string memory _uri) internal virtual returns (uint256) {
+  function mint(
+    address _to,
+    string memory _uri
+  ) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
     uint256 tokenId = uint256(hash);
+
     // only registered specs can be used for minting
     require(raftTokenId != 0, "mint: spec is not registered");
     require(!exists(tokenId), "mint: tokenID exists");
@@ -298,13 +318,14 @@ contract Badges is
     bytes calldata _signature
   ) internal virtual returns (uint256) {
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
-    uint256 voucherHashId = uint256(hash);
-
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
+
+    uint256 voucherHashId = uint256(hash);
     require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
+
     return voucherHashId;
   }
 
@@ -314,11 +335,12 @@ contract Badges is
 
   function burn(uint256 _tokenId) internal virtual {
     address _owner = owners[_tokenId];
-
     balances[_owner] -= 1;
+
     delete owners[_tokenId];
     delete tokenURIs[_tokenId];
     delete voucherHashIds[_tokenId];
+
     emit Transfer(_owner, address(0), _tokenId);
   }
 
