@@ -73,7 +73,7 @@ async function mintBadgeWithExpiration() {
   // get signature
   const { compact } = await getSignature(typedDataWithExpiration.domain, typedDataWithExpiration.types, typedDataWithExpiration.value, issuer)
 
-  const txn = await badgesProxy.connect(claimant).takeWithExpiration(typedDataWithExpiration.value.passive, typedDataWithExpiration.value.tokenURI, compact, typedDataWithExpiration.value.expirationType, typedDataWithExpiration.value.expirationValue)
+  const txn = await badgesProxy.connect(claimant).takeExpiringBadge(typedDataWithExpiration.value.passive, typedDataWithExpiration.value.tokenURI, compact, typedDataWithExpiration.value.expirationType, typedDataWithExpiration.value.expirationValue)
   await txn.wait()
   const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
 
@@ -417,8 +417,8 @@ describe('Badges', async function () {
     mintBadge()
   })
 
-  it('should successfully mint badge with an expiration date', async function () {
-    mintBadgeWithExpiration()
+  it.only('should successfully mint badge with an expiration date', async function () {
+    await mintBadgeWithExpiration()
   })
 
   it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
