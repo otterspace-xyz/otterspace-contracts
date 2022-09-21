@@ -10,6 +10,7 @@ import "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+// import "hardhat/console.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -91,15 +92,13 @@ contract Badges is
       _expirationType,
       _expirationValue
     );
-    uint256 tokenId = mint(_to, _uri);
+    uint256 tokenId = mint(_to, _uri, 0);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
 
     return tokenId;
   }
 
-  // Take is called by somebody who has already been added to an allow list.
-  // The "from" address is the person who issued the voucher, who is permitting them to mint the badge.
   function takeExpiringBadge(
     address _from,
     string calldata _uri,
@@ -117,7 +116,7 @@ contract Badges is
       _expirationType,
       _expirationValue
     );
-    uint256 tokenId = mint(msg.sender, _uri);
+    uint256 tokenId = mint(msg.sender, _uri, _expirationValue);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
 
@@ -152,7 +151,7 @@ contract Badges is
     require(msg.sender != _to, "give: cannot give from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
-    uint256 tokenId = mint(_to, _uri);
+    uint256 tokenId = mint(_to, _uri, 0);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
 
@@ -169,7 +168,7 @@ contract Badges is
     require(msg.sender != _from, "take: cannot take from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
-    uint256 tokenId = mint(msg.sender, _uri);
+    uint256 tokenId = mint(msg.sender, _uri, 0);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
 
@@ -239,9 +238,9 @@ contract Badges is
 
   function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
     bool isNotRevoked = revokedBadges[_badgeId] == false;
-    bool isntExpired = badgeExpirationDates[_badgeId] == 0 || timestamp < badgeExpirationDates[_badgeId];
+    bool isNotExpired = badgeExpirationDates[_badgeId] == 0 || timestamp < badgeExpirationDates[_badgeId];
 
-    return isNotRevoked && isntExpired;
+    return isNotRevoked && isNotExpired;
   }
 
   function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
@@ -291,12 +290,12 @@ contract Badges is
 
   function mint(
     address _to,
-    string memory _uri
+    string memory _uri,
+    uint256 _expirationDate
   ) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
     uint256 tokenId = uint256(hash);
-
     // only registered specs can be used for minting
     require(raftTokenId != 0, "mint: spec is not registered");
     require(!exists(tokenId), "mint: tokenID exists");
@@ -304,6 +303,10 @@ contract Badges is
     balances[_to] += 1;
     owners[tokenId] = _to;
     tokenURIs[tokenId] = _uri;
+
+    if (_expirationDate != 0) {
+      badgeExpirationDates[tokenId] = _expirationDate;
+    }
 
     emit Transfer(address(0), _to, tokenId);
 

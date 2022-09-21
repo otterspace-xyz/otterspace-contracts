@@ -62,9 +62,10 @@ async function mintBadge() {
   return { raftTokenId, badgeId }
 }
 
-async function mintBadgeWithExpiration() {
+async function mintBadgeWithExpiration(timestamp: Number) {
   // deploy contracts
   const { badgesProxy, raftProxy, typedDataWithExpiration, issuer, claimant, owner } = deployed
+  typedDataWithExpiration.value.expirationValue = timestamp
   const specUri = typedDataWithExpiration.value.tokenURI
 
   // mint raft
@@ -250,7 +251,7 @@ const deployContractFixture = async () => {
       passive: issuer.address,
       tokenURI: specUri,
       expirationType: 'specificDate',
-      expirationValue: 9, // just any int right now. Next we'll pass in a real date
+      expirationValue: null, // just any int right now. Next we'll pass in a real date
     },
   }
 
@@ -445,8 +446,24 @@ describe('Badges', async function () {
     mintBadge()
   })
 
-  it.only('should successfully mint badge with an expiration date', async function () {
-    await mintBadgeWithExpiration()
+  it('should successfully mint badge with an expiration date', async function () {
+    await mintBadgeWithExpiration(9)
+  })
+
+  it('should mint badge with an expiration date in the far future then check if its valid now', async function () {
+    const oneWeekFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000
+    const { badgeId } = await mintBadgeWithExpiration(oneWeekFromNow)
+    const { badgesProxy } = deployed
+    const isBadgeValid = await badgesProxy.isBadgeValid(badgeId, Date.now())
+    expect(isBadgeValid).to.equal(true)
+  })
+
+  it('should mint badge with an expiration date in the past then check if its valid now', async function () {
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const { badgeId } = await mintBadgeWithExpiration(oneWeekAgo)
+    const { badgesProxy } = deployed
+    const isBadgeValid = await badgesProxy.isBadgeValid(badgeId, Date.now())
+    expect(isBadgeValid).to.equal(false)
   })
 
   it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
