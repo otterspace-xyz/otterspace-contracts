@@ -466,6 +466,17 @@ describe('Badges', async function () {
     expect(isBadgeValid).to.equal(false)
   })
 
+  it('should extend the expiration date of a badge', async function () {
+    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+    const oneWeekFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000
+    const { badgeId, raftTokenId } = await mintBadgeWithExpiration(oneWeekAgo)
+    const { badgesProxy, issuer } = deployed
+    const isBadgeValid = await badgesProxy.isBadgeValid(badgeId, Date.now())
+    expect(isBadgeValid).to.equal(false)
+    await badgesProxy.connect(issuer).updateExpiration(raftTokenId, oneWeekFromNow, badgeId)
+    expect(await badgesProxy.isBadgeValid(badgeId, Date.now())).to.equal(true)
+  })
+
   it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed

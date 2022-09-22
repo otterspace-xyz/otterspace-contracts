@@ -231,9 +231,21 @@ contract Badges is
   }
 
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId) external {
+    require(owners[_badgeId] != address(0), "reinstateBadge: token doesn't exist");
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "reinstateBadge: unauthorized");
 
     delete revokedBadges[_badgeId];
+  }
+
+  function updateExpiration(
+    uint256 _raftTokenId,
+    uint256 _timestamp,
+    uint256 _badgeId
+  ) external {
+    require(owners[_badgeId] != address(0), "extendExpiration: token doesn't exist");
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "updateExpiration: unauthorized");
+
+    badgeExpirationDates[_badgeId] = _timestamp;
   }
 
   function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
