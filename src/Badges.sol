@@ -41,14 +41,17 @@ contract Badges is
 
   mapping(uint256 => bool) public revokedBadges;
   mapping(uint256 => uint256) public badgeExpirationDates;
+  
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-
+  event BadgeRevoked(uint256 indexed tokenId, address indexed owner, address indexed revokedBy);
+  event BadgeReinstated(uint256 indexed tokenId, address indexed owner, address indexed reinstatedBy);
+  
   modifier senderIsRaftOwner(uint256 _raftTokenId) {
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "senderIsRaftOwner: unauthorized");
     _;
   }
 
-  modifier tokenExists(uint256 _badgeId) {
+    modifier tokenExists(uint256 _badgeId) {
     require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
     _;
   }
@@ -102,9 +105,8 @@ contract Badges is
       _expirationType,
       _expirationValue
     );
-    uint256 tokenId = mint(_to, _uri, 0);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
+    uint256 tokenId = mint(_to, _uri, 0, voucherHashId);
+
 
     return tokenId;
   }
@@ -126,9 +128,7 @@ contract Badges is
       _expirationType,
       _expirationValue
     );
-    uint256 tokenId = mint(msg.sender, _uri, _expirationValue);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
+    uint256 tokenId = mint(msg.sender, _uri, _expirationValue, voucherHashId);
 
     return tokenId;
   }
@@ -161,9 +161,7 @@ contract Badges is
     require(msg.sender != _to, "give: cannot give from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
-    uint256 tokenId = mint(_to, _uri, 0);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
+    uint256 tokenId = mint(_to, _uri, 0, voucherHashId);
 
     return tokenId;
   }
@@ -178,9 +176,7 @@ contract Badges is
     require(msg.sender != _from, "take: cannot take from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
-    uint256 tokenId = mint(msg.sender, _uri, 0);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
+    uint256 tokenId = mint(msg.sender, _uri, 0, voucherHashId);
 
     return tokenId;
   }
@@ -231,6 +227,8 @@ contract Badges is
 
   function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external senderIsRaftOwner(_raftTokenId) {
     revokedBadges[_badgeId] = true;
+    address badgeHolder = owners[_badgeId];
+    emit BadgeRevoked(_badgeId, badgeHolder, msg.sender);
   }
 
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
@@ -239,6 +237,8 @@ contract Badges is
     senderIsRaftOwner(_raftTokenId)
   {
     delete revokedBadges[_badgeId];
+    address badgeHolder = owners[_badgeId];
+    emit BadgeReinstated(_badgeId, badgeHolder, msg.sender);
   }
 
   function updateExpiration(
@@ -303,7 +303,8 @@ contract Badges is
   function mint(
     address _to,
     string memory _uri,
-    uint256 _expirationDate
+    uint256 _expirationDate,
+    uint256 _voucherHashId
   ) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
@@ -315,6 +316,9 @@ contract Badges is
     balances[_to] += 1;
     owners[tokenId] = _to;
     tokenURIs[tokenId] = _uri;
+
+    usedHashes.set(_voucherHashId);
+    voucherHashIds[tokenId] = _voucherHashId;
 
     if (_expirationDate != 0) {
       badgeExpirationDates[tokenId] = _expirationDate;
