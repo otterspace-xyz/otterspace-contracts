@@ -46,12 +46,13 @@ contract Badges is
   event BadgeRevoked(uint256 indexed tokenId, address indexed owner, address indexed revokedBy);
   event BadgeReinstated(uint256 indexed tokenId, address indexed owner, address indexed reinstatedBy);
   
-  modifier senderIsRaftOwner(uint256 _raftTokenId) {
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "senderIsRaftOwner: unauthorized");
+  modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
+    string memory concatenated = string(abi.encodePacked(calledFrom, ": unauthorized"));
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, concatenated);
     _;
   }
 
-    modifier tokenExists(uint256 _badgeId) {
+  modifier tokenExists(uint256 _badgeId) {
     require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
     _;
   }
@@ -185,7 +186,7 @@ contract Badges is
     return address(specDataHolder);
   }
 
-  function createSpec(string memory _specUri, uint256 _raftTokenId) external virtual senderIsRaftOwner(_raftTokenId) {
+  function createSpec(string memory _specUri, uint256 _raftTokenId) external virtual senderIsRaftOwner(_raftTokenId, "createSpec") {
     require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
 
     specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
@@ -225,7 +226,7 @@ contract Badges is
     return owners[_tokenId];
   }
 
-  function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external senderIsRaftOwner(_raftTokenId) {
+  function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external senderIsRaftOwner(_raftTokenId, "revokeBadge") {
     revokedBadges[_badgeId] = true;
     address badgeHolder = owners[_badgeId];
     emit BadgeRevoked(_badgeId, badgeHolder, msg.sender);
@@ -234,7 +235,7 @@ contract Badges is
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
     external
     tokenExists(_badgeId)
-    senderIsRaftOwner(_raftTokenId)
+    senderIsRaftOwner(_raftTokenId, "reinstateBadge")
   {
     delete revokedBadges[_badgeId];
     address badgeHolder = owners[_badgeId];
@@ -245,7 +246,7 @@ contract Badges is
     uint256 _raftTokenId,
     uint256 _timestamp,
     uint256 _badgeId
-  ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId) {
+  ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "updateExpiration") {
     badgeExpirationDates[_badgeId] = _timestamp;
   }
 

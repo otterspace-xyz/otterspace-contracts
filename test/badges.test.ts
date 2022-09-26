@@ -363,7 +363,7 @@ describe('Badge Specs', () => {
     await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(errSpecAlreadyRegistered)
   })
 
-  it('should fail to register a spec if the caller is not a raft token owner', async () => {
+  it.only('should fail to register a spec if the caller is not a raft token owner', async () => {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, owner, randomSigner } = deployed
     const specUri = typedData.value.tokenURI
@@ -372,7 +372,7 @@ describe('Badge Specs', () => {
     const { raftTokenId } = await mintRaftToken(raftProxy, randomSigner.address, specUri, owner)
 
     // create spec when issuer has not minted raft token
-    await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(errNotRaftOwner)
+    await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith("createSpec: unauthorized")
   })
 })
 
