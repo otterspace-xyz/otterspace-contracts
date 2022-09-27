@@ -41,11 +41,11 @@ contract Badges is
 
   mapping(uint256 => bool) public revokedBadges;
   mapping(uint256 => uint256) public badgeExpirationDates;
-  
+
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed owner, address indexed revokedBy);
   event BadgeReinstated(uint256 indexed tokenId, address indexed owner, address indexed reinstatedBy);
-  
+
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory concatenated = string(abi.encodePacked(calledFrom, ": unauthorized"));
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, concatenated);
@@ -107,7 +107,6 @@ contract Badges is
       _expirationValue
     );
     uint256 tokenId = mint(_to, _uri, 0, voucherHashId);
-
 
     return tokenId;
   }
