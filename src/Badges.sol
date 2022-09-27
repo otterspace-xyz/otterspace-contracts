@@ -242,14 +242,6 @@ contract Badges is
     emit BadgeReinstated(_badgeId, badgeHolder, msg.sender);
   }
 
-  function updateExpiration(
-    uint256 _raftTokenId,
-    uint256 _timestamp,
-    uint256 _badgeId
-  ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "updateExpiration") {
-    badgeExpirationDates[_badgeId] = _timestamp;
-  }
-
   function isBadgeValid(uint256 _badgeId, uint256 timestamp) external view returns (bool) {
     bool isNotRevoked = revokedBadges[_badgeId] == false;
     bool isNotExpired = badgeExpirationDates[_badgeId] == 0 || timestamp < badgeExpirationDates[_badgeId];

@@ -363,7 +363,7 @@ describe('Badge Specs', () => {
     await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith(errSpecAlreadyRegistered)
   })
 
-  it.only('should fail to register a spec if the caller is not a raft token owner', async () => {
+  it('should fail to register a spec if the caller is not a raft token owner', async () => {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, owner, randomSigner } = deployed
     const specUri = typedData.value.tokenURI
