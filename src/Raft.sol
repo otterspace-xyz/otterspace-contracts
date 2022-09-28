@@ -20,6 +20,8 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
 
   mapping(uint256 => string) private _tokenURIs;
 
+  event MetadataUpdate(uint256 indexed tokenId);
+
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
     _disableInitializers();
@@ -65,6 +67,8 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   function setTokenURI(uint256 tokenId, string memory uri) public virtual onlyOwner {
     require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
+
+    emit MetadataUpdate(tokenId);
   }
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
