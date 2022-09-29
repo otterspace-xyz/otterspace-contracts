@@ -372,7 +372,7 @@ describe('Badge Specs', () => {
     const { raftTokenId } = await mintRaftToken(raftProxy, randomSigner.address, specUri, owner)
 
     // create spec when issuer has not minted raft token
-    await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith("createSpec: unauthorized")
+    await expect(createSpec(badgesProxy, specUri, raftTokenId, issuer)).to.be.revertedWith('createSpec: unauthorized')
   })
 })
 
@@ -464,17 +464,6 @@ describe('Badges', async function () {
     const { badgesProxy } = deployed
     const isBadgeValid = await badgesProxy.isBadgeValid(badgeId, Date.now())
     expect(isBadgeValid).to.equal(false)
-  })
-
-  it('should extend the expiration date of a badge', async function () {
-    const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
-    const oneWeekFromNow = Date.now() + 7 * 24 * 60 * 60 * 1000
-    const { badgeId, raftTokenId } = await mintBadgeWithExpiration(oneWeekAgo)
-    const { badgesProxy, issuer } = deployed
-    const isBadgeValid = await badgesProxy.isBadgeValid(badgeId, Date.now())
-    expect(isBadgeValid).to.equal(false)
-    await badgesProxy.connect(issuer).updateExpiration(raftTokenId, oneWeekFromNow, badgeId)
-    expect(await badgesProxy.isBadgeValid(badgeId, Date.now())).to.equal(true)
   })
 
   it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
