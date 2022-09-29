@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.1.0
+
+- Added MetadataUpdate event in Raft.sol when setTokenURI is called
+
 ## 2.0.1
 
 - Update Solidity version in Raft.sol

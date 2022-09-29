@@ -24,6 +24,7 @@ contract RaftTest is Test {
   // RaftV2 wrappedProxyV2;
 
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+  event MetadataUpdate(uint256 indexed tokenId);
 
   function setUp() public {
     address to = address(this);
@@ -90,7 +91,11 @@ contract RaftTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
+
+    vm.expectEmit(true, true, false, false);
+    emit MetadataUpdate(raftTokenId);
     wrappedProxyV1.setTokenURI(raftTokenId, "some new uri");
+
     assertEq(wrappedProxyV1.tokenURI(raftTokenId), "some new uri");
   }
 
