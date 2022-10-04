@@ -180,7 +180,7 @@ contract Badges is
     tokenURIs[tokenId] = _uri;
 
     emit Transfer(address(0), _to, tokenId);
-
+  
     specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
     return tokenId;
   }
