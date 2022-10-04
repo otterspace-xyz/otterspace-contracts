@@ -12,14 +12,11 @@ import { HardhatUserConfig, task } from 'hardhat/config'
 
 import example from './tasks/example'
 require('dotenv').config()
-const PRIVATE_KEY_1 = process.env.PRIVATE_KEY_1
-// extra private keys only needed to run tests on live networks
-// provide them in the "accounts" array below
-// const PRIVATE_KEY_2 = process.env.PRIVATE_KEY_2
-// const PRIVATE_KEY_3 = process.env.PRIVATE_KEY_3
-// const PRIVATE_KEY_4 = process.env.PRIVATE_KEY_4
+
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
-const ETHERSCAN_API_KEY_GOERLI = process.env.ETHERSCAN_API_KEY_GOERLI
+const OPTIMISTIC_ETHERSCAN_API_KEY = process.env.OPTIMISTIC_ETHERSCAN_API_KEY
+
 function getRemappings() {
   return fs
     .readFileSync('remappings.txt', 'utf8')
@@ -46,20 +43,14 @@ const config: HardhatUserConfig = {
   },
   networks: {
     goerli: {
-      url: `${process.env.ETH_GOERLI_URL}`,
-      accounts: [`0x${PRIVATE_KEY_1}`],
+      url: `${process.env.GOERLI_RPC_URL}`,
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
       chainId: 5,
       timeout: 20000,
     },
-    rinkeby: {
-      url: `${process.env.ETH_RINKEBY_URL}`,
-      accounts: [`0x${PRIVATE_KEY_1}`],
-      chainId: 4,
-      timeout: 20000,
-    },
     optimisticEthereum: {
-      url: `${process.env.OPTIMISM_URL}`,
-      accounts: [`0x${PRIVATE_KEY_1}`],
+      url: `${process.env.OPTIMISM_RPC_URL}`,
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
       chainId: 10,
       timeout: 20000,
     },
@@ -81,9 +72,8 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      optimisticEthereum: ETHERSCAN_API_KEY!,
-      goerli: ETHERSCAN_API_KEY_GOERLI!,
-      rinkeby: ETHERSCAN_API_KEY_GOERLI!,
+      optimisticEthereum: OPTIMISTIC_ETHERSCAN_API_KEY!,
+      goerli: ETHERSCAN_API_KEY!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

@@ -317,7 +317,7 @@ contract Badges is
     }
 
     emit Transfer(address(0), _to, tokenId);
-
+  
     specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
     return tokenId;
   }
