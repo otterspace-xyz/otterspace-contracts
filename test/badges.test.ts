@@ -14,6 +14,7 @@ const version = '1'
 //live network and automaticall set the chainId to the correct value.
 const chainId = 31337
 const specUri = 'some spec uri'
+const reasonChoice = ethers.BigNumber.from(0)
 
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = 'mint: spec is not registered'
@@ -22,6 +23,9 @@ const errNotRaftOwner = 'createSpec: unauthorized'
 const errInvalidSig = 'safeCheckAgreement: invalid signature'
 const tokenExistsErr = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
+const errNotRevoked = 'reinstateBadge: badge not revoked'
+const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
+
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -459,9 +463,8 @@ describe('Badges', async function () {
   it('Should revoke a badge, confirm its revoked, then reinstate', async () => {
     const { raftTokenId, badgeId } = await mintBadge()
     const { badgesProxy, issuer } = deployed
-
     // revoke the badge
-    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId)
+    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)
 
     // test to make sure that revocation worked
     expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(false)
@@ -477,6 +480,31 @@ describe('Badges', async function () {
     const { raftTokenId, badgeId } = await mintBadge()
     const { badgesProxy, issuer } = deployed
 
-    await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, 123)).to.be.revertedWith(tokenDoesntExistErr)
+    await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, 123, reasonChoice)).to.be.revertedWith(
+      tokenDoesntExistErr
+    )
+  })
+
+  it('Should fail to reinstate a badge that is not revoked', async () => {
+    const { raftTokenId, badgeId } = await mintBadge()
+    const { badgesProxy, issuer } = deployed
+
+    expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(true)
+
+    await expect(badgesProxy.connect(issuer).reinstateBadge(raftTokenId, badgeId)).to.be.revertedWith(errNotRevoked)
+  })
+
+  it('Should fail to revoke a badge if its already revoked', async () => {
+    const { raftTokenId, badgeId } = await mintBadge()
+    const { badgesProxy, issuer } = deployed
+    // revoke the badge
+    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)
+
+    // test to make sure that revocation worked
+    expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(false)
+    console.log('here')
+    await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)).to.be.revertedWith(
+      errBadgeAlreadyRevoked
+    )
   })
 })

@@ -48,7 +48,7 @@ contract Badges is
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, concatenated);
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
     _;
   }
 
@@ -169,6 +169,7 @@ contract Badges is
     uint256 _badgeId,
     RevocationReason _reason
   ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
+    require(revokedBadgesHashes.get(_badgeId) == false, "revokeBadge: badge already revoked");
     revokedBadgesHashes.set(_badgeId);
     emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
@@ -178,6 +179,7 @@ contract Badges is
     tokenExists(_badgeId)
     senderIsRaftOwner(_raftTokenId, "reinstateBadge")
   {
+    require(revokedBadgesHashes.get(_badgeId) == true, "reinstateBadge: badge not revoked");
     revokedBadgesHashes.unset(_badgeId);
     emit BadgeReinstated(_badgeId, msg.sender);
   }
