@@ -40,7 +40,7 @@ contract Badges is
   event BadgeReinstated(uint256 indexed tokenId, address indexed reinstatedFrom);
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
-    string memory concatenated = string(abi.encodePacked(calledFrom, ": unauthorized"));
+    string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, concatenated);
     _;
   }
