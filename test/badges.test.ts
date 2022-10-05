@@ -20,7 +20,7 @@ const errSpecNotRegistered = 'mint: spec is not registered'
 const errSpecAlreadyRegistered = 'createSpec: spec already registered'
 const errNotRaftOwner = 'createSpec: unauthorized'
 const errInvalidSig = 'safeCheckAgreement: invalid signature'
-
+const tokenExistsErr = 'mint: tokenID exists'
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -332,7 +332,7 @@ describe('Badges', async function () {
   it('should match off-chain hash to on-chain hash', async () => {
     const { badgesProxy, typedData } = deployed
     const offChainHash = _TypedDataEncoder.hash(typedData.domain, typedData.types, typedData.value)
-    const onChainHash = await badgesProxy.getHash(
+    const onChainHash = await badgesProxy.getAgreementHash(
       typedData.value.active,
       typedData.value.passive,
       typedData.value.tokenURI
@@ -342,6 +342,57 @@ describe('Badges', async function () {
 
   it('should successfully mint badge', async function () {
     mintBadge()
+  })
+
+  it.only('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
+    // deploy contracts
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    // first we issue the Raft token to the issuer
+    const raftOwner = issuer
+    const { raftTokenId } = await mintRaftToken(raftProxy, raftOwner.address, specUri, owner)
+
+    await createSpec(badgesProxy, specUri, raftTokenId, raftOwner)
+
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, raftOwner)
+
+    const txn = await badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
+    await txn.wait()
+    const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
+
+    expect(transferEventData.to).equal(typedData.value.active) // claimant.address
+    expect(transferEventData.tokenId).gt(0)
+
+    const ownerOfMintedToken = await badgesProxy.ownerOf(transferEventData.tokenId)
+    expect(ownerOfMintedToken).to.equal(claimant.address)
+    const balanceOfClaimant = await badgesProxy.balanceOf(claimant.address)
+    expect(balanceOfClaimant).to.equal(1)
+    const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
+    expect(uriOfToken).to.equal(typedData.value.tokenURI)
+
+    // transfer the Raft token to someone else so that we can test the second minting
+    const newRaftOwner = owner
+    // raft owner should approve the transfer to "owner"
+    await raftProxy.connect(raftOwner).approve(newRaftOwner.address, raftTokenId)
+
+    // make the transfer
+    await raftProxy.connect(raftOwner).transferFrom(raftOwner.address, newRaftOwner.address, raftTokenId)
+    const ownerOfTransferredToken = await raftProxy.ownerOf(raftTokenId)
+    expect(ownerOfTransferredToken).to.equal(newRaftOwner.address)
+    // for TX2 the raft owner is the issuer
+
+    typedData.value.passive = newRaftOwner.address
+    // new owner should create a signature
+    const { compact: compactSig2 } = await getSignature(
+      typedData.domain,
+      typedData.types,
+      typedData.value,
+      newRaftOwner
+    )
+
+    // claimant should again try to mint a badge
+    await expect(
+      badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compactSig2)
+    ).to.be.revertedWith(tokenExistsErr)
   })
 
   it('should fail to mint badge when trying as an unauthorized claimant', async () => {
