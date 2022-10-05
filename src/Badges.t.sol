@@ -479,7 +479,7 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
 
-    vm.expectRevert(bytes("unequip: token doesn't exist"));
+    vm.expectRevert(bytes("tokenExists: token doesn't exist"));
     badgesWrappedProxyV1.unequip(1337);
   }
 }
