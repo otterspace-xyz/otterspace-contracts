@@ -59,7 +59,7 @@ contract BadgesTest is Test {
   }
 
   // // helper function
-  function createRaftAndRegisterSpec() internal {
+  function createRaftAndRegisterSpec() internal returns (uint256) {
     address to = address(this);
     address from = address(0);
 
@@ -72,6 +72,7 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
+    return raftTokenId;
   }
 
   // // helper function
@@ -481,5 +482,48 @@ contract BadgesTest is Test {
 
     vm.expectRevert(bytes("tokenExists: token doesn't exist"));
     badgesWrappedProxyV1.unequip(1337);
+  }
+
+  function testRevokingBadge() public {
+    address to = address(this);
+    address from = address(0);
+
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+    bytes memory signature = getSignature();
+    vm.expectEmit(true, true, true, false);
+    uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
+    assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, Badges.RevocationReason.REASON_1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+  }
+
+  function testReinstatingBadge() public {
+    address to = address(this);
+    address from = address(0);
+
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+    bytes memory signature = getSignature();
+    vm.expectEmit(true, true, true, false);
+    uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
+    emit Transfer(from, to, tokenId);
+
+    assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, Badges.RevocationReason.REASON_1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+
+    badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
   }
 }

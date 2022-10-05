@@ -36,8 +36,15 @@ contract Badges is
   BitMaps.BitMap private revokedBadgesHashes;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-  event BadgeRevoked(uint256 indexed tokenId, address indexed revokedFrom);
+  event BadgeRevoked(uint256 indexed tokenId, address indexed revokedFrom, RevocationReason indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed reinstatedFrom);
+
+  enum RevocationReason {
+    REASON_1,
+    REASON_2,
+    REASON_3,
+    OTHER
+  }
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
@@ -157,13 +164,13 @@ contract Badges is
     return owners[_tokenId];
   }
 
-  function revokeBadge(uint256 _raftTokenId, uint256 _badgeId)
-    external
-    tokenExists(_badgeId)
-    senderIsRaftOwner(_raftTokenId, "revokeBadge")
-  {
+  function revokeBadge(
+    uint256 _raftTokenId,
+    uint256 _badgeId,
+    RevocationReason _reason
+  ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
     revokedBadgesHashes.set(_badgeId);
-    emit BadgeRevoked(_badgeId, msg.sender);
+    emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
 
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
