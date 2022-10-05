@@ -33,8 +33,22 @@ contract Badges is
   ISpecDataHolder private specDataHolder;
 
   mapping(uint256 => uint256) private voucherHashIds;
+  mapping(uint256 => bool) public revokedBadges;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
+  event BadgeRevoked(uint256 indexed tokenId, address indexed revokedFrom);
+  event BadgeReinstated(uint256 indexed tokenId, address indexed reinstatedFrom);
+
+  modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
+    string memory concatenated = string(abi.encodePacked(calledFrom, ": unauthorized"));
+    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, concatenated);
+    _;
+  }
+
+  modifier tokenExists(uint256 _badgeId) {
+    require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
+    _;
+  }
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
@@ -101,8 +115,11 @@ contract Badges is
     return address(specDataHolder);
   }
 
-  function createSpec(string memory _specUri, uint256 _raftTokenId) external virtual {
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, "createSpec: unauthorized");
+  function createSpec(string memory _specUri, uint256 _raftTokenId)
+    external
+    virtual
+    senderIsRaftOwner(_raftTokenId, "createSpec")
+  {
     require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
 
     specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
@@ -123,9 +140,9 @@ contract Badges is
     return tokenURIs[_tokenId];
   }
 
-  function unequip(uint256 _tokenId) external virtual override {
-    require(owners[_tokenId] != address(0), "unequip: token doesn't exist");
+  function unequip(uint256 _tokenId) external virtual override tokenExists(_tokenId) {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
+
     uint256 voucherHashId = voucherHashIds[_tokenId];
     usedHashes.unset(voucherHashId);
     burn(_tokenId);
@@ -136,10 +153,22 @@ contract Badges is
     return balances[_owner];
   }
 
-  function ownerOf(uint256 _tokenId) external view virtual override returns (address) {
-    address owner_ = owners[_tokenId];
-    require(owner_ != address(0), "ownerOf: token doesn't exist");
-    return owner_;
+  function ownerOf(uint256 _tokenId) external view virtual override tokenExists(_tokenId) returns (address) {
+    return owners[_tokenId];
+  }
+
+  function revokeBadge(uint256 _raftTokenId, uint256 _badgeId) external senderIsRaftOwner(_raftTokenId, "revokeBadge") {
+    revokedBadges[_badgeId] = true;
+    emit BadgeRevoked(_badgeId, msg.sender);
+  }
+
+  function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
+    external
+    tokenExists(_badgeId)
+    senderIsRaftOwner(_raftTokenId, "reinstateBadge")
+  {
+    delete revokedBadges[_badgeId];
+    emit BadgeReinstated(_badgeId, msg.sender);
   }
 
   function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {

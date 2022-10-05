@@ -58,6 +58,7 @@ async function mintBadge() {
   expect(balanceOfClaimant).to.equal(1)
   const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
   expect(uriOfToken).to.equal(typedData.value.tokenURI)
+  return { raftTokenId, badgeId: transferEventData.tokenId }
 }
 
 async function mintRaftToken(raftProxy: any, toAddress: string, raftTokenUri: string, signer: SignerWithAddress) {
@@ -344,7 +345,7 @@ describe('Badges', async function () {
     mintBadge()
   })
 
-  it.only('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
+  it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
     // deploy contracts
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     // first we issue the Raft token to the issuer
@@ -452,5 +453,33 @@ describe('Badges', async function () {
     await expect(badgesProxy.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
       errSpecNotRegistered
     )
+  })
+
+  it('Should revoke a badge, confirm its revoked, then reinstate', async () => {
+    const { raftTokenId, badgeId } = await mintBadge()
+    const { badgesProxy, issuer } = deployed
+
+    // deactivate the badge
+    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId)
+
+    // test to make sure that deactivation worked
+    expect(await badgesProxy.connect(issuer).revokedBadges(badgeId)).to.equal(true)
+
+    // reactivate the badge
+    await badgesProxy.connect(issuer).reinstateBadge(raftTokenId, badgeId)
+
+    // test to make sure that reactivation worked
+    expect(await badgesProxy.connect(issuer).revokedBadges(badgeId)).to.equal(false)
+  })
+
+  it('Should revoke a badge, then confirm that its revoked', async () => {
+    const { raftTokenId, badgeId } = await mintBadge()
+    const { badgesProxy, issuer } = deployed
+
+    // deactivate the badge
+    await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId)
+
+    // test to make sure that deactivation worked
+    expect(await badgesProxy.connect(issuer).revokedBadges(badgeId)).to.equal(true)
   })
 })
