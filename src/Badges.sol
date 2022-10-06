@@ -190,6 +190,10 @@ contract Badges is
   /**
    * @notice Revokes a badge from a user
    * @dev we're storing the reason as a uint because the string values may change over time
+   * Reason 0: Abuse
+   * Reason 1: Left community
+   * Reason 2: Tenure ended
+   * Reason 3: Other
    * @param _raftTokenId The raft token id
    * @param _badgeId tokenId of the badge to be revoked
    * @param _reason an integer representing the reason for revoking the badge
