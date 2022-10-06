@@ -211,11 +211,11 @@ contract BadgesTest is Test {
 
   // TAKE TESTS
   // happy path
-  function testBalanceIncreaseAfterTake() public {
+  function testBalanceIncreaseAfterTake() public returns (uint256, uint256) {
     address to = address(this);
     address from = address(0);
 
-    createRaftAndRegisterSpec();
+    uint256 raftTokenId = createRaftAndRegisterSpec();
     bytes memory signature = getSignature();
     vm.expectEmit(true, true, true, false);
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
@@ -224,6 +224,7 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+    return (raftTokenId, tokenId);
   }
 
   function testTakeWithDifferentTokenURI() public {
@@ -485,18 +486,7 @@ contract BadgesTest is Test {
   }
 
   function testRevokingBadge() public {
-    address to = address(this);
-    address from = address(0);
-
-    uint256 raftTokenId = createRaftAndRegisterSpec();
-    bytes memory signature = getSignature();
-    vm.expectEmit(true, true, true, false);
-    uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
-    emit Transfer(from, to, tokenId);
-
-    assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
-    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
-    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
@@ -505,18 +495,7 @@ contract BadgesTest is Test {
   }
 
   function testReinstatingBadge() public {
-    address to = address(this);
-    address from = address(0);
-
-    uint256 raftTokenId = createRaftAndRegisterSpec();
-    bytes memory signature = getSignature();
-    vm.expectEmit(true, true, true, false);
-    uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
-    emit Transfer(from, to, tokenId);
-
-    assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
-    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
-    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
@@ -525,5 +504,14 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+  }
+
+  function testIsBadgeValid() public {
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, Badges.RevocationReason.REASON_1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
   }
 }
