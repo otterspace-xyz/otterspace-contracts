@@ -59,7 +59,7 @@ contract BadgesTest is Test {
   }
 
   // // helper function
-  function createRaftAndRegisterSpec() internal {
+  function createRaftAndRegisterSpec() internal returns (uint256) {
     address to = address(this);
     address from = address(0);
 
@@ -72,6 +72,7 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
+    return raftTokenId;
   }
 
   // // helper function
@@ -210,11 +211,11 @@ contract BadgesTest is Test {
 
   // TAKE TESTS
   // happy path
-  function testBalanceIncreaseAfterTake() public {
+  function testBalanceIncreaseAfterTake() public returns (uint256, uint256) {
     address to = address(this);
     address from = address(0);
 
-    createRaftAndRegisterSpec();
+    uint256 raftTokenId = createRaftAndRegisterSpec();
     bytes memory signature = getSignature();
     vm.expectEmit(true, true, true, false);
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
@@ -223,6 +224,7 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
+    return (raftTokenId, tokenId);
   }
 
   function testTakeWithDifferentTokenURI() public {
@@ -479,7 +481,37 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), to);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
 
-    vm.expectRevert(bytes("unequip: token doesn't exist"));
+    vm.expectRevert(bytes("tokenExists: token doesn't exist"));
     badgesWrappedProxyV1.unequip(1337);
+  }
+
+  function testRevokingBadge() public {
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+  }
+
+  function testReinstatingBadge() public {
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+
+    badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+  }
+
+  function testIsBadgeValid() public {
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
   }
 }
