@@ -36,7 +36,7 @@ contract Badges is
   BitMaps.BitMap private revokedBadgesHashes;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-  event BadgeRevoked(uint256 indexed tokenId, address indexed revokedFrom, uint8 indexed reason);
+  event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed reinstatedFrom);
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
