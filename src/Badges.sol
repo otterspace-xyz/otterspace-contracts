@@ -36,15 +36,8 @@ contract Badges is
   BitMaps.BitMap private revokedBadgesHashes;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-  event BadgeRevoked(uint256 indexed tokenId, address indexed revokedFrom, RevocationReason indexed reason);
+  event BadgeRevoked(uint256 indexed tokenId, address indexed revokedFrom, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed reinstatedFrom);
-
-  enum RevocationReason {
-    REASON_1,
-    REASON_2,
-    REASON_3,
-    OTHER
-  }
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
@@ -62,6 +55,16 @@ contract Badges is
     _disableInitializers();
   }
 
+  /**
+   * @notice Initialize the contract
+   * @dev only called once when the proxy is deployed. Allows the contract to be upgraded
+   * @param _name
+   * @param _symbol
+   * @param _verion
+   * @param _verion
+   * @param _verion
+   * @param _verion
+   */
   function initialize(
     string memory _name,
     string memory _symbol,
@@ -80,15 +83,21 @@ contract Badges is
     transferOwnership(_nextOwner);
   }
 
-  // The owner can call this once only. They should call this when the contract is first deployed.
+  /**
+   * @notice Allows the Badges contract to communicate with the SpecDataHolder contract
+   * @param _dataHolder address of the SpecDataHolder contract
+   */
   function setDataHolder(address _dataHolder) external virtual onlyOwner {
-    // require(address(dataHolder) == address(0x0));
     specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
-  // Give is called by someone who has authority to create badge specs
-  // Prior to calling "Give", the "to" address would have alrady requested
-  // the badge (like joining a wait list)
+  /**
+   * @notice Allows the owner of a badge spec to mint a badge to someone who has requested it
+   * @dev Take is called by somebody who has already been added to an allow list.
+   * @param _to the person who is receiving the badge
+   * @param _uri the uri of the badge spec
+   * @param _signature the signature used to verify that the person receiving the badge actually requested it
+   */
   function give(
     address _to,
     string calldata _uri,
@@ -102,8 +111,13 @@ contract Badges is
     return tokenId;
   }
 
-  // Take is called by somebody who has already been added to an allow list.
-  // The "from" address is the person who issued the voucher, who is permitting them to mint the badge.
+  /**
+   * @notice Allows a user to mint a badge from a voucher
+   * @dev Take is called by somebody who has already been added to an allow list.
+   * @param _from the person who issued the voucher, who is permitting them to mint the badge.
+   * @param _uri the uri of the badge spec
+   * @param _signature the signature used to verify that the person minting has permission from the issuer
+   */
   function take(
     address _from,
     string calldata _uri,
@@ -164,16 +178,29 @@ contract Badges is
     return owners[_tokenId];
   }
 
+  /**
+   * @notice Revokes a badge from a user
+   * @dev we're storing the reason as a uint because the string values may change over time
+   * @param _raftTokenId The raft token id
+   * @param _badgeId tokenId of the badge to be revoked
+   * @param _reason an integer representing the reason for revoking the badge
+   */
   function revokeBadge(
     uint256 _raftTokenId,
     uint256 _badgeId,
-    RevocationReason _reason
+    uint8 _reason
   ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
     require(revokedBadgesHashes.get(_badgeId) == false, "revokeBadge: badge already revoked");
     revokedBadgesHashes.set(_badgeId);
     emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
 
+  /**
+   * @notice Reinstates a badge for a user
+   * @dev we're using bitmaps instead of a mapping to save gas
+   * @param _raftTokenId The raft token id
+   * @param _badgeId tokenId of the badge to be revoked
+   */
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
     external
     tokenExists(_badgeId)

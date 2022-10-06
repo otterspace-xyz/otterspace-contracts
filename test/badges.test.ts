@@ -14,7 +14,7 @@ const version = '1'
 //live network and automaticall set the chainId to the correct value.
 const chainId = 31337
 const specUri = 'some spec uri'
-const reasonChoice = ethers.BigNumber.from(0)
+const reasonChoice = 1
 
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = 'mint: spec is not registered'

@@ -490,7 +490,7 @@ contract BadgesTest is Test {
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
-    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, Badges.RevocationReason.REASON_1);
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
   }
 
@@ -499,7 +499,7 @@ contract BadgesTest is Test {
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
-    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, Badges.RevocationReason.REASON_1);
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
 
     badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
@@ -511,7 +511,7 @@ contract BadgesTest is Test {
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
-    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, Badges.RevocationReason.REASON_1);
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
   }
 }
