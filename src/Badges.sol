@@ -203,7 +203,7 @@ contract Badges is
     uint256 _badgeId,
     uint8 _reason
   ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
-    require(revokedBadgesHashes.get(_badgeId) == false, "revokeBadge: badge already revoked");
+    require(!revokedBadgesHashes.get(_badgeId), "revokeBadge: badge already revoked");
     revokedBadgesHashes.set(_badgeId);
     emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
@@ -219,13 +219,13 @@ contract Badges is
     tokenExists(_badgeId)
     senderIsRaftOwner(_raftTokenId, "reinstateBadge")
   {
-    require(revokedBadgesHashes.get(_badgeId) == true, "reinstateBadge: badge not revoked");
+    require(revokedBadgesHashes.get(_badgeId), "reinstateBadge: badge not revoked");
     revokedBadgesHashes.unset(_badgeId);
     emit BadgeReinstated(_badgeId, msg.sender);
   }
 
   function isBadgeValid(uint256 _badgeId) external view tokenExists(_badgeId) returns (bool) {
-    bool isNotRevoked = revokedBadgesHashes.get(_badgeId) == false;
+    bool isNotRevoked = !revokedBadgesHashes.get(_badgeId);
     return isNotRevoked;
   }
 
