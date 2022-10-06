@@ -58,12 +58,11 @@ contract Badges is
   /**
    * @notice Initialize the contract
    * @dev only called once when the proxy is deployed. Allows the contract to be upgraded
-   * @param _name
-   * @param _symbol
-   * @param _verion
-   * @param _verion
-   * @param _verion
-   * @param _verion
+   * @param _name name used for EIP-712 domain
+   * @param _symbol symbol used for EIP-712 domain
+   * @param _version version used for EIP-712 domain
+   * @param _nextOwner address of the owner
+   * @param _specDataHolderAddress address of the spec data holder contract
    */
   function initialize(
     string memory _name,
@@ -136,6 +135,12 @@ contract Badges is
     return address(specDataHolder);
   }
 
+  /**
+   * @notice Allows a Raft token holder to create a badge spec
+   * @dev Data is stored in the SpecDataHolder contract
+   * @param _specUri the uri of the badge spec
+   * @param _raftTokenId the id of the raft token
+   */
   function createSpec(string memory _specUri, uint256 _raftTokenId)
     external
     virtual
@@ -161,6 +166,10 @@ contract Badges is
     return tokenURIs[_tokenId];
   }
 
+  /**
+   * @notice Allows a user to disassociate themselves from a badge
+   * @param _tokenId the id of the badge
+   */
   function unequip(uint256 _tokenId) external virtual override tokenExists(_tokenId) {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
 
