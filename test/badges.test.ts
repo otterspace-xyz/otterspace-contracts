@@ -16,6 +16,7 @@ const version = '1'
 //live network and automaticall set the chainId to the correct value.
 const chainId = 31337
 const specUri = 'some spec uri'
+const specUri2 = 'another spec uri'
 const reasonChoice = 1
 
 const errNotOwner = 'Ownable: caller is not the owner'
@@ -240,41 +241,30 @@ describe('Merkle minting', () => {
   })
 
   // todo: reject when someone who has already claimed tries to claim again
-  it.only('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
+  it('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     const specUri = typedData.value.tokenURI
-    // SETUP (step 0)
+
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    // ===== step 1: the issuer whitelists a bunch of addresses
     const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
 
-    // map over addresses to get leaf nodes
     const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
 
-    // create merkle tree
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
 
-    // create merkle root
     const merkleRoot = merkleTree.getRoot()
 
-    // create signature
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
-    // ===== at this point we will store signature and `whitelistAddresses` in the db
 
-    // ===== step 2: simulate the claimant minting a badge
-
-    // given the claimant's address, get a merkleProof
     const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
-    // pass merkleRoot and merkleProof to the badges contract
-    // badges contract will check to see if the proof is valid
     await badgesProxy
       .connect(claimant)
       .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
 
-    // ===== step 3: check that the claimant has the badge
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
     // ===== step 4: simulate the claimant minting a badge again
@@ -284,6 +274,57 @@ describe('Merkle minting', () => {
     await expect(
       badgesProxy.connect(claimant).mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
     ).to.be.revertedWith(errMerkleAlreadyUsed)
+  })
+
+  it('Should allow someone who is part of two separate merkle trees to mint both badges', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    const specUri = typedData.value.tokenURI
+    // SETUP (step 0)
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    const whitelist1 = [claimant.address, '0x1', '0x2', '0x3']
+
+    const leafNodes1 = whitelist1.map(addr => keccak256(addr))
+
+    const merkleTree1 = new MerkleTree(leafNodes1, keccak256, { sortPairs: true })
+
+    const merkleRoot1 = merkleTree1.getRoot()
+
+    const { compact: compact1 } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+
+    const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
+
+    await badgesProxy
+      .connect(claimant)
+      .mintWithMerklePermission(issuer.address, merkleRoot1, merkleProof1, specUri, compact1)
+
+    expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
+
+    // create a new spec with a new tokenUri
+    await createSpec(badgesProxy, specUri2, raftTokenId, issuer)
+
+    const whitelist2 = [claimant.address, '0x4', '0x5', '0x6']
+
+    const leafNodes2 = whitelist2.map(addr => keccak256(addr))
+
+    const merkleTree2 = new MerkleTree(leafNodes2, keccak256, { sortPairs: true })
+
+    const merkleRoot2 = merkleTree2.getRoot()
+    // manually override the tokenURI so that the signature works as expected
+    typedData.value.tokenURI = specUri2
+
+    const { compact: compact2 } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+
+    const merkleProof2 = merkleTree2.getHexProof(leafNodes2[0])
+
+    // attempt to mint a badge on the newly created spec
+    await badgesProxy
+      .connect(claimant)
+      .mintWithMerklePermission(issuer.address, merkleRoot2, merkleProof2, specUri2, compact2)
+
+    // expect the user to now have 2 bagdes, one from each whitelist
+    expect(await badgesProxy.balanceOf(claimant.address)).equal(2)
   })
 
   //  todo: ensure that someone who is part of two different merkle trees can claim on each tree
