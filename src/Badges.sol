@@ -165,7 +165,7 @@ contract Badges is
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreementMerkle: invalid signature"
     );
-    require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
+    require(!usedHashes.get(voucherHashId), "safeCheckAgreementMerkle: already used");
     return voucherHashId;
   }
 

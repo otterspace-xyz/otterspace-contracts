@@ -27,6 +27,7 @@ const tokenExistsErr = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
+const errMerkleAlreadyUsed = 'safeCheckAgreementMerkle: already used'
 
 let deployed: any
 
@@ -237,6 +238,55 @@ describe('Merkle minting', () => {
     // ===== step 3: check that the claimant has the badge
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
   })
+
+  // todo: reject when someone who has already claimed tries to claim again
+  it.only('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    const specUri = typedData.value.tokenURI
+    // SETUP (step 0)
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    // ===== step 1: the issuer whitelists a bunch of addresses
+    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
+
+    // map over addresses to get leaf nodes
+    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+
+    // create merkle tree
+    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+
+    // create merkle root
+    const merkleRoot = merkleTree.getRoot()
+
+    // create signature
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+    // ===== at this point we will store signature and `whitelistAddresses` in the db
+
+    // ===== step 2: simulate the claimant minting a badge
+
+    // given the claimant's address, get a merkleProof
+    const merkleProof = merkleTree.getHexProof(leafNodes[0])
+
+    // pass merkleRoot and merkleProof to the badges contract
+    // badges contract will check to see if the proof is valid
+    await badgesProxy
+      .connect(claimant)
+      .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+
+    // ===== step 3: check that the claimant has the badge
+    expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
+
+    // ===== step 4: simulate the claimant minting a badge again
+    console.log('got the first mint')
+
+    // expect the second attempt to fail
+    await expect(
+      badgesProxy.connect(claimant).mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+    ).to.be.revertedWith(errMerkleAlreadyUsed)
+  })
+
+  //  todo: ensure that someone who is part of two different merkle trees can claim on each tree
 
   it('Should reject minting when someone not on the whitelist tries to mint', async () => {
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner, randomSigner } = deployed
