@@ -37,7 +37,7 @@ jobs:
       - name: Compile hardhat
         env:
           CI: true
-          PRIVATE_KEY_1: ${{ secrets.PRIVATE_KEY_1 }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
         run: |
           npx hardhat compile
@@ -45,7 +45,7 @@ jobs:
       - name: Run hardhat tests
         env:
           CI: true
-          PRIVATE_KEY_1: ${{ secrets.PRIVATE_KEY_1 }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
         run: |
           npx hardhat test

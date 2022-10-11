@@ -158,7 +158,10 @@ describe('Raft', async function () {
 
     const newTokenUri: string = 'https://new-token-uri.com'
     tx = await raftProxy.connect(owner).setTokenURI(tokenId, newTokenUri)
-    tx.wait()
+    txReceipt = await tx.wait()
+    const [metadataUpdateEvent] = txReceipt.events!
+    const { tokenId: updatedTokenId } = metadataUpdateEvent.args!
+    expect(tokenId).to.equal(updatedTokenId)
 
     const actualUpdatedTokenUri = await raftProxy.tokenURI(tokenId)
     expect(actualUpdatedTokenUri).to.equal(newTokenUri)
