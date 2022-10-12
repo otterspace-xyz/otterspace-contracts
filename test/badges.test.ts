@@ -18,7 +18,7 @@ const chainId = 31337
 const specUri = 'some spec uri'
 const specUri2 = 'another spec uri'
 const reasonChoice = 1
-
+const emptyBytes32String = ethers.utils.formatBytes32String('')
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = 'mint: spec is not registered'
 const errSpecAlreadyRegistered = 'createSpec: spec already registered'
@@ -52,9 +52,14 @@ async function mintBadge() {
   const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
   // take's "from" is the issuer
   // take's msg.sender is the claimant
-
-  const txn = await badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
+  const emptyBytes32String = ethers.utils.formatBytes32String('')
+  const txn = await badgesProxy.connect(claimant).newTake(typedData.value.passive, typedData.value.tokenURI, compact, {
+    merkleRoot: emptyBytes32String,
+    merkleProof: [],
+    mintType: 0,
+  })
   await txn.wait()
+
   const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
   // currently the ERC4973 is hardcoding from to 0 in the event - https://github.com/rugpullindex/ERC4973/issues/39
   // expect(transferEventData.from).equal(typedData.value.passive) // issuer.address,
@@ -202,7 +207,7 @@ const deployContractFixture = async () => {
 }
 
 describe('Merkle minting', () => {
-  it('Happy path: should allow minting when an address is whitelisted on a merkle tree', async () => {
+  it.only('Happy path: should allow minting when an address is whitelisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     const specUri = typedData.value.tokenURI
     // SETUP (step 0)
@@ -225,18 +230,20 @@ describe('Merkle minting', () => {
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
     // ===== at this point we will store signature and `whitelistAddresses` in the db
 
-    // ===== step 2: simulate the claimant minting a badge
+    // ===== part 2: simulate the claimant minting a badge
 
     // given the claimant's address, get a merkleProof
     const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
     // pass merkleRoot and merkleProof to the badges contract
     // badges contract will check to see if the proof is valid
-    await badgesProxy
-      .connect(claimant)
-      .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+    await badgesProxy.connect(claimant).newTake(issuer.address, specUri, compact, {
+      merkleRoot,
+      merkleProof,
+      mintType: 1,
+    })
 
-    // ===== step 3: check that the claimant has the badge
+    // ===== part 3: check that the claimant has the badge
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
   })
 
@@ -268,7 +275,6 @@ describe('Merkle minting', () => {
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
     // ===== step 4: simulate the claimant minting a badge again
-    console.log('got the first mint')
 
     // expect the second attempt to fail
     await expect(
@@ -516,7 +522,7 @@ describe('Badges', async function () {
   })
 
   it('should successfully mint badge', async function () {
-    mintBadge()
+    await mintBadge()
   })
 
   it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
@@ -671,7 +677,6 @@ describe('Badges', async function () {
 
     // test to make sure that revocation worked
     expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(false)
-    console.log('here')
     await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)).to.be.revertedWith(
       errBadgeAlreadyRevoked
     )
