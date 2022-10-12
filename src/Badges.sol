@@ -37,7 +37,8 @@ contract Badges is
 
   enum MintType {
     TAKE,
-    MERKLE_TAKE
+    MERKLE_TAKE,
+    GIVE
   }
 
   struct MintConfig {
@@ -103,19 +104,19 @@ contract Badges is
 
   /**
    * @notice Allows the owner of a badge spec to mint a badge to someone who has requested it
-   * @dev Take is called by somebody who has already been added to an allow list.
-   * @param _to the person who is receiving the badge
+   * @param _passive the person who is receiving the badge
    * @param _uri the uri of the badge spec
    * @param _signature the signature used to verify that the person receiving the badge actually requested it
    */
   function give(
-    address _to,
+    address _passive,
     string calldata _uri,
     bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != _to, "give: cannot give from self");
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
-    uint256 tokenId = mint(_to, _uri);
+    require(msg.sender != _passive, "give: cannot give from self");
+
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _passive, _uri, _signature);
+    uint256 tokenId = mint(_passive, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -124,34 +125,35 @@ contract Badges is
   /**
    * @notice Allows a user to mint a badge from a voucher
    * @dev Take is called by somebody who has already been added to an allow list.
-   * @param _from the person who issued the voucher, who is permitting them to mint the badge.
+   * @param _passive the person who issued the voucher, who is permitting them to mint the badge.
    * @param _uri the uri of the badge spec
    * @param _signature the signature used to verify that the person minting has permission from the issuer
    */
   function take(
-    address _from,
+    address _passive,
     string calldata _uri,
     bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != _from, "take: cannot take from self");
+    require(msg.sender != _passive, "take: cannot take from self");
 
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _passive, _uri, _signature);
     uint256 tokenId = mint(msg.sender, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
 
-  function newTake(
-    address _from,
+  function mintBadge(
+    address _passive,
     string calldata _uri,
     bytes calldata _signature,
     MintConfig calldata _mintConfig
   ) external virtual returns (uint256) {
-    require(msg.sender != _from, "take: cannot take from self");
+    require(msg.sender != _passive, "take: cannot take from self");
 
-    uint256 voucherHashId = newSafeCheckAgreement(msg.sender, _from, _uri, _signature, _mintConfig);
-    uint256 tokenId = mint(msg.sender, _uri);
+    uint256 voucherHashId = newSafeCheckAgreement(msg.sender, _passive, _uri, _signature, _mintConfig);
+    address badgeRecipient = _mintConfig.mintType == MintType.GIVE ? _passive : msg.sender;
+    uint256 tokenId = mint(badgeRecipient, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -317,7 +319,7 @@ contract Badges is
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
-    require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
+    require(!usedHashes.get(voucherHashId), "newSafeCheckAgreement: already used");
     return voucherHashId;
   }
 

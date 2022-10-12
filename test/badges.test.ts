@@ -28,7 +28,7 @@ const tokenExistsErr = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
-const errMerkleAlreadyUsed = 'safeCheckAgreementMerkle: already used'
+const errMerkleAlreadyUsed = 'newSafeCheckAgreement: already used'
 
 let deployed: any
 
@@ -53,11 +53,13 @@ async function mintBadge() {
   // take's "from" is the issuer
   // take's msg.sender is the claimant
   const emptyBytes32String = ethers.utils.formatBytes32String('')
-  const txn = await badgesProxy.connect(claimant).newTake(typedData.value.passive, typedData.value.tokenURI, compact, {
-    merkleRoot: emptyBytes32String,
-    merkleProof: [],
-    mintType: 0,
-  })
+  const txn = await badgesProxy
+    .connect(claimant)
+    .mintBadge(typedData.value.passive, typedData.value.tokenURI, compact, {
+      merkleRoot: emptyBytes32String,
+      merkleProof: [],
+      mintType: 0,
+    })
   await txn.wait()
 
   const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
@@ -207,7 +209,7 @@ const deployContractFixture = async () => {
 }
 
 describe('Merkle minting', () => {
-  it.only('Happy path: should allow minting when an address is whitelisted on a merkle tree', async () => {
+  it('Happy path: should allow minting when an address is whitelisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
     const specUri = typedData.value.tokenURI
     // SETUP (step 0)
@@ -237,7 +239,7 @@ describe('Merkle minting', () => {
 
     // pass merkleRoot and merkleProof to the badges contract
     // badges contract will check to see if the proof is valid
-    await badgesProxy.connect(claimant).newTake(issuer.address, specUri, compact, {
+    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact, {
       merkleRoot,
       merkleProof,
       mintType: 1,
@@ -268,9 +270,11 @@ describe('Merkle minting', () => {
 
     const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
-    await badgesProxy
-      .connect(claimant)
-      .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact, {
+      merkleRoot,
+      merkleProof,
+      mintType: 1,
+    })
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
@@ -278,7 +282,11 @@ describe('Merkle minting', () => {
 
     // expect the second attempt to fail
     await expect(
-      badgesProxy.connect(claimant).mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+      badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact, {
+        merkleRoot,
+        merkleProof,
+        mintType: 1,
+      })
     ).to.be.revertedWith(errMerkleAlreadyUsed)
   })
 
@@ -301,9 +309,11 @@ describe('Merkle minting', () => {
 
     const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
 
-    await badgesProxy
-      .connect(claimant)
-      .mintWithMerklePermission(issuer.address, merkleRoot1, merkleProof1, specUri, compact1)
+    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact1, {
+      merkleRoot: merkleRoot1,
+      merkleProof: merkleProof1,
+      mintType: 1,
+    })
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
@@ -325,9 +335,11 @@ describe('Merkle minting', () => {
     const merkleProof2 = merkleTree2.getHexProof(leafNodes2[0])
 
     // attempt to mint a badge on the newly created spec
-    await badgesProxy
-      .connect(claimant)
-      .mintWithMerklePermission(issuer.address, merkleRoot2, merkleProof2, specUri2, compact2)
+    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri2, compact2, {
+      merkleRoot: merkleRoot2,
+      merkleProof: merkleProof2,
+      mintType: 1,
+    })
 
     // expect the user to now have 2 bagdes, one from each whitelist
     expect(await badgesProxy.balanceOf(claimant.address)).equal(2)
@@ -356,9 +368,11 @@ describe('Merkle minting', () => {
 
     // calling connect() with a random signer is a "bad actor" trying to mint
     await expect(
-      badgesProxy
-        .connect(randomSigner)
-        .mintWithMerklePermission(issuer.address, merkleRoot, merkleProof, specUri, compact)
+      badgesProxy.connect(randomSigner).mintBadge(issuer.address, specUri, compact, {
+        merkleRoot,
+        merkleProof,
+        mintType: 1,
+      })
     ).to.be.revertedWith('invalid proof')
   })
 })
