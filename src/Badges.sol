@@ -38,6 +38,7 @@ contract Badges is
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
+  event RefreshMetadata(string specUri);
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
@@ -82,6 +83,10 @@ contract Badges is
     transferOwnership(_nextOwner);
   }
 
+  function refreshMetaData(string memory _specUri) external onlyOwner {
+    emit RefreshMetadata(_specUri);
+  }
+
   /**
    * @notice Allows the Badges contract to communicate with the SpecDataHolder contract
    * @param _dataHolder address of the SpecDataHolder contract
@@ -121,7 +126,7 @@ contract Badges is
     address _from,
     string calldata _uri,
     bytes calldata _signature
-  ) external virtual override returns (uint256) {
+  ) external virtual returns (uint256) {
     require(msg.sender != _from, "take: cannot take from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
