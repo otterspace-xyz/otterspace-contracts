@@ -7,6 +7,7 @@ import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";
 import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import { Take } from "./extensions/Take.sol";
 
 contract UUPSProxy is ERC1967Proxy {
   constructor(address _implementation, bytes memory _data) ERC1967Proxy(_implementation, _data) {}
@@ -24,6 +25,7 @@ contract SpecDataHolderTest is Test {
   Badges badgesWrappedProxyV1;
   Raft raftWrappedProxyV1;
   SpecDataHolder specDataHolderWrappedProxyV1;
+  Take take;
 
   address passiveAddress = 0x0f6A79A579658E401E0B81c6dde1F2cd51d97176;
   uint256 passivePrivateKey = 0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
@@ -46,7 +48,8 @@ contract SpecDataHolderTest is Test {
     raftWrappedProxyV1 = Raft(address(raftProxy));
     specDataHolderWrappedProxyV1 = SpecDataHolder(address(specDataHolderProxy));
 
-    badgesWrappedProxyV1.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolderProxy));
+    take = new Take();
+    badgesWrappedProxyV1.initialize("Badges", "BADGES", "0.1.0", to, address(specDataHolderProxy), address(take));
     raftWrappedProxyV1.initialize(to, "Raft", "RAFT");
     specDataHolderWrappedProxyV1.initialize(address(raftProxy), to);
   }

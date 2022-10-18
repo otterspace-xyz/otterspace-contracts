@@ -151,6 +151,9 @@ const deployContractFixture = async () => {
     kind: 'uups',
   })
 
+  const Take = await ethers.getContractFactory('Take')
+  const take = await Take.deploy()
+
   const raftAddress = await specDataHolderProxy.getRaftAddress()
 
   expect(raftAddress).equal(raftProxy.address)
@@ -158,7 +161,7 @@ const deployContractFixture = async () => {
   const badges = await ethers.getContractFactory('Badges')
   const badgesProxy = await upgrades.deployProxy(
     badges,
-    [name, symbol, version, owner.address, specDataHolderProxy.address],
+    [name, symbol, version, owner.address, specDataHolderProxy.address, take.address],
     { kind: 'uups' }
   )
 
@@ -502,9 +505,34 @@ describe('Badges', async function () {
 
     // test to make sure that revocation worked
     expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(false)
-    console.log('here')
     await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)).to.be.revertedWith(
       errBadgeAlreadyRevoked
     )
+  })
+
+  it('Should mint using the new inherited take', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    const specUri = typedData.value.tokenURI
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+
+    const txn = await badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
+
+    await txn.wait()
+
+    const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
+
+    expect(transferEventData.to).equal(typedData.value.active) // claimant.address
+    expect(transferEventData.tokenId).gt(0)
+
+    const ownerOfMintedToken = await badgesProxy.ownerOf(transferEventData.tokenId)
+    expect(ownerOfMintedToken).to.equal(claimant.address)
+    const balanceOfClaimant = await badgesProxy.balanceOf(claimant.address)
+    expect(balanceOfClaimant).to.equal(1)
+    const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
+    expect(uriOfToken).to.equal(typedData.value.tokenURI)
   })
 })

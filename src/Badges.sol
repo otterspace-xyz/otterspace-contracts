@@ -10,6 +10,7 @@ import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+import { ITake } from "./interfaces/ITake.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -34,6 +35,8 @@ contract Badges is
 
   mapping(uint256 => uint256) private voucherHashIds;
   BitMaps.BitMap private revokedBadgesHashes;
+
+  ITake private _take;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
@@ -69,12 +72,14 @@ contract Badges is
     string memory _symbol,
     string memory _version,
     address _nextOwner,
-    address _specDataHolderAddress
+    address _specDataHolderAddress,
+    address _takeAddress
   ) public initializer {
     name_ = _name;
     symbol_ = _symbol;
     specDataHolder = ISpecDataHolder(_specDataHolderAddress);
-
+    _take = ITake(_takeAddress);
+    _take.setBadgesAddress(address(this));
     __ERC165_init();
     __Ownable_init();
     __EIP712_init(_name, _version);
@@ -103,32 +108,19 @@ contract Badges is
     bytes calldata _signature
   ) external virtual override returns (uint256) {
     require(msg.sender != _to, "give: cannot give from self");
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
-    uint256 tokenId = mint(_to, _uri);
+    uint256 voucherHashId = _safeCheckAgreement(msg.sender, _to, _uri, _signature);
+    uint256 tokenId = _mint(_to, _uri);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
 
-  /**
-   * @notice Allows a user to mint a badge from a voucher
-   * @dev Take is called by somebody who has already been added to an allow list.
-   * @param _from the person who issued the voucher, who is permitting them to mint the badge.
-   * @param _uri the uri of the badge spec
-   * @param _signature the signature used to verify that the person minting has permission from the issuer
-   */
   function take(
-    address _from,
+    address _passive,
     string calldata _uri,
     bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != _from, "take: cannot take from self");
-
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
-    uint256 tokenId = mint(msg.sender, _uri);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
-    return tokenId;
+    return _take.take(msg.sender, _passive, _uri, _signature);
   }
 
   function getDataHolderAddress() external view returns (address) {
@@ -253,7 +245,11 @@ contract Badges is
     return keccak256(abi.encode(_to, _uri));
   }
 
-  function mint(address _to, string memory _uri) internal virtual returns (uint256) {
+  function mint(address _to, string memory _uri) external virtual returns (uint256) {
+    return _mint(_to, _uri);
+  }
+
+  function _mint(address _to, string memory _uri) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
     uint256 tokenId = uint256(hash);
@@ -272,6 +268,16 @@ contract Badges is
   }
 
   function safeCheckAgreement(
+    address _active,
+    address _passive,
+    string calldata _uri,
+    bytes calldata _signature
+  ) external virtual returns (uint256) {
+    return _safeCheckAgreement(_active, _passive, _uri, _signature);
+  }
+
+  // we need this so that we can use safeCheckAgreement on the interface
+  function _safeCheckAgreement(
     address _active,
     address _passive,
     string calldata _uri,
@@ -300,6 +306,14 @@ contract Badges is
     delete tokenURIs[_tokenId];
     delete voucherHashIds[_tokenId];
     emit Transfer(_owner, address(0), _tokenId);
+  }
+
+  function setUsedHashId(uint256 _voucherHashId) external virtual {
+    usedHashes.set(_voucherHashId);
+  }
+
+  function setVoucherHashId(uint256 _tokenId, uint256 _voucherHashId) external virtual {
+    voucherHashIds[_tokenId] = _voucherHashId;
   }
 
   // Not implementing this function because it is used to check who is authorized
