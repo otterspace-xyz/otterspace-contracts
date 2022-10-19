@@ -128,7 +128,7 @@ contract Badges is
     address _from,
     string calldata _uri,
     bytes calldata _signature
-  ) external virtual returns (uint256) {
+  ) external virtual override returns (uint256) {
     require(msg.sender != _from, "take: cannot take from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
