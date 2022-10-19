@@ -83,8 +83,10 @@ contract Badges is
     transferOwnership(_nextOwner);
   }
 
-  function refreshMetaData(string memory _specUri) external onlyOwner {
-    emit RefreshMetadata(_specUri);
+  function refreshMetadata(string[] memory _specUris) external onlyOwner {
+    for (uint256 i = 0; i < _specUris.length; i++) {
+      emit RefreshMetadata(_specUris[i]);
+    }
   }
 
   /**
