@@ -33,7 +33,7 @@ contract BadgesTest is Test {
   string[] specUris = ["spec1", "spec2"];
 
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
-  event RefreshMetadata(string specUri);
+  event RefreshMetadata(string[] specUris, address sender);
 
   function setUp() public {
     address to = address(this);
@@ -520,11 +520,9 @@ contract BadgesTest is Test {
   function testRefreshMetadata() public {
     createRaftAndRegisterSpec();
 
-    for (uint256 i = 0; i < specUris.length; i++) {
-      vm.expectEmit(true, false, false, false);
-      emit RefreshMetadata(specUris[i]);
-    }
+    vm.expectEmit(true, false, false, false);
 
+    emit RefreshMetadata(specUris, msg.sender);
     badgesWrappedProxyV1.refreshMetadata(specUris);
   }
 }
