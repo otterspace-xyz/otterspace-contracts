@@ -32,7 +32,7 @@ contract BadgeStorage is ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable,
     string memory _version,
     address _nextOwner,
     address _specDataHolderAddress
-  ) public initializer {
+  ) public virtual initializer {
     name_ = _name;
     symbol_ = _symbol;
     specDataHolder = ISpecDataHolder(_specDataHolderAddress);
@@ -42,6 +42,30 @@ contract BadgeStorage is ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable,
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+  }
+
+  function setUsedHashId(uint256 _voucherHashId) internal virtual {
+    usedHashes.set(_voucherHashId);
+  }
+
+  function getUsedHashId(uint256 _voucherHashId) internal virtual returns (bool) {
+    return usedHashes.get(_voucherHashId);
+  }
+
+  function unsetUsedHashId(uint256 _voucherHashId) internal virtual {
+    usedHashes.unset(_voucherHashId);
+  }
+
+  function getRevokedBadgeHash(uint256 _badgeId) internal view virtual returns (bool) {
+    return revokedBadgesHashes.get(_badgeId);
+  }
+
+  function setRevokedBadgeHash(uint256 _badgeId) internal virtual {
+    revokedBadgesHashes.set(_badgeId);
+  }
+
+  function unsetRevokedBadgeHash(uint256 _badgeId) internal virtual {
+    revokedBadgesHashes.unset(_badgeId);
   }
 
   function _authorizeUpgrade(address) internal virtual override onlyOwner {}

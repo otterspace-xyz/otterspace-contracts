@@ -202,18 +202,20 @@ describe('Proxy upgrades', () => {
     await mintBadge()
   })
 
-  it('Should upgrade the Badge contract then create raft/spec/badge', async () => {
-    // deploy contracts
-    const { badgesProxy } = deployed
+  it.only('Should run an upgrade BadgesOld.sol to BadgesNew.sol', async () => {
+    const { raftProxy, owner, specDataHolderProxy } = deployed
 
-    const badgesV2 = await ethers.getContractFactory('BadgesV2')
-    const upgradedV2Contract = await upgrades.upgradeProxy(badgesProxy.address, badgesV2)
-    await upgradedV2Contract.deployed()
+    const badgesOld = await ethers.getContractFactory('BadgesOld')
+    console.log('🚀 ~ file: badges.test.ts ~ line 209 ~ it.only ~ badgesOld', badgesOld)
+    const badgesOldProxy = await upgrades.deployProxy(
+      badgesOld,
+      [name, symbol, version, owner.address, specDataHolderProxy.address],
+      { kind: 'uups' }
+    )
 
-    const v2 = await upgradedV2Contract.getVersion()
-    expect(v2).equal(2)
-
-    await mintBadge()
+    const badgesNew = await ethers.getContractFactory('BadgesNew')
+    const badgesNewContract = await upgrades.upgradeProxy(raftProxy.address, badgesNew)
+    await badgesNewContract.deployed()
   })
 
   it('Should upgrade then instantiate new variable right after', async () => {

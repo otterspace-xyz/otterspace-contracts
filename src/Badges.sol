@@ -15,7 +15,15 @@ import { BadgeStorage } from "./BadgeStorage.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
+contract Badges is
+  IERC721Metadata,
+  IERC4973,
+  ERC165Upgradeable,
+  UUPSUpgradeable,
+  OwnableUpgradeable,
+  EIP712Upgradeable,
+  BadgeStorage
+{
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
@@ -41,7 +49,13 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
    * @dev only called once when the proxy is deployed. Allows the contract to be upgraded
    * @param _nextOwner address of the owner
    */
-  function initialize(address _nextOwner) public initializer {
+  function initialize(
+    string memory _name,
+    string memory _symbol,
+    string memory _version,
+    address _nextOwner,
+    address _specDataHolderAddress
+  ) public override initializer {
     __Ownable_init();
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
@@ -70,7 +84,7 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
     require(msg.sender != _to, "give: cannot give from self");
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 tokenId = mint(_to, _uri);
-    usedHashes.set(voucherHashId);
+    setUsedHashId(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
@@ -91,7 +105,7 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
     uint256 tokenId = mint(msg.sender, _uri);
-    usedHashes.set(voucherHashId);
+    setUsedHashId(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
@@ -139,7 +153,7 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
 
     uint256 voucherHashId = voucherHashIds[_tokenId];
-    usedHashes.unset(voucherHashId);
+    unsetUsedHashId(voucherHashId);
     burn(_tokenId);
   }
 
@@ -168,8 +182,8 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
     uint256 _badgeId,
     uint8 _reason
   ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
-    require(!revokedBadgesHashes.get(_badgeId), "revokeBadge: badge already revoked");
-    revokedBadgesHashes.set(_badgeId);
+    require(!getRevokedBadgeHash(_badgeId), "revokeBadge: badge already revoked");
+    setRevokedBadgeHash(_badgeId);
     emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
 
@@ -184,13 +198,13 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
     tokenExists(_badgeId)
     senderIsRaftOwner(_raftTokenId, "reinstateBadge")
   {
-    require(revokedBadgesHashes.get(_badgeId), "reinstateBadge: badge not revoked");
-    revokedBadgesHashes.unset(_badgeId);
+    require(getRevokedBadgeHash(_badgeId), "reinstateBadge: badge not revoked");
+    unsetRevokedBadgeHash(_badgeId);
     emit BadgeReinstated(_badgeId, msg.sender);
   }
 
   function isBadgeValid(uint256 _badgeId) external view tokenExists(_badgeId) returns (bool) {
-    bool isNotRevoked = !revokedBadgesHashes.get(_badgeId);
+    bool isNotRevoked = !getRevokedBadgeHash(_badgeId);
     return isNotRevoked;
   }
 
@@ -249,7 +263,7 @@ contract Badges is IERC721Metadata, IERC4973, UUPSUpgradeable, BadgeStorage {
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
-    require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
+    require(!getUsedHashId(voucherHashId), "safeCheckAgreement: already used");
     return voucherHashId;
   }
 
