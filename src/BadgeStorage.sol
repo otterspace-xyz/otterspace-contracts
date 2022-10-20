@@ -25,6 +25,9 @@ contract BadgeStorage is ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable,
 
   mapping(uint256 => uint256) internal voucherHashIds;
   BitMaps.BitMap internal revokedBadgesHashes;
+  event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
+  event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
+  event BadgeReinstated(uint256 indexed tokenId, address indexed from);
 
   function initialize(
     string memory _name,

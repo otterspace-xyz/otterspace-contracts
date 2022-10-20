@@ -12,6 +12,8 @@ import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 
 import { BadgeStorage } from "./BadgeStorage.sol";
+import { Utils } from "./Utils.sol";
+import { Mint } from "./Mint.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -22,12 +24,10 @@ contract Badges is
   UUPSUpgradeable,
   OwnableUpgradeable,
   EIP712Upgradeable,
-  BadgeStorage
+  BadgeStorage,
+  Utils,
+  Mint
 {
-  event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-  event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
-  event BadgeReinstated(uint256 indexed tokenId, address indexed from);
-
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
@@ -140,7 +140,7 @@ contract Badges is
     return symbol_;
   }
 
-  function tokenURI(uint256 _tokenId) external view virtual override returns (string memory) {
+  function tokenURI(uint256 _tokenId) external view virtual returns (string memory) {
     require(exists(_tokenId), "tokenURI: token doesn't exist");
     return tokenURIs[_tokenId];
   }
@@ -228,28 +228,6 @@ contract Badges is
     return _hashTypedDataV4(structHash);
   }
 
-  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
-    return keccak256(abi.encode(_to, _uri));
-  }
-
-  function mint(address _to, string memory _uri) internal virtual returns (uint256) {
-    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
-    bytes32 hash = getBadgeIdHash(_to, _uri);
-    uint256 tokenId = uint256(hash);
-    // only registered specs can be used for minting
-    require(raftTokenId != 0, "mint: spec is not registered");
-    require(!exists(tokenId), "mint: tokenID exists");
-
-    balances[_to] += 1;
-    owners[tokenId] = _to;
-    tokenURIs[tokenId] = _uri;
-
-    emit Transfer(address(0), _to, tokenId);
-
-    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
-    return tokenId;
-  }
-
   function safeCheckAgreement(
     address _active,
     address _passive,
@@ -265,10 +243,6 @@ contract Badges is
     );
     require(!getUsedHashId(voucherHashId), "safeCheckAgreement: already used");
     return voucherHashId;
-  }
-
-  function exists(uint256 _tokenId) internal view virtual returns (bool) {
-    return owners[_tokenId] != address(0);
   }
 
   function burn(uint256 _tokenId) internal virtual {
