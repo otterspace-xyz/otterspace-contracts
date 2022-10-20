@@ -206,7 +206,6 @@ describe('Proxy upgrades', () => {
     const { raftProxy, owner, specDataHolderProxy } = deployed
 
     const badgesOld = await ethers.getContractFactory('BadgesOld')
-    console.log('🚀 ~ file: badges.test.ts ~ line 209 ~ it.only ~ badgesOld', badgesOld)
     const badgesOldProxy = await upgrades.deployProxy(
       badgesOld,
       [name, symbol, version, owner.address, specDataHolderProxy.address],
@@ -214,7 +213,7 @@ describe('Proxy upgrades', () => {
     )
 
     const badgesNew = await ethers.getContractFactory('BadgesNew')
-    const badgesNewContract = await upgrades.upgradeProxy(raftProxy.address, badgesNew)
+    const badgesNewContract = await upgrades.upgradeProxy(badgesOldProxy.address, badgesNew)
     await badgesNewContract.deployed()
   })
 
