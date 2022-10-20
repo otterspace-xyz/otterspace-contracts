@@ -7,14 +7,12 @@ import { OwnableUpgradeable } from "@openzeppelin-upgradeable/access/OwnableUpgr
 import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
-import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 
 import { BadgeStorage } from "./BadgeStorage.sol";
 import { Utils } from "./Utils.sol";
 import { Mint } from "./Mint.sol";
 
 contract Badges is
-  IERC721Metadata,
   IERC4973,
   ERC165Upgradeable,
   UUPSUpgradeable,
@@ -103,19 +101,6 @@ contract Badges is
     specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
 
     emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
-  }
-
-  function name() external view virtual override returns (string memory) {
-    return name_;
-  }
-
-  function symbol() external view virtual override returns (string memory) {
-    return symbol_;
-  }
-
-  function tokenURI(uint256 _tokenId) external view virtual returns (string memory) {
-    require(exists(_tokenId), "tokenURI: token doesn't exist");
-    return tokenURIs[_tokenId];
   }
 
   /**

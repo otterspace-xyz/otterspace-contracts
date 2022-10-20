@@ -3,10 +3,11 @@ pragma solidity 0.8.16;
 import { BadgeStorage } from "./BadgeStorage.sol";
 import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
+import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Utils is BadgeStorage {
+contract Utils is IERC721Metadata, BadgeStorage {
   // TODO: consider moving modifiers to their own file
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
@@ -72,5 +73,18 @@ contract Utils is BadgeStorage {
    */
   function setDataHolder(address _dataHolder) external virtual onlyOwner {
     specDataHolder = ISpecDataHolder(_dataHolder);
+  }
+
+  function name() external view virtual override returns (string memory) {
+    return name_;
+  }
+
+  function symbol() external view virtual override returns (string memory) {
+    return symbol_;
+  }
+
+  function tokenURI(uint256 _tokenId) external view virtual returns (string memory) {
+    require(exists(_tokenId), "tokenURI: token doesn't exist");
+    return tokenURIs[_tokenId];
   }
 }
