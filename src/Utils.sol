@@ -2,6 +2,7 @@
 pragma solidity 0.8.16;
 import { BadgeStorage } from "./BadgeStorage.sol";
 import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
+import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -58,5 +59,18 @@ contract Utils is BadgeStorage {
 
   function getDataHolderAddress() external view returns (address) {
     return address(specDataHolder);
+  }
+
+  function isBadgeValid(uint256 _badgeId) external view tokenExists(_badgeId) returns (bool) {
+    bool isNotRevoked = !getRevokedBadgeHash(_badgeId);
+    return isNotRevoked;
+  }
+
+  /**
+   * @notice Allows the Badges contract to communicate with the SpecDataHolder contract
+   * @param _dataHolder address of the SpecDataHolder contract
+   */
+  function setDataHolder(address _dataHolder) external virtual onlyOwner {
+    specDataHolder = ISpecDataHolder(_dataHolder);
   }
 }

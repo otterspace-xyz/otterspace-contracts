@@ -8,7 +8,6 @@ import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
-import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 
 import { BadgeStorage } from "./BadgeStorage.sol";
 import { Utils } from "./Utils.sol";
@@ -45,14 +44,6 @@ contract Badges is
     __Ownable_init();
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
-  }
-
-  /**
-   * @notice Allows the Badges contract to communicate with the SpecDataHolder contract
-   * @param _dataHolder address of the SpecDataHolder contract
-   */
-  function setDataHolder(address _dataHolder) external virtual onlyOwner {
-    specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
   /**
@@ -183,11 +174,6 @@ contract Badges is
     require(getRevokedBadgeHash(_badgeId), "reinstateBadge: badge not revoked");
     unsetRevokedBadgeHash(_badgeId);
     emit BadgeReinstated(_badgeId, msg.sender);
-  }
-
-  function isBadgeValid(uint256 _badgeId) external view tokenExists(_badgeId) returns (bool) {
-    bool isNotRevoked = !getRevokedBadgeHash(_badgeId);
-    return isNotRevoked;
   }
 
   function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
