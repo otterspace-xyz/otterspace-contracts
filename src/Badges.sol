@@ -2,7 +2,6 @@
 pragma solidity 0.8.16;
 
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
-import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import { OwnableUpgradeable } from "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
@@ -15,8 +14,6 @@ import { BadgeStorage } from "./BadgeStorage.sol";
 import { Utils } from "./Utils.sol";
 import { Mint } from "./Mint.sol";
 
-bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
-
 contract Badges is
   IERC721Metadata,
   IERC4973,
@@ -28,17 +25,6 @@ contract Badges is
   Utils,
   Mint
 {
-  modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
-    string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
-    _;
-  }
-
-  modifier tokenExists(uint256 _badgeId) {
-    require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
-    _;
-  }
-
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
     _disableInitializers();
@@ -108,10 +94,6 @@ contract Badges is
     setUsedHashId(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
-  }
-
-  function getDataHolderAddress() external view returns (address) {
-    return address(specDataHolder);
   }
 
   /**
@@ -213,36 +195,6 @@ contract Badges is
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
       super.supportsInterface(_interfaceId);
-  }
-
-  function getVoucherHash(uint256 _tokenId) public view virtual returns (uint256) {
-    return voucherHashIds[_tokenId];
-  }
-
-  function getAgreementHash(
-    address _from,
-    address _to,
-    string calldata _uri
-  ) public view virtual returns (bytes32) {
-    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
-    return _hashTypedDataV4(structHash);
-  }
-
-  function safeCheckAgreement(
-    address _active,
-    address _passive,
-    string calldata _uri,
-    bytes calldata _signature
-  ) internal virtual returns (uint256) {
-    bytes32 hash = getAgreementHash(_active, _passive, _uri);
-    uint256 voucherHashId = uint256(hash);
-
-    require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
-      "safeCheckAgreement: invalid signature"
-    );
-    require(!getUsedHashId(voucherHashId), "safeCheckAgreement: already used");
-    return voucherHashId;
   }
 
   function burn(uint256 _tokenId) internal virtual {
