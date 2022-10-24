@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.2.0
+
+- Add revocation and reinstatement of badges
+
 ## 2.1.0
 
 - Added MetadataUpdate event in Raft.sol when setTokenURI is called

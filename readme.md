@@ -9,7 +9,7 @@
 # Project setup
 
 - Install [Foundry](https://book.getfoundry.sh/getting-started/installation.html)
-- Requires Node `v16` and Solidity `0.8.7`
+- Requires Node `v16` and Solidity `0.8.16`
 
 ```bash
 git clone git@github.com:otterspace-xyz/otterspace-contracts.git
@@ -111,7 +111,7 @@ Add a `.vscode` file under the root
 {
   "solidity.packageDefaultDependenciesContractsDirectory": "src",
   "solidity.packageDefaultDependenciesDirectory": "lib",
-  "solidity.compileUsingRemoteVersion": "v0.8.7"
+  "solidity.compileUsingRemoteVersion": "v0.8.16"
 }
 ```
 
