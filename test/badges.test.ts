@@ -25,7 +25,7 @@ const tokenExistsErr = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
-
+const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -506,5 +506,16 @@ describe('Badges', async function () {
     await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)).to.be.revertedWith(
       errBadgeAlreadyRevoked
     )
+  })
+
+  it('Should not refreshMetadata if caller isnt the owner', async () => {
+    const { badgesProxy, issuer } = deployed
+    await expect(badgesProxy.connect(issuer).refreshMetadata([specUri])).to.be.revertedWith(errNotOwner)
+  })
+
+  it('Should not refreshMetadata no spec uris are passed in to be refreshed', async () => {
+    const { badgesProxy, owner } = deployed
+    const { raftTokenId, badgeId } = await mintBadge()
+    await expect(badgesProxy.connect(owner).refreshMetadata([])).to.be.revertedWith(errNoSpecUris)
   })
 })

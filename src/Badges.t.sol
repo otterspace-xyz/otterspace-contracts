@@ -30,8 +30,10 @@ contract BadgesTest is Test {
   uint256 passivePrivateKey = 0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
   uint256 randomPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
   string specUri;
+  string[] specUris = ["spec1", "spec2"];
 
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+  event RefreshMetadata(string[] specUris, address sender);
 
   function setUp() public {
     address to = address(this);
@@ -513,5 +515,14 @@ contract BadgesTest is Test {
 
     badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+  }
+
+  function testRefreshMetadata() public {
+    createRaftAndRegisterSpec();
+
+    vm.expectEmit(true, false, false, false);
+
+    emit RefreshMetadata(specUris, msg.sender);
+    badgesWrappedProxyV1.refreshMetadata(specUris);
   }
 }

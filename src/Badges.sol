@@ -38,6 +38,7 @@ contract Badges is
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
+  event RefreshMetadata(string[] specUris, address sender);
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
@@ -80,6 +81,11 @@ contract Badges is
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+  }
+
+  function refreshMetadata(string[] memory _specUris) external onlyOwner {
+    require(_specUris.length > 0, "refreshMetadata: no spec uris provided");
+    emit RefreshMetadata(_specUris, msg.sender);
   }
 
   /**
