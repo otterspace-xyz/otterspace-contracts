@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.3.0
+
+- Add a function that enables us refresh a badge's metadata by emitting an event
+
 ## 2.2.0
 
 - Add revocation and reinstatement of badges
