@@ -189,7 +189,7 @@ contract Badges is
     return balances[_owner];
   }
 
-  function ownerOf(uint256 _tokenId) external view virtual override tokenExists(_tokenId) returns (address) {
+  function ownerOf(uint256 _tokenId) external view virtual override returns (address) {
     address owner = owners[_tokenId];
     require(owner != address(0), "ownerOf: token doesn't exist");
     return owner;
