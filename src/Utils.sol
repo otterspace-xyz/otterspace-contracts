@@ -7,8 +7,6 @@ import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-import "hardhat/console.sol";
-
 contract Utils is IERC721Metadata, BadgeStorage {
   function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
     return keccak256(abi.encode(_to, _uri));
