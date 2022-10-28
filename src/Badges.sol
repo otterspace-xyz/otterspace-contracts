@@ -6,40 +6,14 @@ import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import { OwnableUpgradeable } from "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
-import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+import { BadgeStorage } from "./BadgeStorage.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Badges is
-  IERC721Metadata,
-  IERC4973,
-  ERC165Upgradeable,
-  UUPSUpgradeable,
-  OwnableUpgradeable,
-  EIP712Upgradeable
-{
-  using BitMaps for BitMaps.BitMap;
-  BitMaps.BitMap private usedHashes;
-  string private name_;
-  string private symbol_;
-
-  mapping(uint256 => address) private owners;
-  mapping(uint256 => string) private tokenURIs;
-  mapping(address => uint256) private balances;
-
-  ISpecDataHolder private specDataHolder;
-
-  mapping(uint256 => uint256) private voucherHashIds;
-  BitMaps.BitMap private revokedBadgesHashes;
-
-  event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-  event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
-  event BadgeReinstated(uint256 indexed tokenId, address indexed from);
-  event RefreshMetadata(string[] specUris, address sender);
-
+contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable, BadgeStorage {
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
@@ -54,33 +28,6 @@ contract Badges is
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
     _disableInitializers();
-  }
-
-  /**
-   * @notice Initialize the contract
-   * @dev only called once when the proxy is deployed. Allows the contract to be upgraded
-   * @param _name name used for EIP-712 domain
-   * @param _symbol symbol used for EIP-712 domain
-   * @param _version version used for EIP-712 domain
-   * @param _nextOwner address of the owner
-   * @param _specDataHolderAddress address of the spec data holder contract
-   */
-  function initialize(
-    string memory _name,
-    string memory _symbol,
-    string memory _version,
-    address _nextOwner,
-    address _specDataHolderAddress
-  ) public initializer {
-    name_ = _name;
-    symbol_ = _symbol;
-    specDataHolder = ISpecDataHolder(_specDataHolderAddress);
-
-    __ERC165_init();
-    __Ownable_init();
-    __EIP712_init(_name, _version);
-    __UUPSUpgradeable_init();
-    transferOwnership(_nextOwner);
   }
 
   function refreshMetadata(string[] memory _specUris) external onlyOwner {
@@ -111,7 +58,7 @@ contract Badges is
     require(msg.sender != _to, "give: cannot give from self");
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 tokenId = mint(_to, _uri);
-    usedHashes.set(voucherHashId);
+    setUsedVoucherHashId(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
@@ -132,7 +79,7 @@ contract Badges is
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
     uint256 tokenId = mint(msg.sender, _uri);
-    usedHashes.set(voucherHashId);
+    setUsedVoucherHashId(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
@@ -180,7 +127,7 @@ contract Badges is
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
 
     uint256 voucherHashId = voucherHashIds[_tokenId];
-    usedHashes.unset(voucherHashId);
+    unsetUsedVoucherHashId(voucherHashId);
     burn(_tokenId);
   }
 
@@ -209,8 +156,8 @@ contract Badges is
     uint256 _badgeId,
     uint8 _reason
   ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
-    require(!revokedBadgesHashes.get(_badgeId), "revokeBadge: badge already revoked");
-    revokedBadgesHashes.set(_badgeId);
+    require(!getRevokedBadgeHash(_badgeId), "revokeBadge: badge already revoked");
+    setRevokedBadgeHash(_badgeId);
     emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
 
@@ -225,13 +172,13 @@ contract Badges is
     tokenExists(_badgeId)
     senderIsRaftOwner(_raftTokenId, "reinstateBadge")
   {
-    require(revokedBadgesHashes.get(_badgeId), "reinstateBadge: badge not revoked");
-    revokedBadgesHashes.unset(_badgeId);
+    require(getRevokedBadgeHash(_badgeId), "reinstateBadge: badge not revoked");
+    unsetRevokedBadgeHash(_badgeId);
     emit BadgeReinstated(_badgeId, msg.sender);
   }
 
   function isBadgeValid(uint256 _badgeId) external view tokenExists(_badgeId) returns (bool) {
-    bool isNotRevoked = !revokedBadgesHashes.get(_badgeId);
+    bool isNotRevoked = !getRevokedBadgeHash(_badgeId);
     return isNotRevoked;
   }
 
@@ -290,7 +237,7 @@ contract Badges is
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
-    require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
+    require(!getUsedVoucherHash(voucherHashId), "safeCheckAgreement: already used");
     return voucherHashId;
   }
 
@@ -308,7 +255,8 @@ contract Badges is
     emit Transfer(_owner, address(0), _tokenId);
   }
 
+  // TODO: do we need this since we're inheriting it from BadgeStorage?
   // Not implementing this function because it is used to check who is authorized
   // to update the contract, we're using onlyOwner for this purpose.
-  function _authorizeUpgrade(address) internal override onlyOwner {}
+  function _authorizeUpgrade(address) internal override(BadgeStorage, UUPSUpgradeable) onlyOwner {}
 }

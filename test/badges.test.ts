@@ -502,7 +502,6 @@ describe('Badges', async function () {
 
     // test to make sure that revocation worked
     expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(false)
-    console.log('here')
     await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)).to.be.revertedWith(
       errBadgeAlreadyRevoked
     )
