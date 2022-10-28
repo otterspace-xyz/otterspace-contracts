@@ -10,10 +10,18 @@ import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgra
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { BadgeStorage } from "./BadgeStorage.sol";
-
+import { Utils } from "./Utils.sol";
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable, BadgeStorage {
+contract Badges is
+  IERC721Metadata,
+  IERC4973,
+  ERC165Upgradeable,
+  UUPSUpgradeable,
+  OwnableUpgradeable,
+  BadgeStorage,
+  Utils
+{
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
@@ -33,14 +41,6 @@ contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable
   function refreshMetadata(string[] memory _specUris) external onlyOwner {
     require(_specUris.length > 0, "refreshMetadata: no spec uris provided");
     emit RefreshMetadata(_specUris, msg.sender);
-  }
-
-  /**
-   * @notice Allows the Badges contract to communicate with the SpecDataHolder contract
-   * @param _dataHolder address of the SpecDataHolder contract
-   */
-  function setDataHolder(address _dataHolder) external virtual onlyOwner {
-    specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
   /**
@@ -84,10 +84,6 @@ contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable
     return tokenId;
   }
 
-  function getDataHolderAddress() external view returns (address) {
-    return address(specDataHolder);
-  }
-
   /**
    * @notice Allows a Raft token holder to create a badge spec
    * @dev Data is stored in the SpecDataHolder contract
@@ -104,19 +100,6 @@ contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable
     specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
 
     emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
-  }
-
-  function name() external view virtual override returns (string memory) {
-    return name_;
-  }
-
-  function symbol() external view virtual override returns (string memory) {
-    return symbol_;
-  }
-
-  function tokenURI(uint256 _tokenId) external view virtual override returns (string memory) {
-    require(exists(_tokenId), "tokenURI: token doesn't exist");
-    return tokenURIs[_tokenId];
   }
 
   /**
@@ -189,23 +172,6 @@ contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable
       super.supportsInterface(_interfaceId);
   }
 
-  function getVoucherHash(uint256 _tokenId) public view virtual returns (uint256) {
-    return voucherHashIds[_tokenId];
-  }
-
-  function getAgreementHash(
-    address _from,
-    address _to,
-    string calldata _uri
-  ) public view virtual returns (bytes32) {
-    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
-    return _hashTypedDataV4(structHash);
-  }
-
-  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
-    return keccak256(abi.encode(_to, _uri));
-  }
-
   function mint(address _to, string memory _uri) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
@@ -222,27 +188,6 @@ contract Badges is IERC721Metadata, IERC4973, ERC165Upgradeable, UUPSUpgradeable
 
     specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
     return tokenId;
-  }
-
-  function safeCheckAgreement(
-    address _active,
-    address _passive,
-    string calldata _uri,
-    bytes calldata _signature
-  ) internal virtual returns (uint256) {
-    bytes32 hash = getAgreementHash(_active, _passive, _uri);
-    uint256 voucherHashId = uint256(hash);
-
-    require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
-      "safeCheckAgreement: invalid signature"
-    );
-    require(!getUsedVoucherHash(voucherHashId), "safeCheckAgreement: already used");
-    return voucherHashId;
-  }
-
-  function exists(uint256 _tokenId) internal view virtual returns (bool) {
-    return owners[_tokenId] != address(0);
   }
 
   function burn(uint256 _tokenId) internal virtual {
