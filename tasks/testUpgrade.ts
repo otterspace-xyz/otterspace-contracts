@@ -49,9 +49,21 @@ export default async function testUpgrade(params: any, hre: HardhatRuntimeEnviro
   )
   await badgesProxy.deployed()
 
-  const badgesUpgradedImplementation = await ethers.getContractFactory('Badges')
-  const upgradedContract = await upgrades.upgradeProxy(badgesProxy.address, badgesUpgradedImplementation)
-  await upgradedContract.deployed()
+  const badgesImplementation = await ethers.getContractFactory('Badges')
+  const upgradedBadgesContract = await upgrades.upgradeProxy(badgesProxy.address, badgesImplementation)
+  await upgradedBadgesContract.deployed()
+  console.log('BADGES contract upgraded successfully')
 
-  console.log('contract upgraded successfully')
+  const raftImplementation = await ethers.getContractFactory('Raft')
+  const upgradedRaftContract = await upgrades.upgradeProxy(raftProxy.address, raftImplementation)
+  await upgradedRaftContract.deployed()
+  console.log('RAFT contract upgraded successfully')
+
+  const specDataHolderImplementation = await ethers.getContractFactory('SpecDataHolder')
+  const upgradedspecDataHolderContract = await upgrades.upgradeProxy(
+    specDataHolderProxy.address,
+    specDataHolderImplementation
+  )
+  await upgradedspecDataHolderContract.deployed()
+  console.log('SPECDATAHOLDER contract upgraded successfully')
 }
