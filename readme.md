@@ -58,6 +58,13 @@ Raft ABI
 import Raft from '@otterspace-xyz/contracts/out/Raft.sol/Raft.json' assert { type: 'json' }
 ```
 
+SpecDataHolder ABI
+
+```js
+import Raft from '@otterspace-xyz/contracts/out/SpecDataHolder.sol/SpecDataHolder.json' assert { type: 'json' }
+```
+
+
 We're exporting specific `.sol` files using the `"files"` property in
 `package.json`. Please familiarize yourself with the `.sol` files we're
 exporting by looking into `package.json`.
