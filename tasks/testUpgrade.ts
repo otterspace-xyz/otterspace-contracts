@@ -16,8 +16,8 @@ const badgesAbi = badges.abi
 const badgesBytecode = badges.bytecode
 
 export default async function testUpgrade(params: any, hre: HardhatRuntimeEnvironment): Promise<void> {
+  const { BADGES_NAME: badgesName, BADGES_SYMBOL: badgesSymbol, BADGES_VERSION: badgesVersion } = process.env
   // runs npx hardhat compile
-  // without this you'll the code below will be run with stale code
   await hre.run('compile')
   const ethers = hre.ethers
   const upgrades = hre.upgrades
@@ -35,14 +35,10 @@ export default async function testUpgrade(params: any, hre: HardhatRuntimeEnviro
   })
   await specDataHolderProxy.deployed()
 
-  const name = 'Badges'
-  const symbol = 'BADGES'
-  const version = '1'
-
   const badges = await ethers.getContractFactory(badgesAbi, badgesBytecode, owner)
   const badgesProxy = await upgrades.deployProxy(
     badges,
-    [name, symbol, version, owner.address, specDataHolderProxy.address],
+    [badgesName, badgesSymbol, badgesVersion, owner.address, specDataHolderProxy.address],
     {
       kind: 'uups',
     }
