@@ -10,6 +10,7 @@ import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
+import { IERC5192 } from "./interfaces/IERC5192.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -19,7 +20,8 @@ contract Badges is
   ERC165Upgradeable,
   UUPSUpgradeable,
   OwnableUpgradeable,
-  EIP712Upgradeable
+  EIP712Upgradeable,
+  IERC5192
 {
   using BitMaps for BitMaps.BitMap;
   BitMaps.BitMap private usedHashes;
@@ -272,9 +274,13 @@ contract Badges is
     tokenURIs[tokenId] = _uri;
 
     emit Transfer(address(0), _to, tokenId);
-
+    emit Locked(tokenId);
     specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
     return tokenId;
+  }
+
+  function locked(uint256) public pure returns (bool) {
+    return true;
   }
 
   function safeCheckAgreement(
@@ -306,6 +312,7 @@ contract Badges is
     delete tokenURIs[_tokenId];
     delete voucherHashIds[_tokenId];
     emit Transfer(_owner, address(0), _tokenId);
+    emit Unlocked(_tokenId);
   }
 
   // Not implementing this function because it is used to check who is authorized

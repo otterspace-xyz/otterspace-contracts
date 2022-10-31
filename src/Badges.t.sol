@@ -33,6 +33,7 @@ contract BadgesTest is Test {
   string[] specUris = ["spec1", "spec2"];
 
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+  event Locked(uint256 tokenId);
   event RefreshMetadata(string[] specUris, address sender);
 
   function setUp() public {
@@ -220,8 +221,10 @@ contract BadgesTest is Test {
     uint256 raftTokenId = createRaftAndRegisterSpec();
     bytes memory signature = getSignature();
     vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, false);
     uint256 tokenId = badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
     emit Transfer(from, to, tokenId);
+    emit Locked(tokenId);
 
     assertEq(badgesWrappedProxyV1.balanceOf(to), 1);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
