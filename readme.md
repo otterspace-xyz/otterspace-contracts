@@ -111,7 +111,7 @@ On [Hardhat's website](https://hardhat.org) you will find:
 - **VERY IMPORTANT**: call `setBadgesAddress` on the `SpecDataHolder` contract. Without this, it won't work.
 
 ## Running upgrades
-- Our contracts use the OpenZeppelin UUPS proxy pattern for upgrades. 
+- Our contracts use the OpenZeppelin [UUPS](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable) proxy pattern for upgrades. 
 - To test your working changes against the latest release:
 - 1. check out the `dev` branch
 - 2. run `forge build` to make sure you've generated the latest ABIs
