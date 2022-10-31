@@ -61,7 +61,7 @@ import Raft from '@otterspace-xyz/contracts/out/Raft.sol/Raft.json' assert { typ
 SpecDataHolder ABI
 
 ```js
-import Raft from '@otterspace-xyz/contracts/out/SpecDataHolder.sol/SpecDataHolder.json' assert { type: 'json' }
+import SpecDataHolder from '@otterspace-xyz/contracts/out/SpecDataHolder.sol/SpecDataHolder.json' assert { type: 'json' }
 ```
 
 
