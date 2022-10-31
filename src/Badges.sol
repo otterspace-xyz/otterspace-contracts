@@ -241,6 +241,7 @@ contract Badges is
     return
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
+      _interfaceId == type(IERC5192).interfaceId ||
       super.supportsInterface(_interfaceId);
   }
 
