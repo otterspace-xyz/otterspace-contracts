@@ -110,6 +110,19 @@ On [Hardhat's website](https://hardhat.org) you will find:
 - Once deployed, follow the logged instructions in your terminal to verify the contracts.
 - **VERY IMPORTANT**: call `setBadgesAddress` on the `SpecDataHolder` contract. Without this, it won't work.
 
+## Running upgrades
+- Our contracts use the OpenZeppelin UUPS proxy pattern for upgrades. 
+- To test your working changes against the latest release:
+- 1. check out the `dev` branch
+- 2. run `forge build` to make sure you've generated the latest ABIs
+- 3. copy the contents of:
+- - `artifacts/src/Badges.sol/Badges.json` into `src/test/abis/latest`
+- - `artifacts/src/Raft.sol/Raft.json` into `src/test/abis/latest`
+- - `artifacts/src/SpecDataHolder.sol/SpecDataHolder.json` into `src/test/abis/latest`
+- 4. make some changes in your working directory
+- 5. run `npx hardhat testUpgrade`
+- 6. As long as you don't see errors, your new contract is upgrade safe!
+
 ## Foundry setup for VS Code Users
 
 Add a `.vscode` file under the root
