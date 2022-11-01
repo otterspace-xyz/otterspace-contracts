@@ -12,9 +12,9 @@ typechain-types/
 
 # Foundry
 out/
-# !out/Badges.sol/Badges.json
-# !out/Raft.sol/Raft.json
-# !out/SpecDataHolder.sol/SpecDataHolder.json
+!out/Badges.sol/Badges.json
+!out/Raft.sol/Raft.json
+!out/SpecDataHolder.sol/SpecDataHolder.json
 
 # Project
 node_modules
