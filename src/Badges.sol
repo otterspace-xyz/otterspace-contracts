@@ -9,7 +9,7 @@ import { OwnableUpgradeable } from "@openzeppelin-upgradeable/access/OwnableUpgr
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
-import { BadgeStorage } from "./BadgeStorage.sol";
+import { BadgeDataHolder } from "./BadgeDataHolder.sol";
 import { Utils } from "./Utils.sol";
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -19,7 +19,7 @@ contract Badges is
   ERC165Upgradeable,
   UUPSUpgradeable,
   OwnableUpgradeable,
-  BadgeStorage,
+  BadgeDataHolder,
   Utils
 {
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
@@ -200,8 +200,8 @@ contract Badges is
     emit Transfer(_owner, address(0), _tokenId);
   }
 
-  // TODO: do we need this since we're inheriting it from BadgeStorage?
+  // TODO: do we need this since we're inheriting it from BadgeDataHolder?
   // Not implementing this function because it is used to check who is authorized
   // to update the contract, we're using onlyOwner for this purpose.
-  function _authorizeUpgrade(address) internal override(BadgeStorage, UUPSUpgradeable) onlyOwner {}
+  function _authorizeUpgrade(address) internal override(BadgeDataHolder, UUPSUpgradeable) onlyOwner {}
 }

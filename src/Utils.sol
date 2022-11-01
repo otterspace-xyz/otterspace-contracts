@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.16;
-import { BadgeStorage } from "./BadgeStorage.sol";
+import { BadgeDataHolder } from "./BadgeDataHolder.sol";
 import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Utils is IERC721Metadata, BadgeStorage {
+contract Utils is IERC721Metadata, BadgeDataHolder {
   function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
     return keccak256(abi.encode(_to, _uri));
   }

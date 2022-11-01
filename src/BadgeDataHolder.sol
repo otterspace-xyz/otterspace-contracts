@@ -11,7 +11,7 @@ import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 
-contract BadgeStorage is ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable, EIP712Upgradeable {
+contract BadgeDataHolder is ERC165Upgradeable, UUPSUpgradeable, OwnableUpgradeable, EIP712Upgradeable {
   using BitMaps for BitMaps.BitMap;
   BitMaps.BitMap internal usedHashes;
   string internal name_;
