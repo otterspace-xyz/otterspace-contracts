@@ -41,20 +41,6 @@ const deployContractFixture = async () => {
   deployed = { raftProxy, raftTokenId, owner, addr1, addr2 }
 }
 
-describe('Raft Upgrades', async function () {
-  it('Should upgrade then instantiate new variable right after', async () => {
-    const { raftProxy } = deployed
-
-    const raftV2 = await ethers.getContractFactory('RaftV2')
-    const upgradedV2Contract = await upgrades.upgradeProxy(raftProxy.address, raftV2)
-    await upgradedV2Contract.deployed()
-    await upgradedV2Contract.setNewVar()
-    const newVar = await upgradedV2Contract.myNewVar()
-    expect(newVar).equal(9)
-    await expect(upgradedV2Contract.setNewVar()).to.be.revertedWith('Var is already set')
-  })
-})
-
 describe('Raft', async function () {
   it('should deploy the contract with the right params', async function () {
     const { raftProxy, owner } = deployed

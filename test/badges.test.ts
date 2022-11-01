@@ -188,61 +188,6 @@ const deployContractFixture = async () => {
   deployed = { badgesProxy, raftProxy, owner, issuer, claimant, randomSigner, typedData, specDataHolderProxy }
 }
 
-describe('Proxy upgrades', () => {
-  it('Should upgrade the Raft contract then create raft/spec/badge', async () => {
-    // deploy contracts
-    const { raftProxy } = deployed
-
-    const raftV2 = await ethers.getContractFactory('RaftV2')
-    const upgradedV2Contract = await upgrades.upgradeProxy(raftProxy.address, raftV2)
-    await upgradedV2Contract.deployed()
-
-    const v2 = await upgradedV2Contract.getVersion()
-    // expect(v2).equal(2)
-    await mintBadge()
-  })
-
-  it('Should upgrade the Badge contract then create raft/spec/badge', async () => {
-    // deploy contracts
-    const { badgesProxy } = deployed
-
-    const badgesV2 = await ethers.getContractFactory('BadgesV2')
-    const upgradedV2Contract = await upgrades.upgradeProxy(badgesProxy.address, badgesV2)
-    await upgradedV2Contract.deployed()
-
-    const v2 = await upgradedV2Contract.getVersion()
-    expect(v2).equal(2)
-
-    await mintBadge()
-  })
-
-  it('Should upgrade then instantiate new variable right after', async () => {
-    const { badgesProxy } = deployed
-
-    const badgesV2 = await ethers.getContractFactory('BadgesV2')
-    const upgradedV2Contract = await upgrades.upgradeProxy(badgesProxy.address, badgesV2)
-    await upgradedV2Contract.deployed()
-    await upgradedV2Contract.setNewVar()
-    const newVar = await upgradedV2Contract.myNewVar()
-    expect(newVar).equal(9)
-    await expect(upgradedV2Contract.setNewVar()).to.be.revertedWith('Var is already set')
-  })
-
-  it('Should upgrade the SpecDataHolder contract then create raft/spec/badge', async () => {
-    // deploy contracts
-    const { specDataHolderProxy } = deployed
-
-    const specDataHolderV2 = await ethers.getContractFactory('SpecDataHolderV2')
-    const upgradedV2Contract = await upgrades.upgradeProxy(specDataHolderProxy.address, specDataHolderV2)
-    await upgradedV2Contract.deployed()
-
-    const v2 = await upgradedV2Contract.getVersion()
-    expect(v2).equal(2)
-
-    await mintBadge()
-  })
-})
-
 describe('Badge Specs', () => {
   it('should register a spec successfully', async function () {
     // deploy contracts
