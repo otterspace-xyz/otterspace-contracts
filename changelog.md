@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.4.0
+
+- Update the "give" function to make sure that the caller is the owner of the Raft token associated with the targeted badge spec
+
 ## 2.3.0
 
 - Add a function that enables us refresh a badge's metadata by emitting an event
