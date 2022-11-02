@@ -7,21 +7,12 @@ import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cry
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import { OwnableUpgradeable } from "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
-import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { BadgeDataHolder } from "./BadgeDataHolder.sol";
 import { Utils } from "./Utils.sol";
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Badges is
-  IERC721Metadata,
-  IERC4973,
-  ERC165Upgradeable,
-  UUPSUpgradeable,
-  OwnableUpgradeable,
-  BadgeDataHolder,
-  Utils
-{
+contract Badges is IERC721Metadata, IERC4973, BadgeDataHolder, Utils {
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
@@ -41,6 +32,19 @@ contract Badges is
   function refreshMetadata(string[] memory _specUris) external onlyOwner {
     require(_specUris.length > 0, "refreshMetadata: no spec uris provided");
     emit RefreshMetadata(_specUris, msg.sender);
+  }
+
+  function name() external view virtual override returns (string memory) {
+    return name_;
+  }
+
+  function symbol() external view virtual override returns (string memory) {
+    return symbol_;
+  }
+
+  function tokenURI(uint256 _tokenId) external view virtual returns (string memory) {
+    require(exists(_tokenId), "tokenURI: token doesn't exist");
+    return tokenURIs[_tokenId];
   }
 
   /**
@@ -172,6 +176,10 @@ contract Badges is
       super.supportsInterface(_interfaceId);
   }
 
+  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
+    return keccak256(abi.encode(_to, _uri));
+  }
+
   function mint(address _to, string memory _uri) internal virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     bytes32 hash = getBadgeIdHash(_to, _uri);
@@ -203,5 +211,5 @@ contract Badges is
   // TODO: do we need this since we're inheriting it from BadgeDataHolder?
   // Not implementing this function because it is used to check who is authorized
   // to update the contract, we're using onlyOwner for this purpose.
-  function _authorizeUpgrade(address) internal override(BadgeDataHolder, UUPSUpgradeable) onlyOwner {}
+  function _authorizeUpgrade(address) internal override onlyOwner {}
 }

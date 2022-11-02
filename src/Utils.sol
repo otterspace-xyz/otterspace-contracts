@@ -7,11 +7,7 @@ import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
-contract Utils is IERC721Metadata, BadgeDataHolder {
-  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
-    return keccak256(abi.encode(_to, _uri));
-  }
-
+contract Utils is BadgeDataHolder {
   function exists(uint256 _tokenId) internal view virtual returns (bool) {
     return owners[_tokenId] != address(0);
   }
@@ -56,18 +52,5 @@ contract Utils is IERC721Metadata, BadgeDataHolder {
    */
   function setDataHolder(address _dataHolder) external virtual onlyOwner {
     specDataHolder = ISpecDataHolder(_dataHolder);
-  }
-
-  function name() external view virtual override returns (string memory) {
-    return name_;
-  }
-
-  function symbol() external view virtual override returns (string memory) {
-    return symbol_;
-  }
-
-  function tokenURI(uint256 _tokenId) external view virtual returns (string memory) {
-    require(exists(_tokenId), "tokenURI: token doesn't exist");
-    return tokenURIs[_tokenId];
   }
 }
