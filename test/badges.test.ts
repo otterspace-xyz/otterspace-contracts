@@ -26,6 +26,8 @@ const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
+const errUnauthorizedGive = 'give: unauthorized'
+const errCannotGiveToSelf = 'give: cannot give to self'
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -36,7 +38,7 @@ async function createSpec(badgesProxy: any, specUri: string, raftTokenId: BigNum
   return await getSpecCreatedEventLogData(txn.hash, badgesProxy)
 }
 
-async function mintBadge() {
+async function mintBadgeWithTake() {
   // deploy contracts
   const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
   const specUri = typedData.value.tokenURI
@@ -64,6 +66,31 @@ async function mintBadge() {
   const uriOfToken = await badgesProxy.tokenURI(transferEventData.tokenId)
   expect(uriOfToken).to.equal(typedData.value.tokenURI)
   return { raftTokenId, badgeId: transferEventData.tokenId }
+}
+
+async function mintBadgeWithGive(walletCallingGive: SignerWithAddress) {
+  const { badgesProxy, typedData, issuer, claimant } = deployed
+  // flip the values of active and passive for "give" functionality. Default values are for "take"
+  typedData.value.active = issuer.address
+  typedData.value.passive = claimant.address
+
+  // for "give" the claimant creates the signature
+  const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, claimant)
+
+  // and the issuer calls give
+  const txn = await badgesProxy
+    .connect(walletCallingGive)
+    .give(typedData.value.passive, typedData.value.tokenURI, compact)
+  await txn.wait()
+
+  const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
+
+  expect(transferEventData.to).equal(typedData.value.passive)
+  expect(transferEventData.tokenId).gt(0)
+
+  expect(await badgesProxy.ownerOf(transferEventData.tokenId)).to.equal(claimant.address)
+  expect(await badgesProxy.balanceOf(claimant.address)).to.equal(1)
+  expect(await badgesProxy.tokenURI(transferEventData.tokenId)).to.equal(typedData.value.tokenURI)
 }
 
 async function mintRaftToken(raftProxy: any, toAddress: string, raftTokenUri: string, signer: SignerWithAddress) {
@@ -292,7 +319,7 @@ describe('Badges', async function () {
   })
 
   it('should successfully mint badge', async function () {
-    mintBadge()
+    mintBadgeWithTake()
   })
 
   it('should fail when trying to claim using a voucher from another issuer for the same spec', async function () {
@@ -406,7 +433,7 @@ describe('Badges', async function () {
   })
 
   it('Should revoke a badge, confirm its revoked, then reinstate', async () => {
-    const { raftTokenId, badgeId } = await mintBadge()
+    const { raftTokenId, badgeId } = await mintBadgeWithTake()
     const { badgesProxy, issuer } = deployed
     // revoke the badge
     await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)
@@ -422,7 +449,7 @@ describe('Badges', async function () {
   })
 
   it('Should fail to revoke a badge if passed an invalid tokenId', async () => {
-    const { raftTokenId, badgeId } = await mintBadge()
+    const { raftTokenId, badgeId } = await mintBadgeWithTake()
     const { badgesProxy, issuer } = deployed
 
     await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, 123, reasonChoice)).to.be.revertedWith(
@@ -431,7 +458,7 @@ describe('Badges', async function () {
   })
 
   it('Should fail to reinstate a badge that is not revoked', async () => {
-    const { raftTokenId, badgeId } = await mintBadge()
+    const { raftTokenId, badgeId } = await mintBadgeWithTake()
     const { badgesProxy, issuer } = deployed
 
     expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(true)
@@ -440,14 +467,13 @@ describe('Badges', async function () {
   })
 
   it('Should fail to revoke a badge if its already revoked', async () => {
-    const { raftTokenId, badgeId } = await mintBadge()
+    const { raftTokenId, badgeId } = await mintBadgeWithTake()
     const { badgesProxy, issuer } = deployed
     // revoke the badge
     await badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)
 
     // test to make sure that revocation worked
     expect(await badgesProxy.connect(issuer).isBadgeValid(badgeId)).to.equal(false)
-    console.log('here')
     await expect(badgesProxy.connect(issuer).revokeBadge(raftTokenId, badgeId, reasonChoice)).to.be.revertedWith(
       errBadgeAlreadyRevoked
     )
@@ -460,7 +486,49 @@ describe('Badges', async function () {
 
   it('Should not refreshMetadata no spec uris are passed in to be refreshed', async () => {
     const { badgesProxy, owner } = deployed
-    const { raftTokenId, badgeId } = await mintBadge()
+    const { raftTokenId, badgeId } = await mintBadgeWithTake()
     await expect(badgesProxy.connect(owner).refreshMetadata([])).to.be.revertedWith(errNoSpecUris)
+  })
+
+  it('Should call give with the happy path', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    const specUri = typedData.value.tokenURI
+
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    await mintBadgeWithGive(issuer)
+  })
+
+  it('Should require that give is called by raft owner', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, randomSigner, owner } = deployed
+    const specUri = typedData.value.tokenURI
+
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    // the person calling "give" here is a random signer, not the owner of the raft token
+    await expect(mintBadgeWithGive(randomSigner)).to.be.revertedWith(errUnauthorizedGive)
+  })
+
+  it('Should shouldnt allow someone to call give to themself', async () => {
+    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
+    const specUri = typedData.value.tokenURI
+
+    const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
+
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    typedData.value.active = issuer.address
+    typedData.value.passive = claimant.address
+
+    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, claimant)
+
+    // first param of give here is the "to" address (which is the same as the issuer)
+    await expect(
+      badgesProxy.connect(issuer).give(typedData.value.active, typedData.value.tokenURI, compact)
+    ).to.be.revertedWith(errCannotGiveToSelf)
   })
 })
