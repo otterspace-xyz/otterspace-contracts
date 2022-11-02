@@ -280,7 +280,7 @@ contract Badges is
     return tokenId;
   }
 
-  function locked(uint256) public pure returns (bool) {
+  function locked(uint256 _tokenId) public view tokenExists(_tokenId) returns (bool) {
     return true;
   }
 

@@ -528,4 +528,15 @@ contract BadgesTest is Test {
     emit RefreshMetadata(specUris, msg.sender);
     badgesWrappedProxyV1.refreshMetadata(specUris);
   }
+
+  function testIfBadgeIsLocked() public {
+    (, uint256 tokenId) = testBalanceIncreaseAfterTake();
+
+    assertEq(badgesWrappedProxyV1.locked(tokenId), true);
+  }
+
+  function testLockedOnNonExistentBadge() public {
+    vm.expectRevert(bytes("tokenExists: token doesn't exist"));
+    badgesWrappedProxyV1.locked(123);
+  }
 }
