@@ -112,8 +112,11 @@ contract Badges is
     address _to,
     string calldata _uri,
     bytes calldata _signature
-  ) external virtual override returns (uint256) {
-    require(msg.sender != _to, "give: cannot give from self");
+  ) external virtual returns (uint256) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
+    require(raftOwner == msg.sender, "give: unauthorized");
+    require(msg.sender != _to, "give: cannot give to self");
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 tokenId = mint(_to, _uri);
     usedHashes.set(voucherHashId);

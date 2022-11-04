@@ -326,6 +326,8 @@ contract BadgesTest is Test {
   }
 
   function testGiveWithDifferentTokenURI(string memory falseTokenURI) public {
+    createRaftAndRegisterSpec();
+
     address from = address(this);
     address to = passiveAddress;
 
@@ -340,6 +342,7 @@ contract BadgesTest is Test {
   }
 
   function testGiveWithUnauthorizedSender() public {
+    createRaftAndRegisterSpec();
     address from = address(this);
     address to = passiveAddress;
     address randomAddress = vm.addr(randomPrivateKey);
@@ -401,10 +404,12 @@ contract BadgesTest is Test {
   }
 
   function testPreventGivingToSelf() public {
+    createRaftAndRegisterSpec();
+
     address to = address(this);
     bytes memory signature;
 
-    vm.expectRevert(bytes("give: cannot give from self"));
+    vm.expectRevert(bytes("give: cannot give to self"));
     badgesWrappedProxyV1.give(to, specUri, signature);
   }
 
