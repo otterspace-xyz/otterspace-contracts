@@ -2,15 +2,17 @@
 pragma solidity 0.8.16;
 
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
-import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
+import { IERC4973 } from "./interfaces/IERC4973.sol";
 import { SignatureCheckerUpgradeable } from "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol";
 import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
 import { OwnableUpgradeable } from "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import { EIP712Upgradeable } from "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
+import { IERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/IERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { IERC5192 } from "./interfaces/IERC5192.sol";
+import { IERC721Upgradeable } from "@openzeppelin-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 
 bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -21,7 +23,8 @@ contract Badges is
   UUPSUpgradeable,
   OwnableUpgradeable,
   EIP712Upgradeable,
-  IERC5192
+  IERC5192,
+  IERC721Upgradeable
 {
   using BitMaps for BitMaps.BitMap;
   BitMaps.BitMap private usedHashes;
@@ -186,12 +189,19 @@ contract Badges is
     burn(_tokenId);
   }
 
-  function balanceOf(address _owner) external view virtual override returns (uint256) {
+  function balanceOf(address _owner) external view virtual override(IERC4973, IERC721Upgradeable) returns (uint256) {
     require(_owner != address(0), "balanceOf: address zero is not a valid owner_");
     return balances[_owner];
   }
 
-  function ownerOf(uint256 _tokenId) external view virtual override tokenExists(_tokenId) returns (address) {
+  function ownerOf(uint256 _tokenId)
+    external
+    view
+    virtual
+    override(IERC4973, IERC721Upgradeable)
+    tokenExists(_tokenId)
+    returns (address)
+  {
     return owners[_tokenId];
   }
 
@@ -237,7 +247,13 @@ contract Badges is
     return isNotRevoked;
   }
 
-  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+  function supportsInterface(bytes4 _interfaceId)
+    public
+    view
+    virtual
+    override(ERC165Upgradeable, IERC165Upgradeable)
+    returns (bool)
+  {
     return
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
@@ -319,4 +335,45 @@ contract Badges is
   // Not implementing this function because it is used to check who is authorized
   // to update the contract, we're using onlyOwner for this purpose.
   function _authorizeUpgrade(address) internal override onlyOwner {}
+
+  function safeTransferFrom(
+    address from,
+    address to,
+    uint256 tokenId,
+    bytes calldata data
+  ) external override {
+    revert();
+  }
+
+  function safeTransferFrom(
+    address from,
+    address to,
+    uint256 tokenId
+  ) external override {
+    revert();
+  }
+
+  function approve(address to, uint256 tokenId) external override {
+    revert();
+  }
+
+  function setApprovalForAll(address operator, bool approved) external override {
+    revert();
+  }
+
+  function getApproved(uint256 tokenId) external view override returns (address) {
+    revert();
+  }
+
+  function isApprovedForAll(address owner, address operator) external view override returns (bool) {
+    revert();
+  }
+
+  function transferFrom(
+    address from,
+    address to,
+    uint256 tokenId
+  ) external override {
+    revert();
+  }
 }
