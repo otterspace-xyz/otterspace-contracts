@@ -17,7 +17,7 @@ const specUri = 'some spec uri'
 const reasonChoice = 1
 
 const errNotOwner = 'Ownable: caller is not the owner'
-const errSpecNotRegistered = 'mint: spec is not registered'
+const errSpecNotRegistered = 'spec is not registered'
 const errSpecAlreadyRegistered = 'createSpec: spec already registered'
 const errNotRaftOwner = 'createSpec: unauthorized'
 const errInvalidSig = 'safeCheckAgreement: invalid signature'
@@ -27,7 +27,9 @@ const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 const errUnauthorizedGive = 'give: unauthorized'
+const errUnauthorizedTake = 'take: unauthorized'
 const errCannotGiveToSelf = 'give: cannot give to self'
+const err721InvalidTokenId = 'ERC721: invalid token ID'
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -386,7 +388,7 @@ describe('Badges', async function () {
     // unauthorized claimant
     const unauthorizedClaimant = Wallet.createRandom()
     await expect(badgesProxy.connect(claimant).take(unauthorizedClaimant.address, specUri, compact)).to.be.revertedWith(
-      errInvalidSig
+      errUnauthorizedTake
     )
   })
   it('should fail to mint badge when signed by a random issuer', async () => {
@@ -428,7 +430,7 @@ describe('Badges', async function () {
     // get signature
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
     await expect(badgesProxy.connect(claimant).take(typedData.value.passive, specUri, compact)).to.be.revertedWith(
-      errSpecNotRegistered
+      err721InvalidTokenId
     )
   })
 
