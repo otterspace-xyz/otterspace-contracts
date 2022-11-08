@@ -269,7 +269,7 @@ contract BadgesTest is Test {
     bytes memory signature = abi.encodePacked(r, s, v);
 
     // errors with this because we check for a valid spec URI before validating the signature
-    vm.expectRevert(bytes(err721InvalidTokenId));
+    vm.expectRevert(bytes(errInvalidSig));
     badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
   }
 
@@ -281,7 +281,7 @@ contract BadgesTest is Test {
 
     address unauthorizedSender = address(0);
 
-    vm.expectRevert(bytes(errTakeUnauthorized));
+    vm.expectRevert(bytes(errInvalidSig));
     badgesWrappedProxyV1.take(unauthorizedSender, specUri, signature);
   }
 
