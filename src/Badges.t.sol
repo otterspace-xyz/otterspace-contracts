@@ -55,7 +55,7 @@ contract BadgesTest is Test {
   string errSpecNotRegistered = "mint: spec is not registered";
   string errGiveUnauthorized = "give: unauthorized";
   string errUnequipSenderNotOwner = "unequip: sender must be owner";
-  string errTakeUnauthorized = "take: unauthorized";
+  string errTakeUnauthorized = "take: unauthorized issuer";
   string tokenDoesntExistErr = "tokenExists: token doesn't exist";
   string tokenExistsErr = "mint: tokenID exists";
   string specUri = "some spec uri";
@@ -293,7 +293,7 @@ contract BadgesTest is Test {
 
     address unauthorizedSender = address(0);
 
-    vm.expectRevert(bytes(errGiveUnauthorized));
+    vm.expectRevert(bytes(errInvalidSig));
     badgesWrappedProxyV1.give(unauthorizedSender, specUri, signature);
   }
 

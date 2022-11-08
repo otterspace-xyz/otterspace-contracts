@@ -27,7 +27,7 @@ const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 const errUnauthorizedGive = 'give: unauthorized'
-const errUnauthorizedTake = 'take: unauthorized'
+const errUnauthorizedTake = 'take: unauthorized issuer'
 const errCannotGiveToSelf = 'give: cannot give to self'
 const err721InvalidTokenId = 'ERC721: invalid token ID'
 let deployed: any
@@ -388,7 +388,7 @@ describe('Badges', async function () {
     // unauthorized claimant
     const unauthorizedClaimant = Wallet.createRandom()
     await expect(badgesProxy.connect(claimant).take(unauthorizedClaimant.address, specUri, compact)).to.be.revertedWith(
-      errUnauthorizedTake
+      errInvalidSig
     )
   })
   it('should fail to mint badge when signed by a random issuer', async () => {
@@ -512,7 +512,7 @@ describe('Badges', async function () {
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
     // the person calling "give" here is a random signer, not the owner of the raft token
-    await expect(mintBadgeWithGive(randomSigner)).to.be.revertedWith(errUnauthorizedGive)
+    await expect(mintBadgeWithGive(randomSigner)).to.be.revertedWith(errInvalidSig)
   })
 
   it('Should shouldnt allow someone to call give to themself', async () => {
