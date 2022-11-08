@@ -565,7 +565,7 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.refreshMetadata(specUris);
   }
 
-  function testValidSigTransferredRaftToken() public {
+  function testTakeValidSigTransferredRaftToken() public {
     address active = claimantAddress;
     address zeroAddress = address(0);
 
@@ -599,5 +599,41 @@ contract BadgesTest is Test {
     vm.expectRevert(bytes(errTakeUnauthorized));
     badgesWrappedProxyV1.take(raftHolderAddress, specUri, signature);
     // expect failure
+  }
+
+  function testGiveValidSigTransferredRaftToken() public {
+    address passive = passiveAddress;
+    address zeroAddress = address(0);
+
+    vm.expectEmit(true, true, true, false);
+    // mint raft
+    uint256 raftTokenId = raftWrappedProxyV1.mint(raftHolderAddress, specUri);
+    emit Transfer(zeroAddress, raftHolderAddress, raftTokenId);
+
+    assertEq(raftTokenId, 1);
+    assertEq(raftWrappedProxyV1.balanceOf(raftHolderAddress), 1);
+    // raft holder registers spec
+    vm.prank(raftHolderAddress);
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
+    assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
+    // create "valid" signature
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(raftHolderAddress, passive, specUri);
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
+    bytes memory signature = abi.encodePacked(r, s, v);
+    // transfer raft away from owner
+    address randomAddress = vm.addr(randomPrivateKey);
+    vm.prank(raftHolderAddress);
+
+    raftWrappedProxyV1.approve(randomAddress, raftTokenId);
+    vm.prank(raftHolderAddress);
+
+    raftWrappedProxyV1.transferFrom(raftHolderAddress, randomAddress, raftTokenId);
+    assertEq(raftWrappedProxyV1.balanceOf(randomAddress), 1);
+
+    // try to give
+    // expect failure
+    vm.prank(raftHolderAddress);
+    vm.expectRevert(bytes(errGiveUnauthorized));
+    badgesWrappedProxyV1.give(passive, specUri, signature);
   }
 }
