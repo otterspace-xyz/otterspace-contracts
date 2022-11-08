@@ -113,7 +113,7 @@ contract Badges is
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == msg.sender, "give: unauthorized");
     require(msg.sender != _to, "give: cannot give to self");
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature, raftTokenId);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 tokenId = mint(_to, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
@@ -137,7 +137,7 @@ contract Badges is
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
 
     require(raftOwner == _from, "take: unauthorized");
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature, raftTokenId);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
     uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
@@ -274,6 +274,8 @@ contract Badges is
     bytes32 hash = getBadgeIdHash(_to, _uri);
     uint256 tokenId = uint256(hash);
     // only registered specs can be used for minting
+    require(_raftTokenId != 0, "mint: spec is not registered");
+
     require(!exists(tokenId), "mint: tokenID exists");
 
     balances[_to] += 1;
@@ -290,19 +292,17 @@ contract Badges is
     address _active,
     address _passive,
     string calldata _uri,
-    bytes calldata _signature,
-    uint256 _raftTokenId
+    bytes calldata _signature
   ) internal virtual returns (uint256) {
-    require(_raftTokenId != 0, "safeCheckAgreement: spec is not registered");
     // active is always msg.sender
     // passive changes depending on whether it's give/take
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
-    uint256 voucherHashId = uint256(hash);
 
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
+    uint256 voucherHashId = uint256(hash);
     require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
     return voucherHashId;
   }

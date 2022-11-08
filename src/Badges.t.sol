@@ -52,7 +52,7 @@ contract BadgesTest is Test {
   string errNotRevoked = "reinstateBadge: badge not revoked";
   string errSafeCheckUsed = "safeCheckAgreement: already used";
   string errSpecAlreadyRegistered = "createSpec: spec already registered";
-  string errSpecNotRegistered = "safeCheckAgreement: spec is not registered";
+  string errSpecNotRegistered = "mint: spec is not registered";
   string errGiveUnauthorized = "give: unauthorized";
   string errUnequipSenderNotOwner = "unequip: sender must be owner";
   string errTakeUnauthorized = "take: unauthorized";
