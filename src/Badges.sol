@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.16;
+import "forge-std/Test.sol";
 
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
@@ -108,12 +109,14 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) external virtual returns (uint256) {
+    require(msg.sender != _to, "give: cannot give to self");
+
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == msg.sender, "give: unauthorized");
-    require(msg.sender != _to, "give: cannot give to self");
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
-    uint256 tokenId = mint(_to, _uri);
+
+    uint256 tokenId = mint(_to, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -134,7 +137,11 @@ contract Badges is
     require(msg.sender != _from, "take: cannot take from self");
 
     uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
-    uint256 tokenId = mint(msg.sender, _uri);
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
+    require(raftOwner == _from, "take: unauthorized issuer");
+
+    uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -262,12 +269,16 @@ contract Badges is
     return keccak256(abi.encode(_to, _uri));
   }
 
-  function mint(address _to, string memory _uri) internal virtual returns (uint256) {
-    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+  function mint(
+    address _to,
+    string memory _uri,
+    uint256 _raftTokenId
+  ) internal virtual returns (uint256) {
     bytes32 hash = getBadgeIdHash(_to, _uri);
     uint256 tokenId = uint256(hash);
     // only registered specs can be used for minting
-    require(raftTokenId != 0, "mint: spec is not registered");
+    require(_raftTokenId != 0, "mint: spec is not registered");
+
     require(!exists(tokenId), "mint: tokenID exists");
 
     balances[_to] += 1;
@@ -276,23 +287,26 @@ contract Badges is
 
     emit Transfer(address(0), _to, tokenId);
 
-    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
+    specDataHolder.setBadgeToRaft(tokenId, _raftTokenId);
     return tokenId;
   }
 
+  // signature comes from the people with the right params
   function safeCheckAgreement(
     address _active,
     address _passive,
     string calldata _uri,
     bytes calldata _signature
   ) internal virtual returns (uint256) {
+    // active is always msg.sender
+    // passive changes depending on whether it's give/take
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
-    uint256 voucherHashId = uint256(hash);
 
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
+    uint256 voucherHashId = uint256(hash);
     require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
     return voucherHashId;
   }
