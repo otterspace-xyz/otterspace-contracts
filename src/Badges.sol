@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.16;
+import "forge-std/Test.sol";
 
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
@@ -50,6 +51,7 @@ contract Badges is
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
+  event RefreshMetadata(string[] specUris, address sender);
 
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
     string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
@@ -94,6 +96,11 @@ contract Badges is
     transferOwnership(_nextOwner);
   }
 
+  function refreshMetadata(string[] memory _specUris) external onlyOwner {
+    require(_specUris.length > 0, "refreshMetadata: no spec uris provided");
+    emit RefreshMetadata(_specUris, msg.sender);
+  }
+
   /**
    * @notice Allows the Badges contract to communicate with the SpecDataHolder contract
    * @param _dataHolder address of the SpecDataHolder contract
@@ -104,19 +111,23 @@ contract Badges is
 
   /**
    * @notice Allows the owner of a badge spec to mint a badge to someone who has requested it
-   * @param _passive the person who is receiving the badge
+   * @param _to the person who is receiving the badge
    * @param _uri the uri of the badge spec
    * @param _signature the signature used to verify that the person receiving the badge actually requested it
    */
   function give(
-    address _passive,
+    address _to,
     string calldata _uri,
     bytes calldata _signature
-  ) external virtual override returns (uint256) {
-    require(msg.sender != _passive, "give: cannot give from self");
+  ) external virtual returns (uint256) {
+    require(msg.sender != _to, "give: cannot give to self");
 
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _passive, _uri, _signature);
-    uint256 tokenId = mint(_passive, _uri);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
+    require(raftOwner == msg.sender, "give: unauthorized");
+
+    uint256 tokenId = mint(_to, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -125,19 +136,23 @@ contract Badges is
   /**
    * @notice Allows a user to mint a badge from a voucher
    * @dev Take is called by somebody who has already been added to an allow list.
-   * @param _passive the person who issued the voucher, who is permitting them to mint the badge.
+   * @param _from the person who issued the voucher, who is permitting them to mint the badge.
    * @param _uri the uri of the badge spec
    * @param _signature the signature used to verify that the person minting has permission from the issuer
    */
   function take(
-    address _passive,
+    address _from,
     string calldata _uri,
     bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != _passive, "take: cannot take from self");
+    require(msg.sender != _from, "take: cannot take from self");
 
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _passive, _uri, _signature);
-    uint256 tokenId = mint(msg.sender, _uri);
+    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
+    require(raftOwner == _from, "take: unauthorized issuer");
+
+    uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -153,7 +168,12 @@ contract Badges is
 
     uint256 voucherHashId = newSafeCheckAgreement(msg.sender, _passive, _uri, _signature, _mintConfig);
     address badgeRecipient = _mintConfig.mintType == MintType.GIVE ? _passive : msg.sender;
-    uint256 tokenId = mint(badgeRecipient, _uri);
+
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
+    require(raftOwner == _passive, "take: unauthorized issuer");
+
+    uint256 tokenId = mint(badgeRecipient, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -281,12 +301,16 @@ contract Badges is
     return keccak256(abi.encode(_to, _uri));
   }
 
-  function mint(address _to, string memory _uri) internal virtual returns (uint256) {
-    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+  function mint(
+    address _to,
+    string memory _uri,
+    uint256 _raftTokenId
+  ) internal virtual returns (uint256) {
     bytes32 hash = getBadgeIdHash(_to, _uri);
     uint256 tokenId = uint256(hash);
     // only registered specs can be used for minting
-    require(raftTokenId != 0, "mint: spec is not registered");
+    require(_raftTokenId != 0, "mint: spec is not registered");
+
     require(!exists(tokenId), "mint: tokenID exists");
 
     balances[_to] += 1;
@@ -295,7 +319,7 @@ contract Badges is
 
     emit Transfer(address(0), _to, tokenId);
 
-    specDataHolder.setBadgeToRaft(tokenId, raftTokenId);
+    specDataHolder.setBadgeToRaft(tokenId, _raftTokenId);
     return tokenId;
   }
 
@@ -329,13 +353,15 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) internal virtual returns (uint256) {
+    // active is always msg.sender
+    // passive changes depending on whether it's give/take
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
-    uint256 voucherHashId = uint256(hash);
 
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
+    uint256 voucherHashId = uint256(hash);
     require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
     return voucherHashId;
   }
