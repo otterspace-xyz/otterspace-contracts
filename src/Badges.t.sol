@@ -8,6 +8,8 @@ import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";
 import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import { Merkle } from "murky/src/Merkle.sol";
+import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract UUPSProxy is ERC1967Proxy {
   constructor(address _implementation, bytes memory _data) ERC1967Proxy(_implementation, _data) {}
@@ -56,6 +58,8 @@ contract BadgesTest is Test {
   string errGiveUnauthorized = "give: unauthorized";
   string errUnequipSenderNotOwner = "unequip: sender must be owner";
   string errTakeUnauthorized = "take: unauthorized issuer";
+  string errMerkleInvalidLeaf = "safeCheckMerkleAgreement: invalid leaf";
+  string errMerkleInvalidSignature = "safeCheckMerkleAgreement: invalid signature";
   string tokenDoesntExistErr = "tokenExists: token doesn't exist";
   string tokenExistsErr = "mint: tokenID exists";
   string specUri = "some spec uri";
@@ -635,5 +639,61 @@ contract BadgesTest is Test {
     vm.prank(raftHolderAddress);
     vm.expectRevert(bytes(errGiveUnauthorized));
     badgesWrappedProxyV1.give(passive, specUri, signature);
+  }
+
+  function testSafeCheckMerkleAgreementShouldPassForValidClaimants() public {
+    address issuer = passiveAddress;
+
+    Merkle m = new Merkle();
+    bytes32[] memory data = _getTestDataWithDistinctValues();
+    bytes32 root = m.getRoot(data);
+
+    for (uint256 i = 0; i < data.length; i++) {
+      bytes32[] memory proof = m.getProof(data, i);
+
+      bytes32 leaf = data[i];
+
+      bytes memory signature = _getSignatureForMerkleAgreementHash(issuer, specUri, root);
+      badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, root, proof, leaf);
+    }
+  }
+
+  function testSafeCheckMerkleAgreementShouldFailForInvalidProofs() public {
+    address issuer = passiveAddress;
+
+    Merkle m = new Merkle();
+    bytes32[] memory data = _getTestDataWithDistinctValues();
+    bytes32 root = m.getRoot(data);
+    bytes32[] memory proof = m.getProof(data, 0);
+    bytes32 leaf = bytes32("0x0");
+
+    bytes memory signature = _getSignatureForMerkleAgreementHash(issuer, specUri, root);
+
+    bytes32 invalidLeaf = bytes32("0x9");
+    vm.expectRevert(bytes(errMerkleInvalidLeaf));
+    badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, root, proof, invalidLeaf);
+
+    bytes32[] memory invalidProof = new bytes32[](1);
+    vm.expectRevert(bytes(errMerkleInvalidLeaf));
+    badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, root, invalidProof, leaf);
+
+    bytes32 invalidRoot = bytes32("invalid_root");
+    vm.expectRevert(bytes(errMerkleInvalidSignature));
+    badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, invalidRoot, proof, leaf);
+  }
+
+  function _getTestDataWithDistinctValues() private pure returns (bytes32[] memory data) {
+    data = new bytes32[](5);
+    data[0] = bytes32("0x0");
+    data[1] = bytes32("0x1");
+    data[2] = bytes32("0x2");
+    data[3] = bytes32("0x3");
+    data[4] = bytes32("0x4");
+  }
+
+  function _getSignatureForMerkleAgreementHash(address issuer, string storage uri, bytes32 root) private returns (bytes memory signature) {
+    bytes32 hash = badgesWrappedProxyV1.getMerkleAgreementHash(issuer, uri, root);
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
+    signature = abi.encodePacked(r, s, v);
   }
 }
