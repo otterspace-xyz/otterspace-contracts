@@ -36,18 +36,6 @@ contract Badges is
   mapping(uint256 => uint256) private voucherHashIds;
   BitMaps.BitMap private revokedBadgesHashes;
 
-  enum MintType {
-    TAKE,
-    MERKLE_TAKE,
-    GIVE
-  }
-
-  struct MintConfig {
-    bytes32 merkleRoot;
-    bytes32[] merkleProof;
-    MintType mintType;
-  }
-
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
   event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
@@ -158,22 +146,21 @@ contract Badges is
     return tokenId;
   }
 
-  function mintBadge(
-    address _passive,
+  function merkleTake(
+    address _from,
     string calldata _uri,
     bytes calldata _signature,
-    MintConfig calldata _mintConfig
+    bytes32 merkleRoot,
+    bytes32[] memory merkleProof
   ) external virtual returns (uint256) {
-    require(msg.sender != _passive, "take: cannot take from self");
+    require(msg.sender != _from, "take: cannot take from self");
 
-    uint256 voucherHashId = newSafeCheckAgreement(msg.sender, _passive, _uri, _signature, _mintConfig);
-    address badgeRecipient = _mintConfig.mintType == MintType.GIVE ? _passive : msg.sender;
-
+    uint256 voucherHashId = merkleSafeCheckAgreement(msg.sender, _from, _uri, _signature, merkleRoot, merkleProof);
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
-    require(raftOwner == _passive, "take: unauthorized issuer");
+    require(raftOwner == _from, "take: unauthorized issuer");
 
-    uint256 tokenId = mint(badgeRecipient, _uri, raftTokenId);
+    uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
     usedHashes.set(voucherHashId);
     voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
@@ -323,27 +310,25 @@ contract Badges is
     return tokenId;
   }
 
-  function newSafeCheckAgreement(
+  function merkleSafeCheckAgreement(
     address _active,
     address _passive,
     string calldata _uri,
     bytes calldata _signature,
-    MintConfig memory _mintConfig
+    bytes32 merkleRoot,
+    bytes32[] memory merkleProof
   ) internal virtual returns (uint256) {
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
     uint256 voucherHashId = uint256(hash);
-
-    if (_mintConfig.mintType == MintType.MERKLE_TAKE) {
-      bytes32 leaf = keccak256(abi.encodePacked(_active));
-      // require that the sender is whitelisted in the merkle tree
-      require(MerkleProof.verify(_mintConfig.merkleProof, _mintConfig.merkleRoot, leaf), "invalid proof");
-    }
+    bytes32 leaf = keccak256(abi.encodePacked(_active));
+    // require that the sender is whitelisted in the merkle tree
+    require(MerkleProof.verify(merkleProof, merkleRoot, leaf), "invalid proof");
 
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
-      "safeCheckAgreement: invalid signature"
+      "merkleSafeCheckAgreement: invalid signature"
     );
-    require(!usedHashes.get(voucherHashId), "newSafeCheckAgreement: already used");
+    require(!usedHashes.get(voucherHashId), "merkleSafeCheckAgreement: already used");
     return voucherHashId;
   }
 
