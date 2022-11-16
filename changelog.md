@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.4.1
+
+- Fix bug which allows signatures with non-authorized raft tokens to mint badges
+
 ## 2.4.0
 
 - Update the "give" function to make sure that the caller is the owner of the Raft token associated with the targeted badge spec
