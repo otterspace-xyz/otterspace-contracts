@@ -148,6 +148,26 @@ contract Badges is
     return tokenId;
   }
 
+  function merkleTake(
+    address _from,
+    string calldata _uri,
+    bytes calldata _signature,
+    bytes32 root,
+    bytes32[] calldata proof
+  ) external virtual returns (uint256) {
+    require(msg.sender != _from, "take: cannot take from self");
+
+    uint256 voucherHashId = safeCheckMerkleAgreement(msg.sender, _from, _uri, _signature, root, proof);
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
+    require(raftOwner == _from, "take: unauthorized issuer");
+
+    uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
+    usedHashes.set(voucherHashId);
+    voucherHashIds[tokenId] = voucherHashId;
+    return tokenId;
+  }
+
   function getDataHolderAddress() external view returns (address) {
     return address(specDataHolder);
   }
@@ -304,22 +324,24 @@ contract Badges is
   // todo:: do we need to use a sparse markle tree? Is it more gas efficient?
   // todo:: handling vouchers - what would be a voucherID here?
   function safeCheckMerkleAgreement(
-    address _issuer,
+    address _to,
+    address _from,
     string calldata _uri,
     bytes calldata _signature,
     bytes32 _root,
-    bytes32[] calldata _proof,
-    bytes32 _leaf
-  ) public view virtual {
+    bytes32[] calldata _proof
+  ) public view virtual returns (uint256) {
     // this authenticates the signature coming from the issuer
-    bytes32 hash = getMerkleAgreementHash(_issuer, _uri, _root);
+    bytes32 hash = getMerkleAgreementHash(_from, _uri, _root);
     require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(_issuer, hash, _signature),
+      SignatureCheckerUpgradeable.isValidSignatureNow(_from, hash, _signature),
       "safeCheckMerkleAgreement: invalid signature"
     );
-
+    bytes32 leaf = keccak256(abi.encodePacked(_to));
     // this authenticates that the claimant is indeed part of the tree whose root was signed
-    require(MerkleProof.verify(_proof, _root, _leaf), "safeCheckMerkleAgreement: invalid leaf");
+    require(MerkleProof.verify(_proof, _root, leaf), "safeCheckMerkleAgreement: invalid leaf");
+    uint256 voucherHashId = uint256(keccak256(abi.encode(_from, _to)));
+    return voucherHashId;
   }
 
   function safeCheckAgreement(
