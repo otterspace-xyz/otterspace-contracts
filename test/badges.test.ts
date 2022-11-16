@@ -28,7 +28,7 @@ const tokenExistsErr = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
-const errMerkleAlreadyUsed = 'newSafeCheckAgreement: already used'
+const errMerkleAlreadyUsed = 'merkleSafeCheckAgreement: already used'
 
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 const errUnauthorizedGive = 'give: unauthorized'
@@ -58,13 +58,7 @@ async function mintBadgeWithTake() {
   // take's "from" is the issuer
   // take's msg.sender is the claimant
   const emptyBytes32String = ethers.utils.formatBytes32String('')
-  const txn = await badgesProxy
-    .connect(claimant)
-    .mintBadge(typedData.value.passive, typedData.value.tokenURI, compact, {
-      merkleRoot: emptyBytes32String,
-      merkleProof: [],
-      mintType: 0,
-    })
+  const txn = await badgesProxy.connect(claimant).take(typedData.value.passive, typedData.value.tokenURI, compact)
   await txn.wait()
 
   const transferEventData = await getTransferEventLogData(txn.hash, badgesProxy)
@@ -226,6 +220,27 @@ const deployContractFixture = async () => {
     },
   }
 
+  const merkleTypedData = {
+    domain: {
+      name: name,
+      version: version,
+      chainId,
+      verifyingContract: badgesProxy.address,
+    },
+    types: {
+      MerkleAgreement: [
+        { name: 'passive', type: 'address' },
+        { name: 'tokenURI', type: 'string' },
+        { name: 'root', type: 'bytes32' },
+      ],
+    },
+    value: {
+      passive: issuer.address,
+      tokenURI: specUri,
+      root: '',
+    },
+  }
+
   deployed = {
     badgesProxy,
     raftProxy,
@@ -235,45 +250,44 @@ const deployContractFixture = async () => {
     randomSigner,
     typedData,
     specDataHolderProxy,
+    merkleTypedData,
   }
 }
 
 describe('Merkle minting', () => {
   it('Happy path: should allow minting when an address is whitelisted on a merkle tree', async () => {
-    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
-    const specUri = typedData.value.tokenURI
-    // SETUP (step 0)
+    const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } = deployed
+
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    // ===== step 1: the issuer whitelists a bunch of addresses
+    // ===== part 1: the issuer whitelists a bunch of addresses and saves signature + array of addresses to the database
     const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
 
     // map over addresses to get leaf nodes
     const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
 
-    // create merkle tree
+    // derive merkle tree
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
 
-    // create merkle root
+    // derive merkle root
     const merkleRoot = merkleTree.getRoot()
 
+    // embed merkle root into signature
+    merkleTypedData.value.root = merkleRoot
+
     // create signature
-    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
-    // ===== at this point we will store signature and `whitelistAddresses` in the db
+    const { compact } = await getSignature(merkleTypedData.domain, merkleTypedData.types, merkleTypedData.value, issuer)
+    // here we would store signature and `whitelistAddresses` in the db
 
     // ===== part 2: simulate the claimant minting a badge
+    // claimant loads the webpage database returns signature and whitelistAddresses
 
-    // given the claimant's address, get a merkleProof
+    // given the claimant's address, derive a merkleProof
     const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
     // pass merkleRoot and merkleProof to the badges contract
     // badges contract will check to see if the proof is valid
-    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact, {
-      merkleRoot,
-      merkleProof,
-      mintType: 1,
-    })
 
     // ===== part 3: check that the claimant has the badge
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
@@ -281,11 +295,8 @@ describe('Merkle minting', () => {
 
   // todo: reject when someone who has already claimed tries to claim again
   it('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
-    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
-    const specUri = typedData.value.tokenURI
-
+    const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } = deployed
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
-
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
     const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
@@ -295,38 +306,30 @@ describe('Merkle minting', () => {
     const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
 
     const merkleRoot = merkleTree.getRoot()
+    merkleTypedData.value.root = merkleRoot
 
-    const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+    const { compact } = await getSignature(merkleTypedData.domain, merkleTypedData.types, merkleTypedData.value, issuer)
 
     const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
-    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact, {
-      merkleRoot,
-      merkleProof,
-      mintType: 1,
-    })
+    await badgesProxy.connect(claimant).merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
-    // ===== step 4: simulate the claimant minting a badge again
-
-    // expect the second attempt to fail
-    await expect(
-      badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact, {
-        merkleRoot,
-        merkleProof,
-        mintType: 1,
-      })
-    ).to.be.revertedWith(errMerkleAlreadyUsed)
+    console.log('hi')
+    // TODO: not sure why this test is failing ... it's reverting as expected
+    expect(
+      await badgesProxy.connect(claimant).merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
+    ).to.be.revertedWith(tokenExistsErr)
   })
 
   it('Should allow someone who is part of two separate merkle trees to mint both badges', async () => {
-    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } = deployed
-    const specUri = typedData.value.tokenURI
+    const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } = deployed
     // SETUP (step 0)
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
+    // ===== step 1: the issuer whitelists a bunch of addresses
     const whitelist1 = [claimant.address, '0x1', '0x2', '0x3']
 
     const leafNodes1 = whitelist1.map(addr => keccak256(addr))
@@ -334,20 +337,21 @@ describe('Merkle minting', () => {
     const merkleTree1 = new MerkleTree(leafNodes1, keccak256, { sortPairs: true })
 
     const merkleRoot1 = merkleTree1.getRoot()
+    merkleTypedData.value.root = merkleRoot1
 
-    const { compact: compact1 } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+    const { compact: compact1 } = await getSignature(
+      merkleTypedData.domain,
+      merkleTypedData.types,
+      merkleTypedData.value,
+      issuer
+    )
 
     const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
 
-    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri, compact1, {
-      merkleRoot: merkleRoot1,
-      merkleProof: merkleProof1,
-      mintType: 1,
-    })
+    await badgesProxy.connect(claimant).merkleTake(issuer.address, specUri, compact1, merkleRoot1, merkleProof1)
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
-    // create a new spec with a new tokenUri
     await createSpec(badgesProxy, specUri2, raftTokenId, issuer)
 
     const whitelist2 = [claimant.address, '0x4', '0x5', '0x6']
@@ -357,19 +361,20 @@ describe('Merkle minting', () => {
     const merkleTree2 = new MerkleTree(leafNodes2, keccak256, { sortPairs: true })
 
     const merkleRoot2 = merkleTree2.getRoot()
-    // manually override the tokenURI so that the signature works as expected
-    typedData.value.tokenURI = specUri2
+    merkleTypedData.value.tokenURI = specUri2
+    merkleTypedData.value.root = merkleRoot2
 
-    const { compact: compact2 } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
+    const { compact: compact2 } = await getSignature(
+      merkleTypedData.domain,
+      merkleTypedData.types,
+      merkleTypedData.value,
+      issuer
+    )
 
     const merkleProof2 = merkleTree2.getHexProof(leafNodes2[0])
 
     // attempt to mint a badge on the newly created spec
-    await badgesProxy.connect(claimant).mintBadge(issuer.address, specUri2, compact2, {
-      merkleRoot: merkleRoot2,
-      merkleProof: merkleProof2,
-      mintType: 1,
-    })
+    await badgesProxy.connect(claimant).merkleTake(issuer.address, specUri2, compact2, merkleRoot2, merkleProof2)
 
     // expect the user to now have 2 bagdes, one from each whitelist
     expect(await badgesProxy.balanceOf(claimant.address)).equal(2)
@@ -393,16 +398,12 @@ describe('Merkle minting', () => {
     const merkleRoot = merkleTree.getRoot()
 
     const { compact } = await getSignature(typedData.domain, typedData.types, typedData.value, issuer)
-
-    const merkleProof = merkleTree.getHexProof(leafNodes[0])
+    const invalidLeafNode = keccak256(randomSigner.address)
+    const merkleProof = merkleTree.getHexProof(invalidLeafNode)
 
     // calling connect() with a random signer is a "bad actor" trying to mint
     await expect(
-      badgesProxy.connect(randomSigner).mintBadge(issuer.address, specUri, compact, {
-        merkleRoot,
-        merkleProof,
-        mintType: 1,
-      })
+      badgesProxy.connect(claimant).merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
     ).to.be.revertedWith('invalid proof')
   })
 })

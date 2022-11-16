@@ -2026,10 +2026,10 @@
         58
       ],
       "IERC721Metadata": [
-        33381
+        33388
       ],
       "ISpecDataHolder": [
-        33424
+        33431
       ],
       "MERKLE_AGREEMENT_HASH": [
         27673
@@ -2107,7 +2107,7 @@
         "file": "./interfaces/ISpecDataHolder.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 28777,
-        "sourceUnit": 33425,
+        "sourceUnit": 33432,
         "symbolAliases": [
           {
             "foreign": {
@@ -2115,7 +2115,7 @@
               "name": "ISpecDataHolder",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 33424,
+              "referencedDeclaration": 33431,
               "src": "104:15:46",
               "typeDescriptions": {}
             },
@@ -2307,7 +2307,7 @@
         "file": "./interfaces/IERC721Metadata.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 28777,
-        "sourceUnit": 33382,
+        "sourceUnit": 33389,
         "symbolAliases": [
           {
             "foreign": {
@@ -2315,7 +2315,7 @@
               "name": "IERC721Metadata",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 33381,
+              "referencedDeclaration": 33388,
               "src": "835:15:46",
               "typeDescriptions": {}
             },
@@ -2794,7 +2794,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+              "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
               "typeString": "contract ISpecDataHolder"
             },
             "typeName": {
@@ -2807,13 +2807,13 @@
                   "1612:15:46"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 33424,
+                "referencedDeclaration": 33431,
                 "src": "1612:15:46"
               },
-              "referencedDeclaration": 33424,
+              "referencedDeclaration": 33431,
               "src": "1612:15:46",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                 "typeString": "contract ISpecDataHolder"
               }
             },
@@ -3507,7 +3507,7 @@
                               "referencedDeclaration": 27711,
                               "src": "2268:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -3519,7 +3519,7 @@
                             "memberLocation": "2283:12:46",
                             "memberName": "getRaftOwner",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33390,
+                            "referencedDeclaration": 33397,
                             "src": "2268:27:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -4129,7 +4129,7 @@
                       "referencedDeclaration": 27711,
                       "src": "3228:14:46",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
@@ -4161,10 +4161,10 @@
                         "name": "ISpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 33424,
+                        "referencedDeclaration": 33431,
                         "src": "3245:15:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33424_$",
+                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33431_$",
                           "typeString": "type(contract ISpecDataHolder)"
                         }
                       },
@@ -4180,13 +4180,13 @@
                       "src": "3245:39:46",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
                     "src": "3228:56:46",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                       "typeString": "contract ISpecDataHolder"
                     }
                   },
@@ -4935,7 +4935,7 @@
                       "referencedDeclaration": 27711,
                       "src": "3884:14:46",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
@@ -4967,10 +4967,10 @@
                         "name": "ISpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 33424,
+                        "referencedDeclaration": 33431,
                         "src": "3901:15:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33424_$",
+                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33431_$",
                           "typeString": "type(contract ISpecDataHolder)"
                         }
                       },
@@ -4986,13 +4986,13 @@
                       "src": "3901:28:46",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
                     "src": "3884:45:46",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                       "typeString": "contract ISpecDataHolder"
                     }
                   },
@@ -5421,7 +5421,7 @@
                         "referencedDeclaration": 27711,
                         "src": "4551:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -5433,7 +5433,7 @@
                       "memberLocation": "4566:14:46",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33416,
+                      "referencedDeclaration": 33423,
                       "src": "4551:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -5524,7 +5524,7 @@
                         "referencedDeclaration": 27711,
                         "src": "4612:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -5536,7 +5536,7 @@
                       "memberLocation": "4627:12:46",
                       "memberName": "getRaftOwner",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33390,
+                      "referencedDeclaration": 33397,
                       "src": "4612:27:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -6447,7 +6447,7 @@
                         "referencedDeclaration": 27711,
                         "src": "5588:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -6459,7 +6459,7 @@
                       "memberLocation": "5603:14:46",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33416,
+                      "referencedDeclaration": 33423,
                       "src": "5588:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -6550,7 +6550,7 @@
                         "referencedDeclaration": 27711,
                         "src": "5649:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -6562,7 +6562,7 @@
                       "memberLocation": "5664:12:46",
                       "memberName": "getRaftOwner",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33390,
+                      "referencedDeclaration": 33397,
                       "src": "5649:27:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -7511,7 +7511,7 @@
                         "referencedDeclaration": 27711,
                         "src": "6301:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -7523,7 +7523,7 @@
                       "memberLocation": "6316:14:46",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33416,
+                      "referencedDeclaration": 33423,
                       "src": "6301:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -7614,7 +7614,7 @@
                         "referencedDeclaration": 27711,
                         "src": "6362:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -7626,7 +7626,7 @@
                       "memberLocation": "6377:12:46",
                       "memberName": "getRaftOwner",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33390,
+                      "referencedDeclaration": 33397,
                       "src": "6362:27:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -8267,7 +8267,7 @@
                         "referencedDeclaration": 27711,
                         "src": "6718:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       }
@@ -8275,7 +8275,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       ],
@@ -8425,7 +8425,7 @@
                               "referencedDeclaration": 27711,
                               "src": "7128:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -8437,7 +8437,7 @@
                             "memberLocation": "7143:16:46",
                             "memberName": "isSpecRegistered",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33397,
+                            "referencedDeclaration": 33404,
                             "src": "7128:31:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_bool_$",
@@ -8574,7 +8574,7 @@
                         "referencedDeclaration": 27711,
                         "src": "7216:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -8586,7 +8586,7 @@
                       "memberLocation": "7231:13:46",
                       "memberName": "setSpecToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33404,
+                      "referencedDeclaration": 33411,
                       "src": "7216:28:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_uint256_$returns$__$",
@@ -8679,7 +8679,7 @@
                             "referencedDeclaration": 27711,
                             "src": "7328:14:46",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -8691,7 +8691,7 @@
                           "memberLocation": "7343:14:46",
                           "memberName": "getRaftAddress",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 33409,
+                          "referencedDeclaration": 33416,
                           "src": "7328:29:46",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -8928,7 +8928,7 @@
               ]
             },
             "baseFunctions": [
-              33368
+              33375
             ],
             "functionSelector": "06fdde03",
             "implemented": true,
@@ -9017,7 +9017,7 @@
               ]
             },
             "baseFunctions": [
-              33373
+              33380
             ],
             "functionSelector": "95d89b41",
             "implemented": true,
@@ -9245,7 +9245,7 @@
               ]
             },
             "baseFunctions": [
-              33380
+              33387
             ],
             "functionSelector": "c87b56dd",
             "implemented": true,
@@ -11548,10 +11548,10 @@
                                 "name": "IERC721Metadata",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 33381,
+                                "referencedDeclaration": 33388,
                                 "src": "10174:15:46",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33381_$",
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33388_$",
                                   "typeString": "type(contract IERC721Metadata)"
                                 }
                               }
@@ -11559,7 +11559,7 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33381_$",
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33388_$",
                                   "typeString": "type(contract IERC721Metadata)"
                                 }
                               ],
@@ -11586,7 +11586,7 @@
                             "src": "10169:21:46",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_magic_meta_type_t_contract$_IERC721Metadata_$33381",
+                              "typeIdentifier": "t_magic_meta_type_t_contract$_IERC721Metadata_$33388",
                               "typeString": "type(contract IERC721Metadata)"
                             }
                           },
@@ -14026,7 +14026,7 @@
                         "referencedDeclaration": 27711,
                         "src": "11678:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33424",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33431",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -14038,7 +14038,7 @@
                       "memberLocation": "11693:14:46",
                       "memberName": "setBadgeToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33423,
+                      "referencedDeclaration": 33430,
                       "src": "11678:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
@@ -16783,7 +16783,7 @@
                 "1230:15:46"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 33381,
+              "referencedDeclaration": 33388,
               "src": "1230:15:46"
             },
             "id": 27675,
@@ -16882,7 +16882,7 @@
           25846,
           22839,
           58,
-          33381
+          33388
         ],
         "name": "Badges",
         "nameLocation": "1218:6:46",
