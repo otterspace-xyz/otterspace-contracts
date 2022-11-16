@@ -642,8 +642,8 @@ contract BadgesTest is Test {
   }
 
   function testSafeCheckMerkleAgreementShouldPassForValidClaimants() public {
-    address issuer = passiveAddress;
-
+    address passive = passiveAddress;
+    address active = claimantAddress;
     Merkle m = new Merkle();
     bytes32[] memory data = _getTestDataWithDistinctValues();
     bytes32 root = m.getRoot(data);
@@ -653,13 +653,14 @@ contract BadgesTest is Test {
 
       bytes32 leaf = data[i];
 
-      bytes memory signature = _getSignatureForMerkleAgreementHash(issuer, specUri, root);
-      badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, root, proof, leaf);
+      bytes memory signature = _getSignatureForMerkleAgreementHash(passive, specUri, root);
+      badgesWrappedProxyV1.safeCheckMerkleAgreement(active, passive, specUri, signature, root, proof);
     }
   }
 
   function testSafeCheckMerkleAgreementShouldFailForInvalidProofs() public {
-    address issuer = passiveAddress;
+    address passive = passiveAddress;
+    address active = claimantAddress;
 
     Merkle m = new Merkle();
     bytes32[] memory data = _getTestDataWithDistinctValues();
@@ -667,19 +668,19 @@ contract BadgesTest is Test {
     bytes32[] memory proof = m.getProof(data, 0);
     bytes32 leaf = bytes32("0x0");
 
-    bytes memory signature = _getSignatureForMerkleAgreementHash(issuer, specUri, root);
+    bytes memory signature = _getSignatureForMerkleAgreementHash(passive, specUri, root);
 
     bytes32 invalidLeaf = bytes32("0x9");
     vm.expectRevert(bytes(errMerkleInvalidLeaf));
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, root, proof, invalidLeaf);
+    badgesWrappedProxyV1.safeCheckMerkleAgreement(active, passive, specUri, signature, root, proof);
 
     bytes32[] memory invalidProof = new bytes32[](1);
     vm.expectRevert(bytes(errMerkleInvalidLeaf));
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, root, invalidProof, leaf);
+    badgesWrappedProxyV1.safeCheckMerkleAgreement(active, passive, specUri, signature, root, invalidProof);
 
     bytes32 invalidRoot = bytes32("invalid_root");
     vm.expectRevert(bytes(errMerkleInvalidSignature));
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(issuer, specUri, signature, invalidRoot, proof, leaf);
+    badgesWrappedProxyV1.safeCheckMerkleAgreement(active, passive, specUri, signature, invalidRoot, proof);
   }
 
   function _getTestDataWithDistinctValues() private pure returns (bytes32[] memory data) {
@@ -691,7 +692,11 @@ contract BadgesTest is Test {
     data[4] = bytes32("0x4");
   }
 
-  function _getSignatureForMerkleAgreementHash(address issuer, string storage uri, bytes32 root) private returns (bytes memory signature) {
+  function _getSignatureForMerkleAgreementHash(
+    address issuer,
+    string storage uri,
+    bytes32 root
+  ) private returns (bytes memory signature) {
     bytes32 hash = badgesWrappedProxyV1.getMerkleAgreementHash(issuer, uri, root);
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     signature = abi.encodePacked(r, s, v);
