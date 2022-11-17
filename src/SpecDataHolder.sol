@@ -46,7 +46,7 @@ contract SpecDataHolder is
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
-  function setSpecToRaft(string memory _specUri, uint256 _raftTokenId)
+  function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
   {
@@ -61,7 +61,7 @@ contract SpecDataHolder is
     return raftAddress;
   }
 
-  function getRaftTokenId(string memory _specUri)
+  function getRaftTokenId(string calldata _specUri)
     external
     view
     returns (uint256)
@@ -69,7 +69,7 @@ contract SpecDataHolder is
     return _specToRaft[_specUri];
   }
 
-  function isSpecRegistered(string memory _specUri)
+  function isSpecRegistered(string calldata _specUri)
     external
     view
     returns (bool)
