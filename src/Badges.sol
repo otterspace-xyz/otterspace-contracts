@@ -113,14 +113,12 @@ contract Badges is
     require(msg.sender != _to, "give: cannot give to self");
 
     safeCheckAgreement(msg.sender, _to, _uri, _signature);
+
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == msg.sender, "give: unauthorized");
 
-    uint256 tokenId = mint(_to, _uri, raftTokenId);
-    // usedHashes.set(voucherHashId);
-    // voucherHashIds[tokenId] = voucherHashId;
-    return tokenId;
+    return mint(_to, _uri, raftTokenId);
   }
 
   /**
@@ -138,14 +136,12 @@ contract Badges is
     require(msg.sender != _from, "take: cannot take from self");
 
     safeCheckAgreement(msg.sender, _from, _uri, _signature);
+
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == _from, "take: unauthorized issuer");
 
-    uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
-    // usedHashes.set(voucherHashId);
-    // voucherHashIds[tokenId] = voucherHashId;
-    return tokenId;
+    return mint(msg.sender, _uri, raftTokenId);
   }
 
   function merkleTake(
@@ -158,6 +154,7 @@ contract Badges is
     require(msg.sender != _from, "take: cannot take from self");
 
     safeCheckMerkleAgreement(_from, msg.sender, _uri, _signature, root, proof);
+
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == _from, "take: unauthorized issuer");
@@ -206,9 +203,6 @@ contract Badges is
    */
   function unequip(uint256 _tokenId) external virtual override tokenExists(_tokenId) {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
-
-    // uint256 voucherHashId = voucherHashIds[_tokenId];
-    // usedHashes.unset(voucherHashId);
     burn(_tokenId);
   }
 
@@ -238,7 +232,9 @@ contract Badges is
     uint8 _reason
   ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
     require(!revokedBadgesHashes.get(_badgeId), "revokeBadge: badge already revoked");
+
     revokedBadgesHashes.set(_badgeId);
+
     emit BadgeRevoked(_badgeId, msg.sender, _reason);
   }
 
@@ -270,17 +266,12 @@ contract Badges is
       super.supportsInterface(_interfaceId);
   }
 
-  function getVoucherHash(uint256 _tokenId) public view virtual returns (uint256) {
-    return voucherHashIds[_tokenId];
-  }
-
   function getAgreementHash(
     address _from,
     address _to,
     string calldata _uri
   ) public view virtual returns (bytes32) {
-    bytes32 structHash = keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri))));
-    return _hashTypedDataV4(structHash);
+    return _hashTypedDataV4(keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri)))));
   }
 
   function getMerkleAgreementHash(
@@ -288,8 +279,7 @@ contract Badges is
     string calldata _uri,
     bytes32 _root
   ) public view virtual returns (bytes32) {
-    bytes32 structHash = keccak256(abi.encode(MERKLE_AGREEMENT_HASH, _issuer, keccak256(bytes(_uri)), _root));
-    return _hashTypedDataV4(structHash);
+    return _hashTypedDataV4(keccak256(abi.encode(MERKLE_AGREEMENT_HASH, _issuer, keccak256(bytes(_uri)), _root)));
   }
 
   function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
@@ -316,6 +306,7 @@ contract Badges is
     emit Transfer(address(0), _to, tokenId);
 
     specDataHolder.setBadgeToRaft(tokenId, _raftTokenId);
+
     return tokenId;
   }
 
@@ -354,9 +345,6 @@ contract Badges is
       SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
       "safeCheckAgreement: invalid signature"
     );
-
-    // uint256 voucherHashId = uint256(hash);
-    // require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
   }
 
   function exists(uint256 _tokenId) internal view virtual returns (bool) {
@@ -365,11 +353,11 @@ contract Badges is
 
   function burn(uint256 _tokenId) internal virtual {
     address _owner = owners[_tokenId];
-
     balances[_owner] -= 1;
+
     delete owners[_tokenId];
     delete tokenURIs[_tokenId];
-    // delete voucherHashIds[_tokenId];
+
     emit Transfer(_owner, address(0), _tokenId);
   }
 
