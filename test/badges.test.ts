@@ -316,10 +316,8 @@ describe('Merkle minting', () => {
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
 
-    console.log('hi')
-    // TODO: not sure why this test is failing ... it's reverting as expected
-    expect(
-      await badgesProxy.connect(claimant).merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
+    await expect(
+      badgesProxy.connect(claimant).merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
     ).to.be.revertedWith(tokenExistsErr)
   })
 
