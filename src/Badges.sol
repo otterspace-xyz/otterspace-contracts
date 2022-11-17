@@ -134,8 +134,10 @@ contract Badges is
     safeCheckAgreement(msg.sender, _to, _uri, _signature);
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
-    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
-    require(raftOwner == msg.sender, "give: unauthorized");
+    require(
+      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      "give: unauthorized"
+    );
 
     return mint(_to, _uri, raftTokenId);
   }
@@ -157,8 +159,10 @@ contract Badges is
     safeCheckAgreement(msg.sender, _from, _uri, _signature);
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
-    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
-    require(raftOwner == _from, "take: unauthorized issuer");
+    require(
+      specDataHolder.getRaftOwner(raftTokenId) == _from,
+      "take: unauthorized issuer"
+    );
 
     return mint(msg.sender, _uri, raftTokenId);
   }
@@ -175,8 +179,10 @@ contract Badges is
     safeCheckMerkleAgreement(_from, msg.sender, _uri, _signature, root, proof);
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
-    address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
-    require(raftOwner == _from, "take: unauthorized issuer");
+    require(
+      specDataHolder.getRaftOwner(raftTokenId) == _from,
+      "take: unauthorized issuer"
+    );
 
     return mint(msg.sender, _uri, raftTokenId);
   }
