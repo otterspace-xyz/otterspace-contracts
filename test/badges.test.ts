@@ -22,7 +22,7 @@ const emptyBytes32String = ethers.utils.formatBytes32String('')
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = 'spec is not registered'
 const errSpecAlreadyRegistered = 'createSpec: spec already registered'
-const errNotRaftOwner = 'createSpec: unauthorized'
+const errNotRaftOwner = 'senderIsRaftOwner: unauthorized'
 const errInvalidSig = 'safeCheckAgreement: invalid signature'
 const tokenExistsErr = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
@@ -255,7 +255,7 @@ const deployContractFixture = async () => {
 }
 
 describe('Merkle minting', () => {
-  it.only('Should allow minting when an address is allowlisted on a merkle tree', async () => {
+  it('Should allow minting when an address is allowlisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } = deployed
 
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
@@ -511,7 +511,7 @@ describe('Badges', async function () {
     expect(offChainHash).to.equal(onChainHash)
   })
 
-  it.only('should successfully mint badge', async function () {
+  it('should successfully mint badge', async function () {
     await mintBadgeWithTake()
   })
 

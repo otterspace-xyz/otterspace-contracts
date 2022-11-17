@@ -59,7 +59,7 @@ contract BadgesTest is Test {
   string errInvalidSig = "safeCheckAgreement: invalid signature";
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
-  string errNotRaftOwner = "createSpec: unauthorized";
+  string errNotRaftOwner = "senderIsRaftOwner: unauthorized";
   string errNotRevoked = "reinstateBadge: badge not revoked";
   string errSafeCheckUsed = "safeCheckAgreement: already used";
   string errSpecAlreadyRegistered = "createSpec: spec already registered";

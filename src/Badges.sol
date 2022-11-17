@@ -57,11 +57,14 @@ contract Badges is
   bytes32 constant MERKLE_AGREEMENT_HASH =
     keccak256("MerkleAgreement(address passive,string tokenURI,bytes32 root)");
 
-  modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
-    string memory message = string(
-      abi.encodePacked(calledFrom, ": unauthorized")
+  modifier senderIsRaftOwner(uint256 _raftTokenId) {
+    // string memory message = string(
+    //   abi.encodePacked(calledFrom, ": unauthorized")
+    // );
+    require(
+      specDataHolder.getRaftOwner(_raftTokenId) == msg.sender,
+      "senderIsRaftOwner: unauthorized"
     );
-    require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
     _;
   }
 
@@ -191,7 +194,7 @@ contract Badges is
   function createSpec(string memory _specUri, uint256 _raftTokenId)
     external
     virtual
-    senderIsRaftOwner(_raftTokenId, "createSpec")
+    senderIsRaftOwner(_raftTokenId)
   {
     require(
       !specDataHolder.isSpecRegistered(_specUri),
@@ -281,11 +284,7 @@ contract Badges is
     uint256 _raftTokenId,
     uint256 _badgeId,
     uint8 _reason
-  )
-    external
-    tokenExists(_badgeId)
-    senderIsRaftOwner(_raftTokenId, "revokeBadge")
-  {
+  ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId) {
     require(
       !revokedBadgesHashes.get(_badgeId),
       "revokeBadge: badge already revoked"
@@ -305,7 +304,7 @@ contract Badges is
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
     external
     tokenExists(_badgeId)
-    senderIsRaftOwner(_raftTokenId, "reinstateBadge")
+    senderIsRaftOwner(_raftTokenId)
   {
     require(
       revokedBadgesHashes.get(_badgeId),
