@@ -255,7 +255,7 @@ const deployContractFixture = async () => {
 }
 
 describe('Merkle minting', () => {
-  it('Should allow minting when an address is allowlisted on a merkle tree', async () => {
+  it.only('Should allow minting when an address is allowlisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } = deployed
 
     const { raftTokenId } = await mintRaftToken(raftProxy, issuer.address, specUri, owner)
@@ -511,7 +511,7 @@ describe('Badges', async function () {
     expect(offChainHash).to.equal(onChainHash)
   })
 
-  it('should successfully mint badge', async function () {
+  it.only('should successfully mint badge', async function () {
     await mintBadgeWithTake()
   })
 

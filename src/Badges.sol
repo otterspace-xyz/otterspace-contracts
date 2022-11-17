@@ -25,7 +25,7 @@ contract Badges is
   EIP712Upgradeable
 {
   using BitMaps for BitMaps.BitMap;
-  BitMaps.BitMap private usedHashes;
+  BitMaps.BitMap private usedHashes; // redundant storage as of x/x/x
   string private name_;
   string private symbol_;
 
@@ -35,7 +35,7 @@ contract Badges is
 
   ISpecDataHolder private specDataHolder;
 
-  mapping(uint256 => uint256) private voucherHashIds;
+  mapping(uint256 => uint256) private voucherHashIds; // redundant storage as of x/x/x
   BitMaps.BitMap private revokedBadgesHashes;
 
   event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
@@ -112,14 +112,14 @@ contract Badges is
   ) external virtual returns (uint256) {
     require(msg.sender != _to, "give: cannot give to self");
 
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _to, _uri, _signature);
+    safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == msg.sender, "give: unauthorized");
 
     uint256 tokenId = mint(_to, _uri, raftTokenId);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
+    // usedHashes.set(voucherHashId);
+    // voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
 
@@ -137,14 +137,14 @@ contract Badges is
   ) external virtual override returns (uint256) {
     require(msg.sender != _from, "take: cannot take from self");
 
-    uint256 voucherHashId = safeCheckAgreement(msg.sender, _from, _uri, _signature);
+    safeCheckAgreement(msg.sender, _from, _uri, _signature);
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == _from, "take: unauthorized issuer");
 
     uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
+    // usedHashes.set(voucherHashId);
+    // voucherHashIds[tokenId] = voucherHashId;
     return tokenId;
   }
 
@@ -157,15 +157,12 @@ contract Badges is
   ) external virtual returns (uint256) {
     require(msg.sender != _from, "take: cannot take from self");
 
-    uint256 voucherHashId = safeCheckMerkleAgreement(msg.sender, _from, _uri, _signature, root, proof);
+    safeCheckMerkleAgreement(_from, msg.sender, _uri, _signature, root, proof);
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     address raftOwner = specDataHolder.getRaftOwner(raftTokenId);
     require(raftOwner == _from, "take: unauthorized issuer");
 
-    uint256 tokenId = mint(msg.sender, _uri, raftTokenId);
-    usedHashes.set(voucherHashId);
-    voucherHashIds[tokenId] = voucherHashId;
-    return tokenId;
+    return mint(msg.sender, _uri, raftTokenId);
   }
 
   function getDataHolderAddress() external view returns (address) {
@@ -210,8 +207,8 @@ contract Badges is
   function unequip(uint256 _tokenId) external virtual override tokenExists(_tokenId) {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
 
-    uint256 voucherHashId = voucherHashIds[_tokenId];
-    usedHashes.unset(voucherHashId);
+    // uint256 voucherHashId = voucherHashIds[_tokenId];
+    // usedHashes.unset(voucherHashId);
     burn(_tokenId);
   }
 
@@ -304,11 +301,12 @@ contract Badges is
     string memory _uri,
     uint256 _raftTokenId
   ) internal virtual returns (uint256) {
-    bytes32 hash = getBadgeIdHash(_to, _uri);
-    uint256 tokenId = uint256(hash);
     // only registered specs can be used for minting
     require(_raftTokenId != 0, "mint: spec is not registered");
 
+    // ensures that a badge spec can only be owned once by an account
+    bytes32 hash = getBadgeIdHash(_to, _uri);
+    uint256 tokenId = uint256(hash);
     require(!exists(tokenId), "mint: tokenID exists");
 
     balances[_to] += 1;
@@ -324,24 +322,23 @@ contract Badges is
   // todo:: do we need to use a sparse markle tree? Is it more gas efficient?
   // todo:: handling vouchers - what would be a voucherID here?
   function safeCheckMerkleAgreement(
-    address _to,
     address _from,
+    address _to,
     string calldata _uri,
     bytes calldata _signature,
     bytes32 _root,
     bytes32[] calldata _proof
-  ) public view virtual returns (uint256) {
+  ) public view virtual {
     // this authenticates the signature coming from the issuer
     bytes32 hash = getMerkleAgreementHash(_from, _uri, _root);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(_from, hash, _signature),
       "safeCheckMerkleAgreement: invalid signature"
     );
-    bytes32 leaf = keccak256(abi.encodePacked(_to));
-    // this authenticates that the claimant is indeed part of the tree whose root was signed
+
+    // this authenticates that the claimant (leaf) is indeed part of the tree whose root was signed
+    bytes32 leaf = keccak256(abi.encodePacked(_to)); //todo:: why not use abi.encode? which is appropriate?
     require(MerkleProof.verify(_proof, _root, leaf), "safeCheckMerkleAgreement: invalid leaf");
-    uint256 voucherHashId = uint256(keccak256(abi.encode(_from, _to)));
-    return voucherHashId;
   }
 
   function safeCheckAgreement(
@@ -349,7 +346,7 @@ contract Badges is
     address _passive,
     string calldata _uri,
     bytes calldata _signature
-  ) internal view virtual returns (uint256) {
+  ) internal view virtual {
     // active is always msg.sender
     // passive changes depending on whether it's give/take
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
@@ -358,10 +355,8 @@ contract Badges is
       "safeCheckAgreement: invalid signature"
     );
 
-    uint256 voucherHashId = uint256(hash);
-    require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
-
-    return voucherHashId;
+    // uint256 voucherHashId = uint256(hash);
+    // require(!usedHashes.get(voucherHashId), "safeCheckAgreement: already used");
   }
 
   function exists(uint256 _tokenId) internal view virtual returns (bool) {
@@ -374,7 +369,7 @@ contract Badges is
     balances[_owner] -= 1;
     delete owners[_tokenId];
     delete tokenURIs[_tokenId];
-    delete voucherHashIds[_tokenId];
+    // delete voucherHashIds[_tokenId];
     emit Transfer(_owner, address(0), _tokenId);
   }
 
