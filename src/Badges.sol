@@ -374,7 +374,7 @@ contract Badges is
       );
   }
 
-  function getBadgeIdHash(address _to, string memory _uri)
+  function getBadgeIdHash(address _to, string calldata _uri)
     public
     view
     virtual
@@ -385,18 +385,17 @@ contract Badges is
 
   function mint(
     address _to,
-    string memory _uri,
+    string calldata _uri,
     uint256 _raftTokenId
   ) internal virtual returns (uint256) {
     // only registered specs can be used for minting
     require(_raftTokenId != 0, "mint: spec is not registered");
 
     // ensures that a badge spec can only be owned once by an account
-    bytes32 hash = getBadgeIdHash(_to, _uri);
-    uint256 tokenId = uint256(hash);
+    uint256 tokenId = uint256(getBadgeIdHash(_to, _uri));
     require(!exists(tokenId), "mint: tokenID exists");
 
-    balances[_to] += 1;
+    balances[_to]++;
     owners[tokenId] = _to;
     tokenURIs[tokenId] = _uri;
 
@@ -418,9 +417,12 @@ contract Badges is
     bytes32[] calldata _proof
   ) public view virtual {
     // this authenticates the signature coming from the issuer
-    bytes32 hash = getMerkleAgreementHash(_from, _uri, _root);
     require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(_from, hash, _signature),
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        _from,
+        getMerkleAgreementHash(_from, _uri, _root),
+        _signature
+      ),
       "safeCheckMerkleAgreement: invalid signature"
     );
 
@@ -440,11 +442,10 @@ contract Badges is
   ) internal view virtual {
     // active is always msg.sender
     // passive changes depending on whether it's give/take
-    bytes32 hash = getAgreementHash(_active, _passive, _uri);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _passive,
-        hash,
+        getAgreementHash(_active, _passive, _uri),
         _signature
       ),
       "safeCheckAgreement: invalid signature"
