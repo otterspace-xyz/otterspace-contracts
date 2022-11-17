@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.16;
-import "forge-std/Test.sol";
 
 import { ISpecDataHolder } from "./interfaces/ISpecDataHolder.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
@@ -12,9 +11,6 @@ import { UUPSUpgradeable } from "@openzeppelin-upgradeable/proxy/utils/UUPSUpgra
 import { ERC165Upgradeable } from "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-
-bytes32 constant AGREEMENT_HASH = keccak256("Agreement(address active,address passive,string tokenURI)");
-bytes32 constant MERKLE_AGREEMENT_HASH = keccak256("MerkleAgreement(address passive,string tokenURI,bytes32 root)");
 
 contract Badges is
   IERC721Metadata,
@@ -38,13 +34,33 @@ contract Badges is
   mapping(uint256 => uint256) private voucherHashIds; // redundant storage as of x/x/x
   BitMaps.BitMap private revokedBadgesHashes;
 
-  event SpecCreated(address indexed to, string specUri, uint256 indexed raftTokenId, address indexed raftAddress);
-  event BadgeRevoked(uint256 indexed tokenId, address indexed from, uint8 indexed reason);
+  event SpecCreated(
+    address indexed to,
+    string specUri,
+    uint256 indexed raftTokenId,
+    address indexed raftAddress
+  );
+
+  event BadgeRevoked(
+    uint256 indexed tokenId,
+    address indexed from,
+    uint8 indexed reason
+  );
+
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
+
   event RefreshMetadata(string[] specUris, address sender);
 
+  bytes32 constant AGREEMENT_HASH =
+    keccak256("Agreement(address active,address passive,string tokenURI)");
+
+  bytes32 constant MERKLE_AGREEMENT_HASH =
+    keccak256("MerkleAgreement(address passive,string tokenURI,bytes32 root)");
+
   modifier senderIsRaftOwner(uint256 _raftTokenId, string memory calledFrom) {
-    string memory message = string(abi.encodePacked(calledFrom, ": unauthorized"));
+    string memory message = string(
+      abi.encodePacked(calledFrom, ": unauthorized")
+    );
     require(specDataHolder.getRaftOwner(_raftTokenId) == msg.sender, message);
     _;
   }
@@ -177,11 +193,19 @@ contract Badges is
     virtual
     senderIsRaftOwner(_raftTokenId, "createSpec")
   {
-    require(!specDataHolder.isSpecRegistered(_specUri), "createSpec: spec already registered");
+    require(
+      !specDataHolder.isSpecRegistered(_specUri),
+      "createSpec: spec already registered"
+    );
 
     specDataHolder.setSpecToRaft(_specUri, _raftTokenId);
 
-    emit SpecCreated(msg.sender, _specUri, _raftTokenId, specDataHolder.getRaftAddress());
+    emit SpecCreated(
+      msg.sender,
+      _specUri,
+      _raftTokenId,
+      specDataHolder.getRaftAddress()
+    );
   }
 
   function name() external view virtual override returns (string memory) {
@@ -192,7 +216,13 @@ contract Badges is
     return symbol_;
   }
 
-  function tokenURI(uint256 _tokenId) external view virtual override returns (string memory) {
+  function tokenURI(uint256 _tokenId)
+    external
+    view
+    virtual
+    override
+    returns (string memory)
+  {
     require(exists(_tokenId), "tokenURI: token doesn't exist");
     return tokenURIs[_tokenId];
   }
@@ -201,17 +231,38 @@ contract Badges is
    * @notice Allows a user to disassociate themselves from a badge
    * @param _tokenId the id of the badge
    */
-  function unequip(uint256 _tokenId) external virtual override tokenExists(_tokenId) {
+  function unequip(uint256 _tokenId)
+    external
+    virtual
+    override
+    tokenExists(_tokenId)
+  {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
     burn(_tokenId);
   }
 
-  function balanceOf(address _owner) external view virtual override returns (uint256) {
-    require(_owner != address(0), "balanceOf: address zero is not a valid owner_");
+  function balanceOf(address _owner)
+    external
+    view
+    virtual
+    override
+    returns (uint256)
+  {
+    require(
+      _owner != address(0),
+      "balanceOf: address zero is not a valid owner_"
+    );
     return balances[_owner];
   }
 
-  function ownerOf(uint256 _tokenId) external view virtual override tokenExists(_tokenId) returns (address) {
+  function ownerOf(uint256 _tokenId)
+    external
+    view
+    virtual
+    override
+    tokenExists(_tokenId)
+    returns (address)
+  {
     return owners[_tokenId];
   }
 
@@ -230,8 +281,15 @@ contract Badges is
     uint256 _raftTokenId,
     uint256 _badgeId,
     uint8 _reason
-  ) external tokenExists(_badgeId) senderIsRaftOwner(_raftTokenId, "revokeBadge") {
-    require(!revokedBadgesHashes.get(_badgeId), "revokeBadge: badge already revoked");
+  )
+    external
+    tokenExists(_badgeId)
+    senderIsRaftOwner(_raftTokenId, "revokeBadge")
+  {
+    require(
+      !revokedBadgesHashes.get(_badgeId),
+      "revokeBadge: badge already revoked"
+    );
 
     revokedBadgesHashes.set(_badgeId);
 
@@ -249,17 +307,31 @@ contract Badges is
     tokenExists(_badgeId)
     senderIsRaftOwner(_raftTokenId, "reinstateBadge")
   {
-    require(revokedBadgesHashes.get(_badgeId), "reinstateBadge: badge not revoked");
+    require(
+      revokedBadgesHashes.get(_badgeId),
+      "reinstateBadge: badge not revoked"
+    );
     revokedBadgesHashes.unset(_badgeId);
     emit BadgeReinstated(_badgeId, msg.sender);
   }
 
-  function isBadgeValid(uint256 _badgeId) external view tokenExists(_badgeId) returns (bool) {
+  function isBadgeValid(uint256 _badgeId)
+    external
+    view
+    tokenExists(_badgeId)
+    returns (bool)
+  {
     bool isNotRevoked = !revokedBadgesHashes.get(_badgeId);
     return isNotRevoked;
   }
 
-  function supportsInterface(bytes4 _interfaceId) public view virtual override returns (bool) {
+  function supportsInterface(bytes4 _interfaceId)
+    public
+    view
+    virtual
+    override
+    returns (bool)
+  {
     return
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
@@ -271,7 +343,12 @@ contract Badges is
     address _to,
     string calldata _uri
   ) public view virtual returns (bytes32) {
-    return _hashTypedDataV4(keccak256(abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri)))));
+    return
+      _hashTypedDataV4(
+        keccak256(
+          abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri)))
+        )
+      );
   }
 
   function getMerkleAgreementHash(
@@ -279,10 +356,25 @@ contract Badges is
     string calldata _uri,
     bytes32 _root
   ) public view virtual returns (bytes32) {
-    return _hashTypedDataV4(keccak256(abi.encode(MERKLE_AGREEMENT_HASH, _issuer, keccak256(bytes(_uri)), _root)));
+    return
+      _hashTypedDataV4(
+        keccak256(
+          abi.encode(
+            MERKLE_AGREEMENT_HASH,
+            _issuer,
+            keccak256(bytes(_uri)),
+            _root
+          )
+        )
+      );
   }
 
-  function getBadgeIdHash(address _to, string memory _uri) public view virtual returns (bytes32) {
+  function getBadgeIdHash(address _to, string memory _uri)
+    public
+    view
+    virtual
+    returns (bytes32)
+  {
     return keccak256(abi.encode(_to, _uri));
   }
 
@@ -329,7 +421,10 @@ contract Badges is
 
     // this authenticates that the claimant (leaf) is indeed part of the tree whose root was signed
     bytes32 leaf = keccak256(abi.encodePacked(_to)); //todo:: why not use abi.encode? which is appropriate?
-    require(MerkleProof.verify(_proof, _root, leaf), "safeCheckMerkleAgreement: invalid leaf");
+    require(
+      MerkleProof.verify(_proof, _root, leaf),
+      "safeCheckMerkleAgreement: invalid leaf"
+    );
   }
 
   function safeCheckAgreement(
@@ -342,7 +437,11 @@ contract Badges is
     // passive changes depending on whether it's give/take
     bytes32 hash = getAgreementHash(_active, _passive, _uri);
     require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(_passive, hash, _signature),
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        _passive,
+        hash,
+        _signature
+      ),
       "safeCheckAgreement: invalid signature"
     );
   }
