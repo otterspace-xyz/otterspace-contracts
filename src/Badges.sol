@@ -58,9 +58,6 @@ contract Badges is
     keccak256("MerkleAgreement(address passive,string tokenURI,bytes32 root)");
 
   modifier senderIsRaftOwner(uint256 _raftTokenId) {
-    // string memory message = string(
-    //   abi.encodePacked(calledFrom, ": unauthorized")
-    // );
     require(
       specDataHolder.getRaftOwner(_raftTokenId) == msg.sender,
       "senderIsRaftOwner: unauthorized"
@@ -88,9 +85,9 @@ contract Badges is
    * @param _specDataHolderAddress address of the spec data holder contract
    */
   function initialize(
-    string memory _name,
-    string memory _symbol,
-    string memory _version,
+    string calldata _name,
+    string calldata _symbol,
+    string calldata _version,
     address _nextOwner,
     address _specDataHolderAddress
   ) public initializer {
@@ -105,7 +102,7 @@ contract Badges is
     transferOwnership(_nextOwner);
   }
 
-  function refreshMetadata(string[] memory _specUris) external onlyOwner {
+  function refreshMetadata(string[] calldata _specUris) external onlyOwner {
     require(_specUris.length > 0, "refreshMetadata: no spec uris provided");
     emit RefreshMetadata(_specUris, msg.sender);
   }
@@ -197,7 +194,7 @@ contract Badges is
    * @param _specUri the uri of the badge spec
    * @param _raftTokenId the id of the raft token
    */
-  function createSpec(string memory _specUri, uint256 _raftTokenId)
+  function createSpec(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
     senderIsRaftOwner(_raftTokenId)
