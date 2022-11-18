@@ -39,6 +39,8 @@ const errUnauthorizedGive = 'give: unauthorized'
 const errUnauthorizedTake = 'take: unauthorized issuer'
 const errCannotGiveToSelf = 'give: cannot give to self'
 const err721InvalidTokenId = 'ERC721: invalid token ID'
+const errSafeCheckMerkleInvalidSig =
+  'safeCheckMerkleAgreement: invalid signature'
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -479,8 +481,6 @@ describe('Merkle minting', () => {
     expect(await badgesProxy.balanceOf(claimant.address)).equal(2)
   })
 
-  //  todo: ensure that someone who is part of two different merkle trees can claim on each tree
-
   it('Should reject minting when someone not on the whitelist tries to mint', async () => {
     const {
       badgesProxy,
@@ -523,7 +523,7 @@ describe('Merkle minting', () => {
       badgesProxy
         .connect(claimant)
         .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
-    ).to.be.revertedWith('invalid proof')
+    ).to.be.revertedWith(errSafeCheckMerkleInvalidSig)
   })
 })
 
