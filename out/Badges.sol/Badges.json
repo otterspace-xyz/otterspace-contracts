@@ -825,6 +825,1081 @@
     "upgradeTo(address)": "3659cfe6",
     "upgradeToAndCall(address,bytes)": "4f1ef286"
   },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"previousAdmin\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAdmin\",\"type\":\"address\"}],\"name\":\"AdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"}],\"name\":\"BadgeReinstated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint8\",\"name\":\"reason\",\"type\":\"uint8\"}],\"name\":\"BadgeRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"beacon\",\"type\":\"address\"}],\"name\":\"BeaconUpgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string[]\",\"name\":\"specUris\",\"type\":\"string[]\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RefreshMetadata\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"specUri\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"raftTokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"raftAddress\",\"type\":\"address\"}],\"name\":\"SpecCreated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_specUri\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_raftTokenId\",\"type\":\"uint256\"}],\"name\":\"createSpec\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"getAgreementHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"}],\"name\":\"getBadgeIdHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDataHolderAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_issuer\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"_root\",\"type\":\"bytes32\"}],\"name\":\"getMerkleAgreementHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"give\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_symbol\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_version\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_nextOwner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_specDataHolderAddress\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_badgeId\",\"type\":\"uint256\"}],\"name\":\"isBadgeValid\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"root\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"proof\",\"type\":\"bytes32[]\"}],\"name\":\"merkleTake\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string[]\",\"name\":\"_specUris\",\"type\":\"string[]\"}],\"name\":\"refreshMetadata\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_raftTokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_badgeId\",\"type\":\"uint256\"}],\"name\":\"reinstateBadge\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_raftTokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_badgeId\",\"type\":\"uint256\"},{\"internalType\":\"uint8\",\"name\":\"_reason\",\"type\":\"uint8\"}],\"name\":\"revokeBadge\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes32\",\"name\":\"_root\",\"type\":\"bytes32\"},{\"internalType\":\"bytes32[]\",\"name\":\"_proof\",\"type\":\"bytes32[]\"}],\"name\":\"safeCheckMerkleAgreement\",\"outputs\":[],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_dataHolder\",\"type\":\"address\"}],\"name\":\"setDataHolder\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"_interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_from\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_uri\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"_signature\",\"type\":\"bytes\"}],\"name\":\"take\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"unequip\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"constructor\":{\"custom:oz-upgrades-unsafe-allow\":\"constructor\"},\"createSpec(string,uint256)\":{\"details\":\"Data is stored in the SpecDataHolder contract\",\"params\":{\"_raftTokenId\":\"the id of the raft token\",\"_specUri\":\"the uri of the badge spec\"}},\"give(address,string,bytes)\":{\"params\":{\"_signature\":\"the signature used to verify that the person receiving the badge actually requested it\",\"_to\":\"the person who is receiving the badge\",\"_uri\":\"the uri of the badge spec\"}},\"initialize(string,string,string,address,address)\":{\"details\":\"only called once when the proxy is deployed. Allows the contract to be upgraded\",\"params\":{\"_name\":\"name used for EIP-712 domain\",\"_nextOwner\":\"address of the owner\",\"_specDataHolderAddress\":\"address of the spec data holder contract\",\"_symbol\":\"symbol used for EIP-712 domain\",\"_version\":\"version used for EIP-712 domain\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"proxiableUUID()\":{\"details\":\"Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the implementation. It is used to validate that the this implementation remains valid after an upgrade. IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier.\"},\"reinstateBadge(uint256,uint256)\":{\"details\":\"we're using bitmaps instead of a mapping to save gas\",\"params\":{\"_badgeId\":\"tokenId of the badge to be revoked\",\"_raftTokenId\":\"The raft token id\"}},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"revokeBadge(uint256,uint256,uint8)\":{\"details\":\"we're storing the reason as a uint because the string values may change over time Reason 0: Abuse Reason 1: Left community Reason 2: Tenure ended Reason 3: Other\",\"params\":{\"_badgeId\":\"tokenId of the badge to be revoked\",\"_raftTokenId\":\"The raft token id\",\"_reason\":\"an integer representing the reason for revoking the badge\"}},\"setDataHolder(address)\":{\"params\":{\"_dataHolder\":\"address of the SpecDataHolder contract\"}},\"take(address,string,bytes)\":{\"details\":\"Take is called by somebody who has already been added to an allow list.\",\"params\":{\"_from\":\"the person who issued the voucher, who is permitting them to mint the badge.\",\"_signature\":\"the signature used to verify that the person minting has permission from the issuer\",\"_uri\":\"the uri of the badge spec\"}},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"unequip(uint256)\":{\"params\":{\"_tokenId\":\"the id of the badge\"}},\"upgradeTo(address)\":{\"details\":\"Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event.\"},\"upgradeToAndCall(address,bytes)\":{\"details\":\"Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call encoded in `data`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"createSpec(string,uint256)\":{\"notice\":\"Allows a Raft token holder to create a badge spec\"},\"give(address,string,bytes)\":{\"notice\":\"Allows the owner of a badge spec to mint a badge to someone who has requested it\"},\"initialize(string,string,string,address,address)\":{\"notice\":\"Initialize the contract\"},\"reinstateBadge(uint256,uint256)\":{\"notice\":\"Reinstates a badge for a user\"},\"revokeBadge(uint256,uint256,uint8)\":{\"notice\":\"Revokes a badge from a user\"},\"setDataHolder(address)\":{\"notice\":\"Allows the Badges contract to communicate with the SpecDataHolder contract\"},\"take(address,string,bytes)\":{\"notice\":\"Allows a user to mint a badge from a voucher\"},\"unequip(uint256)\":{\"notice\":\"Allows a user to disassociate themselves from a badge\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/Badges.sol\":\"Badges\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":@openzeppelin/=lib/openzeppelin-contracts/\",\":ERC4973/=lib/ERC4973/src/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\",\":murky/=lib/murky/\",\":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"lib/ERC4973/src/interfaces/IERC4973.sol\":{\"keccak256\":\"0x85bb14e7f703579db5246d659d4504d42cc095817f8fd7f1dc01b94f196a05c2\",\"license\":\"CC0-1.0\",\"urls\":[\"bzz-raw://1ec43e0c41b3a17f900fb08ed93fb5dabfff2bf144f6776240a3b72af476673e\",\"dweb:/ipfs/QmX7rXPmpmGaix1bP9TRssGJ9bTTnnsukP5cDS9shTrBKc\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol\":{\"keccak256\":\"0x247c62047745915c0af6b955470a72d1696ebad4352d7d3011aef1a2463cd888\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d7fc8396619de513c96b6e00301b88dd790e83542aab918425633a5f7297a15a\",\"dweb:/ipfs/QmXbP4kiZyp7guuS7xe8KaybnwkRPGrBc2Kbi3vhcTfpxb\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/interfaces/IERC1271Upgradeable.sol\":{\"keccak256\":\"0x4473c09c087ee1a48c5547b23799c0474b2e08cde6fec5921c628171c4ebcdc0\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6d92614db0b346b756af8ba9bd0098db81b031026361635fb4f55a420254637d\",\"dweb:/ipfs/QmVviVD57zX54ny1zvVsksfYF9RantBwVyJBTdHqPywFuP\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/interfaces/draft-IERC1822Upgradeable.sol\":{\"keccak256\":\"0x77c89f893e403efc6929ba842b7ccf6534d4ffe03afe31670b4a528c0ad78c0f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://496bd9b3df2455d571018c09f0c6badd29713fdeb907c6aa09d8d28cb603f053\",\"dweb:/ipfs/QmXdJDyYs6WMwMh21dez2BYPxhSUaUYFMDtVNcn2cgFR79\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol\":{\"keccak256\":\"0x315887e846f1e5f8d8fa535a229d318bb9290aaa69485117f1ee8a9a6b3be823\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dda00da6d269685b555e710e4abf1c3eb6d00c15b888a7880a2f8dd3c4fdc2\",\"dweb:/ipfs/QmSqcjtdECygtT1Gy7uEo42x8542srpgGEeKKHfcnQqXgn\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/beacon/IBeaconUpgradeable.sol\":{\"keccak256\":\"0x24b86ac8c005b8c654fbf6ac34a5a4f61580d7273541e83e013e89d66fbf0908\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4dbfe1a3b3b3fb64294ce41fd2ad362e7b7012208117864f42c1a67620a6d5c1\",\"dweb:/ipfs/QmVMU5tWt7zBQMmf5cpMX8UMHV86T3kFeTxBTBjFqVWfoJ\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x0203dcadc5737d9ef2c211d6fa15d18ebc3b30dfa51903b64870b01a062b0b4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6eb2fd1e9894dbe778f4b8131adecebe570689e63cf892f4e21257bfe1252497\",\"dweb:/ipfs/QmXgUGNfZvrn6N2miv3nooSs7Jm34A41qz94fu2GtDFcx8\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol\":{\"keccak256\":\"0x6e36e9b4b71de699c2f3f0d4e4d1aa0b35da99a26e8d5b91ef09ba234b4ef270\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://abfa467c53a0d60b4d09bf04aa952b1d1d44e5766fcc053aace078d7859b8419\",\"dweb:/ipfs/QmebVTZpyNxYfKYTuLMywzEJTdc1Ca8ME4xm3kR9gQgToG\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/AddressUpgradeable.sol\":{\"keccak256\":\"0xf8313972e73a49ff9a8c2dee0b9a07a3585bc4d077bd8a9670ebdd76ff390177\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3fc2a0888fca21e976b4b77ca46891f547ff339a8175bc0a6461a62ce65aa89a\",\"dweb:/ipfs/QmYDpaGK98esv36MBanhjgzpS7QcisrsVMzttPknvxWhRG\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol\":{\"keccak256\":\"0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d6520943ea55fdf5f0bafb39ed909f64de17051bc954ff3e88c9e5621412c79c\",\"dweb:/ipfs/QmWZ4rAKTQbNG2HxGs46AcTXShsVytKeLs7CUCdCSv5N7a\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/StorageSlotUpgradeable.sol\":{\"keccak256\":\"0x09864aea84f01e39313375b5610c73a3c1c68abbdc51e5ccdd25ff977fdadf9a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://aedb48081190fa828d243529ce25c708202c7d4ccfe99f0e4ecd6bc0cfcd03f3\",\"dweb:/ipfs/QmWyiDQHPZA56iqsAwTmiJoxvNeRQLUVr4gTfzpdpXivpo\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/StringsUpgradeable.sol\":{\"keccak256\":\"0xea5339a7fff0ed42b45be56a88efdd0b2ddde9fa480dc99fef9a6a4c5b776863\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://841619682637df5579b4c396d281d6c55b26f1b1acce1d0ab67bead5e39cf60c\",\"dweb:/ipfs/QmNRtuKp43ZHJwswdyT3GivY4fDMvz3cxBe1FfDthG1JGj\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/ECDSAUpgradeable.sol\":{\"keccak256\":\"0xe8c62ca00ed2d0a4d9b7e3c4bf7d62c821618b2cdb3c844da91a1193986851bf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2a459d8907c5fe73d70b4c522e48127b13b9aaa29a223670e928a2a5e5e4c8f8\",\"dweb:/ipfs/QmcwBnMVrajEBgj2i1saNXnQ6ytHQdnpQF978E86EuhvtX\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol\":{\"keccak256\":\"0x48d9ff94aeacf14a509d1f8e65f1f355f85385043613eb752d8640da04e1e91e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a4233f31f9519598a95387c3f2c36dfd7fa9e7d6ad6b82bc3cf029d249a9db4d\",\"dweb:/ipfs/QmaWrFY9tmtvWjW75XBAgtDsvXyoRVvBtMpWRKBAer5sdf\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/draft-EIP712Upgradeable.sol\":{\"keccak256\":\"0xaf5a96100f421d61693605349511e43221d3c2e47d4b3efa87af2b936e2567fc\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://371fd95bad4416766089d3e621dee1fd86fece2b266ad3f9443fefe567e24e94\",\"dweb:/ipfs/QmNciwwtGev3Q8uVhnoE5PQUSCDpMp6KtVjiDgnGdqLmWX\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/ERC165Upgradeable.sol\":{\"keccak256\":\"0x9a3b990bd56d139df3e454a9edf1c64668530b5a77fc32eb063bc206f958274a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://0895399d170daab2d69b4c43a0202e5a07f2e67a93b26e3354dcbedb062232f7\",\"dweb:/ipfs/QmUM1VH3XDk559Dsgh4QPvupr3YVKjz87HrSyYzzVFZbxw\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/IERC165Upgradeable.sol\":{\"keccak256\":\"0xc6cef87559d0aeffdf0a99803de655938a7779ec0a3cd5d4383483ad85565a09\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://92ad7e572cf44e6b4b37631b44b62f9eb9fb1cf14d9ce51c1504d5dc7ccaf758\",\"dweb:/ipfs/QmcnbqX85tsWnUXPmtuPLE4SczME2sJaTfmqEFkuAJvWhy\"]},\"lib/openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol\":{\"keccak256\":\"0x596ed72a251d391b814a4aa19d7acb02ebdcc92ba27d3fff74a6f0c158b12ab7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d5f49013d50b1011c842f76e96f3c3f146ca7cb15084c8805575e0e0e1a5c700\",\"dweb:/ipfs/QmQ3n5qiuioUA74heD6ZddNkYg1kYihjQBNcy9zgwYXKgM\"]},\"lib/openzeppelin-contracts/contracts/utils/structs/BitMaps.sol\":{\"keccak256\":\"0xc5d14e1780f0ea212b19c07b83c8e51b9dc6903017df71e6de1fae364d724e0d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f310b0f071955b042dd92ede4113771a3f4fdbf8a8e0c8bb533e5f281ffa794c\",\"dweb:/ipfs/QmSTf6YPotBd7SZTdKp41JSDAGy5idcuww6y4jncTsD46f\"]},\"src/Badges.sol\":{\"keccak256\":\"0xf423c7b439484e785270f679f62958e3b587485e2c0a8fa06197688227f557e3\",\"license\":\"GPL-3.0-only\",\"urls\":[\"bzz-raw://c7b65c1018dc5b267b063255780f82c486ea77e19b38421c7525951fee218f19\",\"dweb:/ipfs/QmfYfydEs2MXyZgdGto5DGDbarYDn6PfAbEW1SfxmySmJc\"]},\"src/interfaces/IERC721Metadata.sol\":{\"keccak256\":\"0xb5b370323c76cf7f2ea7c4bdcab72cdbc5d4d783ea05119adbcc1bd63794a156\",\"license\":\"CC0-1.0\",\"urls\":[\"bzz-raw://42419022e119435b48cca7c2cf7a4f4c73d7a4804f16fea0ebea86f1d7a48cb9\",\"dweb:/ipfs/QmaLyaz5oxyt6jhzhYDhwXxXiiCBFjJzufsM5BFogKmTAc\"]},\"src/interfaces/ISpecDataHolder.sol\":{\"keccak256\":\"0x0013c6c48838857f2c25f205f4daa33f0a4758eea66e5927dc34daffd88ac365\",\"license\":\"CC0-1.0\",\"urls\":[\"bzz-raw://2f7d1a9fa4084b7719a8c3dc5a455d37b4f2e6f3f12b45a915d5ace658a3d8b5\",\"dweb:/ipfs/Qmd377kkUAamyABRidUt9ekcJ4rGb3qsAiE6rrzshKZscd\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.16+commit.07a7930e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "AdminChanged",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "BadgeReinstated",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint8",
+              "name": "reason",
+              "type": "uint8",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "BadgeRevoked",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "beacon",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "BeaconUpgraded",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "version",
+              "type": "uint8",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Initialized",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "OwnershipTransferred",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string[]",
+              "name": "specUris",
+              "type": "string[]",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "RefreshMetadata",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "string",
+              "name": "specUri",
+              "type": "string",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "raftTokenId",
+              "type": "uint256",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "raftAddress",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "SpecCreated",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "Transfer",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "Upgraded",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_specUri",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_raftTokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "createSpec"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getAgreementHash",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBadgeIdHash",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDataHolderAddress",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_issuer",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_root",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getMerkleAgreementHash",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_signature",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "give",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_symbol",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_version",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "_nextOwner",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_specDataHolderAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "initialize"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_badgeId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isBadgeValid",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_signature",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "root",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "proof",
+              "type": "bytes32[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "merkleTake",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "name",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "ownerOf",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "proxiableUUID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string[]",
+              "name": "_specUris",
+              "type": "string[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "refreshMetadata"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_raftTokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_badgeId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "reinstateBadge"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "renounceOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_raftTokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_badgeId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "_reason",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "revokeBadge"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_to",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_signature",
+              "type": "bytes"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "_root",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32[]",
+              "name": "_proof",
+              "type": "bytes32[]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "safeCheckMerkleAgreement"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_dataHolder",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setDataHolder"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes4",
+              "name": "_interfaceId",
+              "type": "bytes4"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "supportsInterface",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "symbol",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_from",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "_uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes",
+              "name": "_signature",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "take",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "tokenURI",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_tokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "unequip"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "upgradeTo"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "upgradeToAndCall"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "constructor": {
+            "custom:oz-upgrades-unsafe-allow": "constructor"
+          },
+          "createSpec(string,uint256)": {
+            "details": "Data is stored in the SpecDataHolder contract",
+            "params": {
+              "_raftTokenId": "the id of the raft token",
+              "_specUri": "the uri of the badge spec"
+            }
+          },
+          "give(address,string,bytes)": {
+            "params": {
+              "_signature": "the signature used to verify that the person receiving the badge actually requested it",
+              "_to": "the person who is receiving the badge",
+              "_uri": "the uri of the badge spec"
+            }
+          },
+          "initialize(string,string,string,address,address)": {
+            "details": "only called once when the proxy is deployed. Allows the contract to be upgraded",
+            "params": {
+              "_name": "name used for EIP-712 domain",
+              "_nextOwner": "address of the owner",
+              "_specDataHolderAddress": "address of the spec data holder contract",
+              "_symbol": "symbol used for EIP-712 domain",
+              "_version": "version used for EIP-712 domain"
+            }
+          },
+          "owner()": {
+            "details": "Returns the address of the current owner."
+          },
+          "proxiableUUID()": {
+            "details": "Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the implementation. It is used to validate that the this implementation remains valid after an upgrade. IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier."
+          },
+          "reinstateBadge(uint256,uint256)": {
+            "details": "we're using bitmaps instead of a mapping to save gas",
+            "params": {
+              "_badgeId": "tokenId of the badge to be revoked",
+              "_raftTokenId": "The raft token id"
+            }
+          },
+          "renounceOwnership()": {
+            "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+          },
+          "revokeBadge(uint256,uint256,uint8)": {
+            "details": "we're storing the reason as a uint because the string values may change over time Reason 0: Abuse Reason 1: Left community Reason 2: Tenure ended Reason 3: Other",
+            "params": {
+              "_badgeId": "tokenId of the badge to be revoked",
+              "_raftTokenId": "The raft token id",
+              "_reason": "an integer representing the reason for revoking the badge"
+            }
+          },
+          "setDataHolder(address)": {
+            "params": {
+              "_dataHolder": "address of the SpecDataHolder contract"
+            }
+          },
+          "take(address,string,bytes)": {
+            "details": "Take is called by somebody who has already been added to an allow list.",
+            "params": {
+              "_from": "the person who issued the voucher, who is permitting them to mint the badge.",
+              "_signature": "the signature used to verify that the person minting has permission from the issuer",
+              "_uri": "the uri of the badge spec"
+            }
+          },
+          "transferOwnership(address)": {
+            "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+          },
+          "unequip(uint256)": {
+            "params": {
+              "_tokenId": "the id of the badge"
+            }
+          },
+          "upgradeTo(address)": {
+            "details": "Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
+          },
+          "upgradeToAndCall(address,bytes)": {
+            "details": "Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call encoded in `data`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "createSpec(string,uint256)": {
+            "notice": "Allows a Raft token holder to create a badge spec"
+          },
+          "give(address,string,bytes)": {
+            "notice": "Allows the owner of a badge spec to mint a badge to someone who has requested it"
+          },
+          "initialize(string,string,string,address,address)": {
+            "notice": "Initialize the contract"
+          },
+          "reinstateBadge(uint256,uint256)": {
+            "notice": "Reinstates a badge for a user"
+          },
+          "revokeBadge(uint256,uint256,uint8)": {
+            "notice": "Revokes a badge from a user"
+          },
+          "setDataHolder(address)": {
+            "notice": "Allows the Badges contract to communicate with the SpecDataHolder contract"
+          },
+          "take(address,string,bytes)": {
+            "notice": "Allows a user to mint a badge from a voucher"
+          },
+          "unequip(uint256)": {
+            "notice": "Allows a user to disassociate themselves from a badge"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        ":@openzeppelin/=lib/openzeppelin-contracts/",
+        ":ERC4973/=lib/ERC4973/src/",
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":forge-std/=lib/forge-std/src/",
+        ":murky/=lib/murky/",
+        ":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+        ":openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/Badges.sol": "Badges"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "lib/ERC4973/src/interfaces/IERC4973.sol": {
+        "keccak256": "0x85bb14e7f703579db5246d659d4504d42cc095817f8fd7f1dc01b94f196a05c2",
+        "urls": [
+          "bzz-raw://1ec43e0c41b3a17f900fb08ed93fb5dabfff2bf144f6776240a3b72af476673e",
+          "dweb:/ipfs/QmX7rXPmpmGaix1bP9TRssGJ9bTTnnsukP5cDS9shTrBKc"
+        ],
+        "license": "CC0-1.0"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol": {
+        "keccak256": "0x247c62047745915c0af6b955470a72d1696ebad4352d7d3011aef1a2463cd888",
+        "urls": [
+          "bzz-raw://d7fc8396619de513c96b6e00301b88dd790e83542aab918425633a5f7297a15a",
+          "dweb:/ipfs/QmXbP4kiZyp7guuS7xe8KaybnwkRPGrBc2Kbi3vhcTfpxb"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/interfaces/IERC1271Upgradeable.sol": {
+        "keccak256": "0x4473c09c087ee1a48c5547b23799c0474b2e08cde6fec5921c628171c4ebcdc0",
+        "urls": [
+          "bzz-raw://6d92614db0b346b756af8ba9bd0098db81b031026361635fb4f55a420254637d",
+          "dweb:/ipfs/QmVviVD57zX54ny1zvVsksfYF9RantBwVyJBTdHqPywFuP"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/interfaces/draft-IERC1822Upgradeable.sol": {
+        "keccak256": "0x77c89f893e403efc6929ba842b7ccf6534d4ffe03afe31670b4a528c0ad78c0f",
+        "urls": [
+          "bzz-raw://496bd9b3df2455d571018c09f0c6badd29713fdeb907c6aa09d8d28cb603f053",
+          "dweb:/ipfs/QmXdJDyYs6WMwMh21dez2BYPxhSUaUYFMDtVNcn2cgFR79"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol": {
+        "keccak256": "0x315887e846f1e5f8d8fa535a229d318bb9290aaa69485117f1ee8a9a6b3be823",
+        "urls": [
+          "bzz-raw://29dda00da6d269685b555e710e4abf1c3eb6d00c15b888a7880a2f8dd3c4fdc2",
+          "dweb:/ipfs/QmSqcjtdECygtT1Gy7uEo42x8542srpgGEeKKHfcnQqXgn"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/beacon/IBeaconUpgradeable.sol": {
+        "keccak256": "0x24b86ac8c005b8c654fbf6ac34a5a4f61580d7273541e83e013e89d66fbf0908",
+        "urls": [
+          "bzz-raw://4dbfe1a3b3b3fb64294ce41fd2ad362e7b7012208117864f42c1a67620a6d5c1",
+          "dweb:/ipfs/QmVMU5tWt7zBQMmf5cpMX8UMHV86T3kFeTxBTBjFqVWfoJ"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol": {
+        "keccak256": "0x0203dcadc5737d9ef2c211d6fa15d18ebc3b30dfa51903b64870b01a062b0b4e",
+        "urls": [
+          "bzz-raw://6eb2fd1e9894dbe778f4b8131adecebe570689e63cf892f4e21257bfe1252497",
+          "dweb:/ipfs/QmXgUGNfZvrn6N2miv3nooSs7Jm34A41qz94fu2GtDFcx8"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol": {
+        "keccak256": "0x6e36e9b4b71de699c2f3f0d4e4d1aa0b35da99a26e8d5b91ef09ba234b4ef270",
+        "urls": [
+          "bzz-raw://abfa467c53a0d60b4d09bf04aa952b1d1d44e5766fcc053aace078d7859b8419",
+          "dweb:/ipfs/QmebVTZpyNxYfKYTuLMywzEJTdc1Ca8ME4xm3kR9gQgToG"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/AddressUpgradeable.sol": {
+        "keccak256": "0xf8313972e73a49ff9a8c2dee0b9a07a3585bc4d077bd8a9670ebdd76ff390177",
+        "urls": [
+          "bzz-raw://3fc2a0888fca21e976b4b77ca46891f547ff339a8175bc0a6461a62ce65aa89a",
+          "dweb:/ipfs/QmYDpaGK98esv36MBanhjgzpS7QcisrsVMzttPknvxWhRG"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol": {
+        "keccak256": "0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149",
+        "urls": [
+          "bzz-raw://d6520943ea55fdf5f0bafb39ed909f64de17051bc954ff3e88c9e5621412c79c",
+          "dweb:/ipfs/QmWZ4rAKTQbNG2HxGs46AcTXShsVytKeLs7CUCdCSv5N7a"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/StorageSlotUpgradeable.sol": {
+        "keccak256": "0x09864aea84f01e39313375b5610c73a3c1c68abbdc51e5ccdd25ff977fdadf9a",
+        "urls": [
+          "bzz-raw://aedb48081190fa828d243529ce25c708202c7d4ccfe99f0e4ecd6bc0cfcd03f3",
+          "dweb:/ipfs/QmWyiDQHPZA56iqsAwTmiJoxvNeRQLUVr4gTfzpdpXivpo"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/StringsUpgradeable.sol": {
+        "keccak256": "0xea5339a7fff0ed42b45be56a88efdd0b2ddde9fa480dc99fef9a6a4c5b776863",
+        "urls": [
+          "bzz-raw://841619682637df5579b4c396d281d6c55b26f1b1acce1d0ab67bead5e39cf60c",
+          "dweb:/ipfs/QmNRtuKp43ZHJwswdyT3GivY4fDMvz3cxBe1FfDthG1JGj"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/ECDSAUpgradeable.sol": {
+        "keccak256": "0xe8c62ca00ed2d0a4d9b7e3c4bf7d62c821618b2cdb3c844da91a1193986851bf",
+        "urls": [
+          "bzz-raw://2a459d8907c5fe73d70b4c522e48127b13b9aaa29a223670e928a2a5e5e4c8f8",
+          "dweb:/ipfs/QmcwBnMVrajEBgj2i1saNXnQ6ytHQdnpQF978E86EuhvtX"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol": {
+        "keccak256": "0x48d9ff94aeacf14a509d1f8e65f1f355f85385043613eb752d8640da04e1e91e",
+        "urls": [
+          "bzz-raw://a4233f31f9519598a95387c3f2c36dfd7fa9e7d6ad6b82bc3cf029d249a9db4d",
+          "dweb:/ipfs/QmaWrFY9tmtvWjW75XBAgtDsvXyoRVvBtMpWRKBAer5sdf"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/draft-EIP712Upgradeable.sol": {
+        "keccak256": "0xaf5a96100f421d61693605349511e43221d3c2e47d4b3efa87af2b936e2567fc",
+        "urls": [
+          "bzz-raw://371fd95bad4416766089d3e621dee1fd86fece2b266ad3f9443fefe567e24e94",
+          "dweb:/ipfs/QmNciwwtGev3Q8uVhnoE5PQUSCDpMp6KtVjiDgnGdqLmWX"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/ERC165Upgradeable.sol": {
+        "keccak256": "0x9a3b990bd56d139df3e454a9edf1c64668530b5a77fc32eb063bc206f958274a",
+        "urls": [
+          "bzz-raw://0895399d170daab2d69b4c43a0202e5a07f2e67a93b26e3354dcbedb062232f7",
+          "dweb:/ipfs/QmUM1VH3XDk559Dsgh4QPvupr3YVKjz87HrSyYzzVFZbxw"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/IERC165Upgradeable.sol": {
+        "keccak256": "0xc6cef87559d0aeffdf0a99803de655938a7779ec0a3cd5d4383483ad85565a09",
+        "urls": [
+          "bzz-raw://92ad7e572cf44e6b4b37631b44b62f9eb9fb1cf14d9ce51c1504d5dc7ccaf758",
+          "dweb:/ipfs/QmcnbqX85tsWnUXPmtuPLE4SczME2sJaTfmqEFkuAJvWhy"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol": {
+        "keccak256": "0x596ed72a251d391b814a4aa19d7acb02ebdcc92ba27d3fff74a6f0c158b12ab7",
+        "urls": [
+          "bzz-raw://d5f49013d50b1011c842f76e96f3c3f146ca7cb15084c8805575e0e0e1a5c700",
+          "dweb:/ipfs/QmQ3n5qiuioUA74heD6ZddNkYg1kYihjQBNcy9zgwYXKgM"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/structs/BitMaps.sol": {
+        "keccak256": "0xc5d14e1780f0ea212b19c07b83c8e51b9dc6903017df71e6de1fae364d724e0d",
+        "urls": [
+          "bzz-raw://f310b0f071955b042dd92ede4113771a3f4fdbf8a8e0c8bb533e5f281ffa794c",
+          "dweb:/ipfs/QmSTf6YPotBd7SZTdKp41JSDAGy5idcuww6y4jncTsD46f"
+        ],
+        "license": "MIT"
+      },
+      "src/Badges.sol": {
+        "keccak256": "0xf423c7b439484e785270f679f62958e3b587485e2c0a8fa06197688227f557e3",
+        "urls": [
+          "bzz-raw://c7b65c1018dc5b267b063255780f82c486ea77e19b38421c7525951fee218f19",
+          "dweb:/ipfs/QmfYfydEs2MXyZgdGto5DGDbarYDn6PfAbEW1SfxmySmJc"
+        ],
+        "license": "GPL-3.0-only"
+      },
+      "src/interfaces/IERC721Metadata.sol": {
+        "keccak256": "0xb5b370323c76cf7f2ea7c4bdcab72cdbc5d4d783ea05119adbcc1bd63794a156",
+        "urls": [
+          "bzz-raw://42419022e119435b48cca7c2cf7a4f4c73d7a4804f16fea0ebea86f1d7a48cb9",
+          "dweb:/ipfs/QmaLyaz5oxyt6jhzhYDhwXxXiiCBFjJzufsM5BFogKmTAc"
+        ],
+        "license": "CC0-1.0"
+      },
+      "src/interfaces/ISpecDataHolder.sol": {
+        "keccak256": "0x0013c6c48838857f2c25f205f4daa33f0a4758eea66e5927dc34daffd88ac365",
+        "urls": [
+          "bzz-raw://2f7d1a9fa4084b7719a8c3dc5a455d37b4f2e6f3f12b45a915d5ace658a3d8b5",
+          "dweb:/ipfs/Qmd377kkUAamyABRidUt9ekcJ4rGb3qsAiE6rrzshKZscd"
+        ],
+        "license": "CC0-1.0"
+      }
+    },
+    "version": 1
+  },
   "ast": {
     "absolutePath": "src/Badges.sol",
     "id": 28607,
@@ -845,10 +1920,10 @@
         58
       ],
       "IERC721Metadata": [
-        33185
+        33653
       ],
       "ISpecDataHolder": [
-        33228
+        33696
       ],
       "MerkleProof": [
         27490
@@ -884,7 +1959,7 @@
         "file": "./interfaces/ISpecDataHolder.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 28607,
-        "sourceUnit": 33229,
+        "sourceUnit": 33697,
         "symbolAliases": [
           {
             "foreign": {
@@ -892,7 +1967,7 @@
               "name": "ISpecDataHolder",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 33228,
+              "referencedDeclaration": 33696,
               "src": "75:15:46",
               "typeDescriptions": {}
             },
@@ -1084,7 +2159,7 @@
         "file": "./interfaces/IERC721Metadata.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 28607,
-        "sourceUnit": 33186,
+        "sourceUnit": 33654,
         "symbolAliases": [
           {
             "foreign": {
@@ -1092,7 +2167,7 @@
               "name": "IERC721Metadata",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 33185,
+              "referencedDeclaration": 33653,
               "src": "806:15:46",
               "typeDescriptions": {}
             },
@@ -1411,7 +2486,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+              "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
               "typeString": "contract ISpecDataHolder"
             },
             "typeName": {
@@ -1424,13 +2499,13 @@
                   "1392:15:46"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 33228,
+                "referencedDeclaration": 33696,
                 "src": "1392:15:46"
               },
-              "referencedDeclaration": 33228,
+              "referencedDeclaration": 33696,
               "src": "1392:15:46",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                 "typeString": "contract ISpecDataHolder"
               }
             },
@@ -2118,7 +3193,7 @@
                               "referencedDeclaration": 27700,
                               "src": "2254:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -2130,7 +3205,7 @@
                             "memberLocation": "2269:12:46",
                             "memberName": "getRaftOwner",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33194,
+                            "referencedDeclaration": 33662,
                             "src": "2254:27:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -2717,7 +3792,7 @@
                       "referencedDeclaration": 27700,
                       "src": "3257:14:46",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
@@ -2749,10 +3824,10 @@
                         "name": "ISpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 33228,
+                        "referencedDeclaration": 33696,
                         "src": "3274:15:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33228_$",
+                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33696_$",
                           "typeString": "type(contract ISpecDataHolder)"
                         }
                       },
@@ -2768,13 +3843,13 @@
                       "src": "3274:39:46",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
                     "src": "3257:56:46",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                       "typeString": "contract ISpecDataHolder"
                     }
                   },
@@ -3523,7 +4598,7 @@
                       "referencedDeclaration": 27700,
                       "src": "3915:14:46",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
@@ -3555,10 +4630,10 @@
                         "name": "ISpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 33228,
+                        "referencedDeclaration": 33696,
                         "src": "3932:15:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33228_$",
+                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33696_$",
                           "typeString": "type(contract ISpecDataHolder)"
                         }
                       },
@@ -3574,13 +4649,13 @@
                       "src": "3932:28:46",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
                     "src": "3915:45:46",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                       "typeString": "contract ISpecDataHolder"
                     }
                   },
@@ -3977,7 +5052,7 @@
                         "referencedDeclaration": 27700,
                         "src": "4559:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -3989,7 +5064,7 @@
                       "memberLocation": "4574:14:46",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33220,
+                      "referencedDeclaration": 33688,
                       "src": "4559:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -4058,7 +5133,7 @@
                               "referencedDeclaration": 27700,
                               "src": "4615:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -4070,7 +5145,7 @@
                             "memberLocation": "4630:12:46",
                             "memberName": "getRaftOwner",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33194,
+                            "referencedDeclaration": 33662,
                             "src": "4615:27:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -4734,7 +5809,7 @@
                         "referencedDeclaration": 27700,
                         "src": "5445:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -4746,7 +5821,7 @@
                       "memberLocation": "5460:14:46",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33220,
+                      "referencedDeclaration": 33688,
                       "src": "5445:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -4815,7 +5890,7 @@
                               "referencedDeclaration": 27700,
                               "src": "5501:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -4827,7 +5902,7 @@
                             "memberLocation": "5516:12:46",
                             "memberName": "getRaftOwner",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33194,
+                            "referencedDeclaration": 33662,
                             "src": "5501:27:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -5529,7 +6604,7 @@
                         "referencedDeclaration": 27700,
                         "src": "6007:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -5541,7 +6616,7 @@
                       "memberLocation": "6022:14:46",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33220,
+                      "referencedDeclaration": 33688,
                       "src": "6007:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -5610,7 +6685,7 @@
                               "referencedDeclaration": 27700,
                               "src": "6063:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -5622,7 +6697,7 @@
                             "memberLocation": "6078:12:46",
                             "memberName": "getRaftOwner",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33194,
+                            "referencedDeclaration": 33662,
                             "src": "6063:27:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_uint256_$returns$_t_address_$",
@@ -6048,7 +7123,7 @@
                         "referencedDeclaration": 27700,
                         "src": "6296:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       }
@@ -6056,7 +7131,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       ],
@@ -6206,7 +7281,7 @@
                               "referencedDeclaration": 27700,
                               "src": "6701:14:46",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -6218,7 +7293,7 @@
                             "memberLocation": "6716:16:46",
                             "memberName": "isSpecRegistered",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 33201,
+                            "referencedDeclaration": 33669,
                             "src": "6701:31:46",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_bool_$",
@@ -6355,7 +7430,7 @@
                         "referencedDeclaration": 27700,
                         "src": "6800:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -6367,7 +7442,7 @@
                       "memberLocation": "6815:13:46",
                       "memberName": "setSpecToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33208,
+                      "referencedDeclaration": 33676,
                       "src": "6800:28:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_uint256_$returns$__$",
@@ -6460,7 +7535,7 @@
                             "referencedDeclaration": 27700,
                             "src": "6937:14:46",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -6472,7 +7547,7 @@
                           "memberLocation": "6952:14:46",
                           "memberName": "getRaftAddress",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 33213,
+                          "referencedDeclaration": 33681,
                           "src": "6937:29:46",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -6693,7 +7768,7 @@
               ]
             },
             "baseFunctions": [
-              33172
+              33640
             ],
             "functionSelector": "06fdde03",
             "implemented": true,
@@ -6782,7 +7857,7 @@
               ]
             },
             "baseFunctions": [
-              33177
+              33645
             ],
             "functionSelector": "95d89b41",
             "implemented": true,
@@ -7010,7 +8085,7 @@
               ]
             },
             "baseFunctions": [
-              33184
+              33652
             ],
             "functionSelector": "c87b56dd",
             "implemented": true,
@@ -9137,10 +10212,10 @@
                                 "name": "IERC721Metadata",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 33185,
+                                "referencedDeclaration": 33653,
                                 "src": "9847:15:46",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33185_$",
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33653_$",
                                   "typeString": "type(contract IERC721Metadata)"
                                 }
                               }
@@ -9148,7 +10223,7 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33185_$",
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33653_$",
                                   "typeString": "type(contract IERC721Metadata)"
                                 }
                               ],
@@ -9175,7 +10250,7 @@
                             "src": "9842:21:46",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_magic_meta_type_t_contract$_IERC721Metadata_$33185",
+                              "typeIdentifier": "t_magic_meta_type_t_contract$_IERC721Metadata_$33653",
                               "typeString": "type(contract IERC721Metadata)"
                             }
                           },
@@ -11320,7 +12395,7 @@
                         "referencedDeclaration": 27700,
                         "src": "11359:14:46",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33228",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33696",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -11332,7 +12407,7 @@
                       "memberLocation": "11374:14:46",
                       "memberName": "setBadgeToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 33227,
+                      "referencedDeclaration": 33695,
                       "src": "11359:29:46",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
@@ -13392,7 +14467,7 @@
                 "977:15:46"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 33185,
+              "referencedDeclaration": 33653,
               "src": "977:15:46"
             },
             "id": 27664,
@@ -13491,7 +14566,7 @@
           25846,
           22839,
           58,
-          33185
+          33653
         ],
         "name": "Badges",
         "nameLocation": "965:6:46",

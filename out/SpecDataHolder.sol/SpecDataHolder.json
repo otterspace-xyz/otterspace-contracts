@@ -375,9 +375,511 @@
     "upgradeTo(address)": "3659cfe6",
     "upgradeToAndCall(address,bytes)": "4f1ef286"
   },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"previousAdmin\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAdmin\",\"type\":\"address\"}],\"name\":\"AdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"beacon\",\"type\":\"address\"}],\"name\":\"BeaconUpgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"getBadgesAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRaftAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_raftTokenId\",\"type\":\"uint256\"}],\"name\":\"getRaftOwner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_specUri\",\"type\":\"string\"}],\"name\":\"getRaftTokenId\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_raftAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_nextOwner\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_specUri\",\"type\":\"string\"}],\"name\":\"isSpecRegistered\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_badgeTokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_raftTokenId\",\"type\":\"uint256\"}],\"name\":\"setBadgeToRaft\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_badgesAddress\",\"type\":\"address\"}],\"name\":\"setBadgesAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_raftAddress\",\"type\":\"address\"}],\"name\":\"setRaftAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_specUri\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_raftTokenId\",\"type\":\"uint256\"}],\"name\":\"setSpecToRaft\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"constructor\":{\"custom:oz-upgrades-unsafe-allow\":\"constructor\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"proxiableUUID()\":{\"details\":\"Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the implementation. It is used to validate that the this implementation remains valid after an upgrade. IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"upgradeTo(address)\":{\"details\":\"Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event.\"},\"upgradeToAndCall(address,bytes)\":{\"details\":\"Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call encoded in `data`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/SpecDataHolder.sol\":\"SpecDataHolder\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":@openzeppelin/=lib/openzeppelin-contracts/\",\":ERC4973/=lib/ERC4973/src/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\",\":murky/=lib/murky/\",\":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol\":{\"keccak256\":\"0x247c62047745915c0af6b955470a72d1696ebad4352d7d3011aef1a2463cd888\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d7fc8396619de513c96b6e00301b88dd790e83542aab918425633a5f7297a15a\",\"dweb:/ipfs/QmXbP4kiZyp7guuS7xe8KaybnwkRPGrBc2Kbi3vhcTfpxb\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/interfaces/draft-IERC1822Upgradeable.sol\":{\"keccak256\":\"0x77c89f893e403efc6929ba842b7ccf6534d4ffe03afe31670b4a528c0ad78c0f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://496bd9b3df2455d571018c09f0c6badd29713fdeb907c6aa09d8d28cb603f053\",\"dweb:/ipfs/QmXdJDyYs6WMwMh21dez2BYPxhSUaUYFMDtVNcn2cgFR79\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol\":{\"keccak256\":\"0x315887e846f1e5f8d8fa535a229d318bb9290aaa69485117f1ee8a9a6b3be823\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://29dda00da6d269685b555e710e4abf1c3eb6d00c15b888a7880a2f8dd3c4fdc2\",\"dweb:/ipfs/QmSqcjtdECygtT1Gy7uEo42x8542srpgGEeKKHfcnQqXgn\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/beacon/IBeaconUpgradeable.sol\":{\"keccak256\":\"0x24b86ac8c005b8c654fbf6ac34a5a4f61580d7273541e83e013e89d66fbf0908\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4dbfe1a3b3b3fb64294ce41fd2ad362e7b7012208117864f42c1a67620a6d5c1\",\"dweb:/ipfs/QmVMU5tWt7zBQMmf5cpMX8UMHV86T3kFeTxBTBjFqVWfoJ\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol\":{\"keccak256\":\"0x0203dcadc5737d9ef2c211d6fa15d18ebc3b30dfa51903b64870b01a062b0b4e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6eb2fd1e9894dbe778f4b8131adecebe570689e63cf892f4e21257bfe1252497\",\"dweb:/ipfs/QmXgUGNfZvrn6N2miv3nooSs7Jm34A41qz94fu2GtDFcx8\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol\":{\"keccak256\":\"0x6e36e9b4b71de699c2f3f0d4e4d1aa0b35da99a26e8d5b91ef09ba234b4ef270\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://abfa467c53a0d60b4d09bf04aa952b1d1d44e5766fcc053aace078d7859b8419\",\"dweb:/ipfs/QmebVTZpyNxYfKYTuLMywzEJTdc1Ca8ME4xm3kR9gQgToG\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/AddressUpgradeable.sol\":{\"keccak256\":\"0xf8313972e73a49ff9a8c2dee0b9a07a3585bc4d077bd8a9670ebdd76ff390177\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3fc2a0888fca21e976b4b77ca46891f547ff339a8175bc0a6461a62ce65aa89a\",\"dweb:/ipfs/QmYDpaGK98esv36MBanhjgzpS7QcisrsVMzttPknvxWhRG\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol\":{\"keccak256\":\"0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d6520943ea55fdf5f0bafb39ed909f64de17051bc954ff3e88c9e5621412c79c\",\"dweb:/ipfs/QmWZ4rAKTQbNG2HxGs46AcTXShsVytKeLs7CUCdCSv5N7a\"]},\"lib/openzeppelin-contracts-upgradeable/contracts/utils/StorageSlotUpgradeable.sol\":{\"keccak256\":\"0x09864aea84f01e39313375b5610c73a3c1c68abbdc51e5ccdd25ff977fdadf9a\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://aedb48081190fa828d243529ce25c708202c7d4ccfe99f0e4ecd6bc0cfcd03f3\",\"dweb:/ipfs/QmWyiDQHPZA56iqsAwTmiJoxvNeRQLUVr4gTfzpdpXivpo\"]},\"lib/openzeppelin-contracts/contracts/access/Ownable.sol\":{\"keccak256\":\"0xa94b34880e3c1b0b931662cb1c09e5dfa6662f31cba80e07c5ee71cd135c9673\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://40fb1b5102468f783961d0af743f91b9980cf66b50d1d12009f6bb1869cea4d2\",\"dweb:/ipfs/QmYqEbJML4jB1GHbzD4cUZDtJg5wVwNm3vDJq1GbyDus8y\"]},\"lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol\":{\"keccak256\":\"0xed6a749c5373af398105ce6ee3ac4763aa450ea7285d268c85d9eeca809cdb1f\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://20a97f891d06f0fe91560ea1a142aaa26fdd22bed1b51606b7d48f670deeb50f\",\"dweb:/ipfs/QmTbCtZKChpaX5H2iRiTDMcSz29GSLCpTCDgJpcMR4wg8x\"]},\"lib/openzeppelin-contracts/contracts/utils/Context.sol\":{\"keccak256\":\"0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6df0ddf21ce9f58271bdfaa85cde98b200ef242a05a3f85c2bc10a8294800a92\",\"dweb:/ipfs/QmRK2Y5Yc6BK7tGKkgsgn3aJEQGi5aakeSPZvS65PV8Xp3\"]},\"lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol\":{\"keccak256\":\"0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f\",\"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy\"]},\"src/SpecDataHolder.sol\":{\"keccak256\":\"0x26d7f114c6c67abb2f1d8e63090c382d8a2b44897679d96cbd7bf57116e7b5cc\",\"license\":\"GPL-3.0-only\",\"urls\":[\"bzz-raw://264cd375ebc72f615ad653612ea30a2a569604bf45829e6b63e971b5a5f19770\",\"dweb:/ipfs/QmXkB42tMESx64hp2k8tRWUte3ciGCUPsJvQA9PUFhiPZA\"]},\"src/interfaces/ISpecDataHolder.sol\":{\"keccak256\":\"0x0013c6c48838857f2c25f205f4daa33f0a4758eea66e5927dc34daffd88ac365\",\"license\":\"CC0-1.0\",\"urls\":[\"bzz-raw://2f7d1a9fa4084b7719a8c3dc5a455d37b4f2e6f3f12b45a915d5ace658a3d8b5\",\"dweb:/ipfs/Qmd377kkUAamyABRidUt9ekcJ4rGb3qsAiE6rrzshKZscd\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.16+commit.07a7930e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousAdmin",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "AdminChanged",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "beacon",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "BeaconUpgraded",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint8",
+              "name": "version",
+              "type": "uint8",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "Initialized",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "OwnershipTransferred",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "implementation",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "Upgraded",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBadgesAddress",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRaftAddress",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_raftTokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRaftOwner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_specUri",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getRaftTokenId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_raftAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "_nextOwner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "initialize"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_specUri",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "isSpecRegistered",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "proxiableUUID",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "renounceOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_badgeTokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_raftTokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setBadgeToRaft"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_badgesAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setBadgesAddress"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_raftAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setRaftAddress"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "_specUri",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_raftTokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setSpecToRaft"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "upgradeTo"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newImplementation",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "upgradeToAndCall"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "constructor": {
+            "custom:oz-upgrades-unsafe-allow": "constructor"
+          },
+          "owner()": {
+            "details": "Returns the address of the current owner."
+          },
+          "proxiableUUID()": {
+            "details": "Implementation of the ERC1822 {proxiableUUID} function. This returns the storage slot used by the implementation. It is used to validate that the this implementation remains valid after an upgrade. IMPORTANT: A proxy pointing at a proxiable contract should not be considered proxiable itself, because this risks bricking a proxy that upgrades to it, by delegating to itself until out of gas. Thus it is critical that this function revert if invoked through a proxy. This is guaranteed by the `notDelegated` modifier."
+          },
+          "renounceOwnership()": {
+            "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+          },
+          "transferOwnership(address)": {
+            "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+          },
+          "upgradeTo(address)": {
+            "details": "Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
+          },
+          "upgradeToAndCall(address,bytes)": {
+            "details": "Upgrade the implementation of the proxy to `newImplementation`, and subsequently execute the function call encoded in `data`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        ":@openzeppelin/=lib/openzeppelin-contracts/",
+        ":ERC4973/=lib/ERC4973/src/",
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":forge-std/=lib/forge-std/src/",
+        ":murky/=lib/murky/",
+        ":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+        ":openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/SpecDataHolder.sol": "SpecDataHolder"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol": {
+        "keccak256": "0x247c62047745915c0af6b955470a72d1696ebad4352d7d3011aef1a2463cd888",
+        "urls": [
+          "bzz-raw://d7fc8396619de513c96b6e00301b88dd790e83542aab918425633a5f7297a15a",
+          "dweb:/ipfs/QmXbP4kiZyp7guuS7xe8KaybnwkRPGrBc2Kbi3vhcTfpxb"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/interfaces/draft-IERC1822Upgradeable.sol": {
+        "keccak256": "0x77c89f893e403efc6929ba842b7ccf6534d4ffe03afe31670b4a528c0ad78c0f",
+        "urls": [
+          "bzz-raw://496bd9b3df2455d571018c09f0c6badd29713fdeb907c6aa09d8d28cb603f053",
+          "dweb:/ipfs/QmXdJDyYs6WMwMh21dez2BYPxhSUaUYFMDtVNcn2cgFR79"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol": {
+        "keccak256": "0x315887e846f1e5f8d8fa535a229d318bb9290aaa69485117f1ee8a9a6b3be823",
+        "urls": [
+          "bzz-raw://29dda00da6d269685b555e710e4abf1c3eb6d00c15b888a7880a2f8dd3c4fdc2",
+          "dweb:/ipfs/QmSqcjtdECygtT1Gy7uEo42x8542srpgGEeKKHfcnQqXgn"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/beacon/IBeaconUpgradeable.sol": {
+        "keccak256": "0x24b86ac8c005b8c654fbf6ac34a5a4f61580d7273541e83e013e89d66fbf0908",
+        "urls": [
+          "bzz-raw://4dbfe1a3b3b3fb64294ce41fd2ad362e7b7012208117864f42c1a67620a6d5c1",
+          "dweb:/ipfs/QmVMU5tWt7zBQMmf5cpMX8UMHV86T3kFeTxBTBjFqVWfoJ"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol": {
+        "keccak256": "0x0203dcadc5737d9ef2c211d6fa15d18ebc3b30dfa51903b64870b01a062b0b4e",
+        "urls": [
+          "bzz-raw://6eb2fd1e9894dbe778f4b8131adecebe570689e63cf892f4e21257bfe1252497",
+          "dweb:/ipfs/QmXgUGNfZvrn6N2miv3nooSs7Jm34A41qz94fu2GtDFcx8"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol": {
+        "keccak256": "0x6e36e9b4b71de699c2f3f0d4e4d1aa0b35da99a26e8d5b91ef09ba234b4ef270",
+        "urls": [
+          "bzz-raw://abfa467c53a0d60b4d09bf04aa952b1d1d44e5766fcc053aace078d7859b8419",
+          "dweb:/ipfs/QmebVTZpyNxYfKYTuLMywzEJTdc1Ca8ME4xm3kR9gQgToG"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/AddressUpgradeable.sol": {
+        "keccak256": "0xf8313972e73a49ff9a8c2dee0b9a07a3585bc4d077bd8a9670ebdd76ff390177",
+        "urls": [
+          "bzz-raw://3fc2a0888fca21e976b4b77ca46891f547ff339a8175bc0a6461a62ce65aa89a",
+          "dweb:/ipfs/QmYDpaGK98esv36MBanhjgzpS7QcisrsVMzttPknvxWhRG"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/ContextUpgradeable.sol": {
+        "keccak256": "0x963ea7f0b48b032eef72fe3a7582edf78408d6f834115b9feadd673a4d5bd149",
+        "urls": [
+          "bzz-raw://d6520943ea55fdf5f0bafb39ed909f64de17051bc954ff3e88c9e5621412c79c",
+          "dweb:/ipfs/QmWZ4rAKTQbNG2HxGs46AcTXShsVytKeLs7CUCdCSv5N7a"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts-upgradeable/contracts/utils/StorageSlotUpgradeable.sol": {
+        "keccak256": "0x09864aea84f01e39313375b5610c73a3c1c68abbdc51e5ccdd25ff977fdadf9a",
+        "urls": [
+          "bzz-raw://aedb48081190fa828d243529ce25c708202c7d4ccfe99f0e4ecd6bc0cfcd03f3",
+          "dweb:/ipfs/QmWyiDQHPZA56iqsAwTmiJoxvNeRQLUVr4gTfzpdpXivpo"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/access/Ownable.sol": {
+        "keccak256": "0xa94b34880e3c1b0b931662cb1c09e5dfa6662f31cba80e07c5ee71cd135c9673",
+        "urls": [
+          "bzz-raw://40fb1b5102468f783961d0af743f91b9980cf66b50d1d12009f6bb1869cea4d2",
+          "dweb:/ipfs/QmYqEbJML4jB1GHbzD4cUZDtJg5wVwNm3vDJq1GbyDus8y"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol": {
+        "keccak256": "0xed6a749c5373af398105ce6ee3ac4763aa450ea7285d268c85d9eeca809cdb1f",
+        "urls": [
+          "bzz-raw://20a97f891d06f0fe91560ea1a142aaa26fdd22bed1b51606b7d48f670deeb50f",
+          "dweb:/ipfs/QmTbCtZKChpaX5H2iRiTDMcSz29GSLCpTCDgJpcMR4wg8x"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/Context.sol": {
+        "keccak256": "0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7",
+        "urls": [
+          "bzz-raw://6df0ddf21ce9f58271bdfaa85cde98b200ef242a05a3f85c2bc10a8294800a92",
+          "dweb:/ipfs/QmRK2Y5Yc6BK7tGKkgsgn3aJEQGi5aakeSPZvS65PV8Xp3"
+        ],
+        "license": "MIT"
+      },
+      "lib/openzeppelin-contracts/contracts/utils/introspection/IERC165.sol": {
+        "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+        "urls": [
+          "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+          "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+        ],
+        "license": "MIT"
+      },
+      "src/SpecDataHolder.sol": {
+        "keccak256": "0x26d7f114c6c67abb2f1d8e63090c382d8a2b44897679d96cbd7bf57116e7b5cc",
+        "urls": [
+          "bzz-raw://264cd375ebc72f615ad653612ea30a2a569604bf45829e6b63e971b5a5f19770",
+          "dweb:/ipfs/QmXkB42tMESx64hp2k8tRWUte3ciGCUPsJvQA9PUFhiPZA"
+        ],
+        "license": "GPL-3.0-only"
+      },
+      "src/interfaces/ISpecDataHolder.sol": {
+        "keccak256": "0x0013c6c48838857f2c25f205f4daa33f0a4758eea66e5927dc34daffd88ac365",
+        "urls": [
+          "bzz-raw://2f7d1a9fa4084b7719a8c3dc5a455d37b4f2e6f3f12b45a915d5ace658a3d8b5",
+          "dweb:/ipfs/Qmd377kkUAamyABRidUt9ekcJ4rGb3qsAiE6rrzshKZscd"
+        ],
+        "license": "CC0-1.0"
+      }
+    },
+    "version": 1
+  },
   "ast": {
     "absolutePath": "src/SpecDataHolder.sol",
-    "id": 32720,
+    "id": 33175,
     "exportedSymbols": {
       "AddressUpgradeable": [
         24822
@@ -404,7 +906,7 @@
         26502
       ],
       "ISpecDataHolder": [
-        33241
+        33696
       ],
       "Initializable": [
         22839
@@ -416,7 +918,7 @@
         22285
       ],
       "SpecDataHolder": [
-        32719
+        33174
       ],
       "StorageSlotUpgradeable": [
         24924
@@ -429,7 +931,7 @@
     "src": "41:2754:50",
     "nodes": [
       {
-        "id": 32525,
+        "id": 32980,
         "nodeType": "PragmaDirective",
         "src": "41:23:50",
         "literals": [
@@ -439,91 +941,91 @@
         ]
       },
       {
-        "id": 32526,
+        "id": 32981,
         "nodeType": "ImportDirective",
         "src": "65:52:50",
         "absolutePath": "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
         "file": "@openzeppelin/contracts/access/Ownable.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 32720,
+        "scope": 33175,
         "sourceUnit": 25960,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 32527,
+        "id": 32982,
         "nodeType": "ImportDirective",
         "src": "118:65:50",
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol",
         "file": "@openzeppelin-upgradeable/proxy/utils/Initializable.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 32720,
+        "scope": 33175,
         "sourceUnit": 22840,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 32528,
+        "id": 32983,
         "nodeType": "ImportDirective",
         "src": "184:65:50",
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 32720,
+        "scope": 33175,
         "sourceUnit": 22286,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 32529,
+        "id": 32984,
         "nodeType": "ImportDirective",
         "src": "250:67:50",
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 32720,
+        "scope": 33175,
         "sourceUnit": 22976,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 32530,
+        "id": 32985,
         "nodeType": "ImportDirective",
         "src": "318:58:50",
         "absolutePath": "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
         "file": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 32720,
+        "scope": 33175,
         "sourceUnit": 26503,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 32531,
+        "id": 32986,
         "nodeType": "ImportDirective",
         "src": "377:42:50",
         "absolutePath": "src/interfaces/ISpecDataHolder.sol",
         "file": "./interfaces/ISpecDataHolder.sol",
         "nameLocation": "-1:-1:-1",
-        "scope": 32720,
-        "sourceUnit": 33242,
+        "scope": 33175,
+        "sourceUnit": 33697,
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
-        "id": 32719,
+        "id": 33174,
         "nodeType": "ContractDefinition",
         "src": "474:2320:50",
         "nodes": [
           {
-            "id": 32541,
+            "id": 32996,
             "nodeType": "VariableDeclaration",
             "src": "564:46:50",
             "constant": false,
             "mutability": "mutable",
             "name": "_specToRaft",
             "nameLocation": "599:11:50",
-            "scope": 32719,
+            "scope": 33174,
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -531,9 +1033,9 @@
               "typeString": "mapping(string => uint256)"
             },
             "typeName": {
-              "id": 32540,
+              "id": 32995,
               "keyType": {
-                "id": 32538,
+                "id": 32993,
                 "name": "string",
                 "nodeType": "ElementaryTypeName",
                 "src": "572:6:50",
@@ -549,7 +1051,7 @@
                 "typeString": "mapping(string => uint256)"
               },
               "valueType": {
-                "id": 32539,
+                "id": 32994,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
                 "src": "582:7:50",
@@ -562,14 +1064,14 @@
             "visibility": "private"
           },
           {
-            "id": 32545,
+            "id": 33000,
             "nodeType": "VariableDeclaration",
             "src": "614:48:50",
             "constant": false,
             "mutability": "mutable",
             "name": "_badgeToRaft",
             "nameLocation": "650:12:50",
-            "scope": 32719,
+            "scope": 33174,
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -577,9 +1079,9 @@
               "typeString": "mapping(uint256 => uint256)"
             },
             "typeName": {
-              "id": 32544,
+              "id": 32999,
               "keyType": {
-                "id": 32542,
+                "id": 32997,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
                 "src": "622:7:50",
@@ -595,7 +1097,7 @@
                 "typeString": "mapping(uint256 => uint256)"
               },
               "valueType": {
-                "id": 32543,
+                "id": 32998,
                 "name": "uint256",
                 "nodeType": "ElementaryTypeName",
                 "src": "633:7:50",
@@ -608,14 +1110,14 @@
             "visibility": "private"
           },
           {
-            "id": 32547,
+            "id": 33002,
             "nodeType": "VariableDeclaration",
             "src": "667:29:50",
             "constant": false,
             "mutability": "mutable",
             "name": "badgesAddress",
             "nameLocation": "683:13:50",
-            "scope": 32719,
+            "scope": 33174,
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -623,7 +1125,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 32546,
+              "id": 33001,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "667:7:50",
@@ -636,14 +1138,14 @@
             "visibility": "private"
           },
           {
-            "id": 32549,
+            "id": 33004,
             "nodeType": "VariableDeclaration",
             "src": "700:27:50",
             "constant": false,
             "mutability": "mutable",
             "name": "raftAddress",
             "nameLocation": "716:11:50",
-            "scope": 32719,
+            "scope": 33174,
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -651,7 +1153,7 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 32548,
+              "id": 33003,
               "name": "address",
               "nodeType": "ElementaryTypeName",
               "src": "700:7:50",
@@ -664,11 +1166,11 @@
             "visibility": "private"
           },
           {
-            "id": 32561,
+            "id": 33016,
             "nodeType": "ModifierDefinition",
             "src": "732:100:50",
             "body": {
-              "id": 32560,
+              "id": 33015,
               "nodeType": "Block",
               "src": "762:70:50",
               "statements": [
@@ -680,14 +1182,14 @@
                           "typeIdentifier": "t_address",
                           "typeString": "address"
                         },
-                        "id": 32555,
+                        "id": 33010,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": false,
                         "lValueRequested": false,
                         "leftExpression": {
                           "expression": {
-                            "id": 32552,
+                            "id": 33007,
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
@@ -698,7 +1200,7 @@
                               "typeString": "msg"
                             }
                           },
-                          "id": 32553,
+                          "id": 33008,
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
@@ -715,11 +1217,11 @@
                         "nodeType": "BinaryOperation",
                         "operator": "==",
                         "rightExpression": {
-                          "id": 32554,
+                          "id": 33009,
                           "name": "badgesAddress",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 32547,
+                          "referencedDeclaration": 33002,
                           "src": "790:13:50",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
@@ -734,7 +1236,7 @@
                       },
                       {
                         "hexValue": "756e617574686f72697a6564",
-                        "id": 32556,
+                        "id": 33011,
                         "isConstant": false,
                         "isLValue": false,
                         "isPure": true,
@@ -760,7 +1262,7 @@
                           "typeString": "literal_string \"unauthorized\""
                         }
                       ],
-                      "id": 32551,
+                      "id": 33006,
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
@@ -774,7 +1276,7 @@
                         "typeString": "function (bool,string memory) pure"
                       }
                     },
-                    "id": 32557,
+                    "id": 33012,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -790,12 +1292,12 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 32558,
+                  "id": 33013,
                   "nodeType": "ExpressionStatement",
                   "src": "768:52:50"
                 },
                 {
-                  "id": 32559,
+                  "id": 33014,
                   "nodeType": "PlaceholderStatement",
                   "src": "826:1:50"
                 }
@@ -804,7 +1306,7 @@
             "name": "onlyBadgesContract",
             "nameLocation": "741:18:50",
             "parameters": {
-              "id": 32550,
+              "id": 33005,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "759:2:50"
@@ -813,11 +1315,11 @@
             "visibility": "internal"
           },
           {
-            "id": 32569,
+            "id": 33024,
             "nodeType": "FunctionDefinition",
             "src": "887:47:50",
             "body": {
-              "id": 32568,
+              "id": 33023,
               "nodeType": "Block",
               "src": "901:33:50",
               "statements": [
@@ -826,7 +1328,7 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 32565,
+                      "id": 33020,
                       "name": "_disableInitializers",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -837,7 +1339,7 @@
                         "typeString": "function ()"
                       }
                     },
-                    "id": 32566,
+                    "id": 33021,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -853,14 +1355,14 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 32567,
+                  "id": 33022,
                   "nodeType": "ExpressionStatement",
                   "src": "907:22:50"
                 }
               ]
             },
             "documentation": {
-              "id": 32562,
+              "id": 33017,
               "nodeType": "StructuredDocumentation",
               "src": "836:48:50",
               "text": "@custom:oz-upgrades-unsafe-allow constructor"
@@ -871,44 +1373,44 @@
             "name": "",
             "nameLocation": "-1:-1:-1",
             "parameters": {
-              "id": 32563,
+              "id": 33018,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "898:2:50"
             },
             "returnParameters": {
-              "id": 32564,
+              "id": 33019,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "901:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 32581,
+            "id": 33036,
             "nodeType": "FunctionDefinition",
             "src": "938:118:50",
             "body": {
-              "id": 32580,
+              "id": 33035,
               "nodeType": "Block",
               "src": "1015:41:50",
               "statements": [
                 {
                   "expression": {
-                    "id": 32578,
+                    "id": 33033,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 32576,
+                      "id": 33031,
                       "name": "badgesAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32547,
+                      "referencedDeclaration": 33002,
                       "src": "1021:13:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -918,11 +1420,11 @@
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 32577,
+                      "id": 33032,
                       "name": "_badgesAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32571,
+                      "referencedDeclaration": 33026,
                       "src": "1037:14:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -935,7 +1437,7 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 32579,
+                  "id": 33034,
                   "nodeType": "ExpressionStatement",
                   "src": "1021:30:50"
                 }
@@ -946,10 +1448,10 @@
             "kind": "function",
             "modifiers": [
               {
-                "id": 32574,
+                "id": 33029,
                 "kind": "modifierInvocation",
                 "modifierName": {
-                  "id": 32573,
+                  "id": 33028,
                   "name": "onlyOwner",
                   "nameLocations": [
                     "1005:9:50"
@@ -965,17 +1467,17 @@
             "name": "setBadgesAddress",
             "nameLocation": "947:16:50",
             "parameters": {
-              "id": 32572,
+              "id": 33027,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32571,
+                  "id": 33026,
                   "mutability": "mutable",
                   "name": "_badgesAddress",
                   "nameLocation": "972:14:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32581,
+                  "scope": 33036,
                   "src": "964:22:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -984,7 +1486,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32570,
+                    "id": 33025,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "964:7:50",
@@ -1000,38 +1502,38 @@
               "src": "963:24:50"
             },
             "returnParameters": {
-              "id": 32575,
+              "id": 33030,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1015:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "external"
           },
           {
-            "id": 32593,
+            "id": 33048,
             "nodeType": "FunctionDefinition",
             "src": "1060:110:50",
             "body": {
-              "id": 32592,
+              "id": 33047,
               "nodeType": "Block",
               "src": "1133:37:50",
               "statements": [
                 {
                   "expression": {
-                    "id": 32590,
+                    "id": 33045,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 32588,
+                      "id": 33043,
                       "name": "raftAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32549,
+                      "referencedDeclaration": 33004,
                       "src": "1139:11:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1041,11 +1543,11 @@
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 32589,
+                      "id": 33044,
                       "name": "_raftAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32583,
+                      "referencedDeclaration": 33038,
                       "src": "1153:12:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1058,7 +1560,7 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 32591,
+                  "id": 33046,
                   "nodeType": "ExpressionStatement",
                   "src": "1139:26:50"
                 }
@@ -1069,10 +1571,10 @@
             "kind": "function",
             "modifiers": [
               {
-                "id": 32586,
+                "id": 33041,
                 "kind": "modifierInvocation",
                 "modifierName": {
-                  "id": 32585,
+                  "id": 33040,
                   "name": "onlyOwner",
                   "nameLocations": [
                     "1123:9:50"
@@ -1088,17 +1590,17 @@
             "name": "setRaftAddress",
             "nameLocation": "1069:14:50",
             "parameters": {
-              "id": 32584,
+              "id": 33039,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32583,
+                  "id": 33038,
                   "mutability": "mutable",
                   "name": "_raftAddress",
                   "nameLocation": "1092:12:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32593,
+                  "scope": 33048,
                   "src": "1084:20:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1107,7 +1609,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32582,
+                    "id": 33037,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1084:7:50",
@@ -1123,52 +1625,52 @@
               "src": "1083:22:50"
             },
             "returnParameters": {
-              "id": 32587,
+              "id": 33042,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1133:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "external"
           },
           {
-            "id": 32609,
+            "id": 33064,
             "nodeType": "FunctionDefinition",
             "src": "1174:172:50",
             "body": {
-              "id": 32608,
+              "id": 33063,
               "nodeType": "Block",
               "src": "1293:53:50",
               "statements": [
                 {
                   "expression": {
-                    "id": 32606,
+                    "id": 33061,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 32602,
+                        "id": 33057,
                         "name": "_badgeToRaft",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32545,
+                        "referencedDeclaration": 33000,
                         "src": "1299:12:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_uint256_$_t_uint256_$",
                           "typeString": "mapping(uint256 => uint256)"
                         }
                       },
-                      "id": 32604,
+                      "id": 33059,
                       "indexExpression": {
-                        "id": 32603,
+                        "id": 33058,
                         "name": "_badgeTokenId",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32595,
+                        "referencedDeclaration": 33050,
                         "src": "1312:13:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -1189,11 +1691,11 @@
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 32605,
+                      "id": 33060,
                       "name": "_raftTokenId",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32597,
+                      "referencedDeclaration": 33052,
                       "src": "1329:12:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -1206,30 +1708,30 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 32607,
+                  "id": 33062,
                   "nodeType": "ExpressionStatement",
                   "src": "1299:42:50"
                 }
               ]
             },
             "baseFunctions": [
-              33240
+              33695
             ],
             "functionSelector": "fb749261",
             "implemented": true,
             "kind": "function",
             "modifiers": [
               {
-                "id": 32600,
+                "id": 33055,
                 "kind": "modifierInvocation",
                 "modifierName": {
-                  "id": 32599,
+                  "id": 33054,
                   "name": "onlyBadgesContract",
                   "nameLocations": [
                     "1272:18:50"
                   ],
                   "nodeType": "IdentifierPath",
-                  "referencedDeclaration": 32561,
+                  "referencedDeclaration": 33016,
                   "src": "1272:18:50"
                 },
                 "nodeType": "ModifierInvocation",
@@ -1239,17 +1741,17 @@
             "name": "setBadgeToRaft",
             "nameLocation": "1183:14:50",
             "parameters": {
-              "id": 32598,
+              "id": 33053,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32595,
+                  "id": 33050,
                   "mutability": "mutable",
                   "name": "_badgeTokenId",
                   "nameLocation": "1206:13:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32609,
+                  "scope": 33064,
                   "src": "1198:21:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1258,7 +1760,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 32594,
+                    "id": 33049,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1198:7:50",
@@ -1271,12 +1773,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 32597,
+                  "id": 33052,
                   "mutability": "mutable",
                   "name": "_raftTokenId",
                   "nameLocation": "1229:12:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32609,
+                  "scope": 33064,
                   "src": "1221:20:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1285,7 +1787,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 32596,
+                    "id": 33051,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1221:7:50",
@@ -1300,52 +1802,52 @@
               "src": "1197:45:50"
             },
             "returnParameters": {
-              "id": 32601,
+              "id": 33056,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1293:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "external"
           },
           {
-            "id": 32623,
+            "id": 33078,
             "nodeType": "FunctionDefinition",
             "src": "1350:145:50",
             "body": {
-              "id": 32622,
+              "id": 33077,
               "nodeType": "Block",
               "src": "1448:47:50",
               "statements": [
                 {
                   "expression": {
-                    "id": 32620,
+                    "id": 33075,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "baseExpression": {
-                        "id": 32616,
+                        "id": 33071,
                         "name": "_specToRaft",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32541,
+                        "referencedDeclaration": 32996,
                         "src": "1454:11:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_string_memory_ptr_$_t_uint256_$",
                           "typeString": "mapping(string memory => uint256)"
                         }
                       },
-                      "id": 32618,
+                      "id": 33073,
                       "indexExpression": {
-                        "id": 32617,
+                        "id": 33072,
                         "name": "_specUri",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32611,
+                        "referencedDeclaration": 33066,
                         "src": "1466:8:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_calldata_ptr",
@@ -1366,11 +1868,11 @@
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 32619,
+                      "id": 33074,
                       "name": "_raftTokenId",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32613,
+                      "referencedDeclaration": 33068,
                       "src": "1478:12:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
@@ -1383,14 +1885,14 @@
                       "typeString": "uint256"
                     }
                   },
-                  "id": 32621,
+                  "id": 33076,
                   "nodeType": "ExpressionStatement",
                   "src": "1454:36:50"
                 }
               ]
             },
             "baseFunctions": [
-              33221
+              33676
             ],
             "functionSelector": "addd1907",
             "implemented": true,
@@ -1399,17 +1901,17 @@
             "name": "setSpecToRaft",
             "nameLocation": "1359:13:50",
             "parameters": {
-              "id": 32614,
+              "id": 33069,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32611,
+                  "id": 33066,
                   "mutability": "mutable",
                   "name": "_specUri",
                   "nameLocation": "1389:8:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32623,
+                  "scope": 33078,
                   "src": "1373:24:50",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1418,7 +1920,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 32610,
+                    "id": 33065,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "1373:6:50",
@@ -1431,12 +1933,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 32613,
+                  "id": 33068,
                   "mutability": "mutable",
                   "name": "_raftTokenId",
                   "nameLocation": "1407:12:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32623,
+                  "scope": 33078,
                   "src": "1399:20:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1445,7 +1947,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 32612,
+                    "id": 33067,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1399:7:50",
@@ -1460,40 +1962,40 @@
               "src": "1372:48:50"
             },
             "returnParameters": {
-              "id": 32615,
+              "id": 33070,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1448:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": true,
             "visibility": "external"
           },
           {
-            "id": 32631,
+            "id": 33086,
             "nodeType": "FunctionDefinition",
             "src": "1499:91:50",
             "body": {
-              "id": 32630,
+              "id": 33085,
               "nodeType": "Block",
               "src": "1559:31:50",
               "statements": [
                 {
                   "expression": {
-                    "id": 32628,
+                    "id": 33083,
                     "name": "badgesAddress",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 32547,
+                    "referencedDeclaration": 33002,
                     "src": "1572:13:50",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 32627,
-                  "id": 32629,
+                  "functionReturnParameters": 33082,
+                  "id": 33084,
                   "nodeType": "Return",
                   "src": "1565:20:50"
                 }
@@ -1506,23 +2008,23 @@
             "name": "getBadgesAddress",
             "nameLocation": "1508:16:50",
             "parameters": {
-              "id": 32624,
+              "id": 33079,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1524:2:50"
             },
             "returnParameters": {
-              "id": 32627,
+              "id": 33082,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32626,
+                  "id": 33081,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32631,
+                  "scope": 33086,
                   "src": "1550:7:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1531,7 +2033,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32625,
+                    "id": 33080,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1550:7:50",
@@ -1546,42 +2048,42 @@
               ],
               "src": "1549:9:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
-            "id": 32639,
+            "id": 33094,
             "nodeType": "FunctionDefinition",
             "src": "1594:87:50",
             "body": {
-              "id": 32638,
+              "id": 33093,
               "nodeType": "Block",
               "src": "1652:29:50",
               "statements": [
                 {
                   "expression": {
-                    "id": 32636,
+                    "id": 33091,
                     "name": "raftAddress",
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
-                    "referencedDeclaration": 32549,
+                    "referencedDeclaration": 33004,
                     "src": "1665:11:50",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 32635,
-                  "id": 32637,
+                  "functionReturnParameters": 33090,
+                  "id": 33092,
                   "nodeType": "Return",
                   "src": "1658:18:50"
                 }
               ]
             },
             "baseFunctions": [
-              33226
+              33681
             ],
             "functionSelector": "34f87662",
             "implemented": true,
@@ -1590,23 +2092,23 @@
             "name": "getRaftAddress",
             "nameLocation": "1603:14:50",
             "parameters": {
-              "id": 32632,
+              "id": 33087,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "1617:2:50"
             },
             "returnParameters": {
-              "id": 32635,
+              "id": 33090,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32634,
+                  "id": 33089,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32639,
+                  "scope": 33094,
                   "src": "1643:7:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1615,7 +2117,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32633,
+                    "id": 33088,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "1643:7:50",
@@ -1630,41 +2132,41 @@
               ],
               "src": "1642:9:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
-            "id": 32651,
+            "id": 33106,
             "nodeType": "FunctionDefinition",
             "src": "1685:135:50",
             "body": {
-              "id": 32650,
+              "id": 33105,
               "nodeType": "Block",
               "src": "1781:39:50",
               "statements": [
                 {
                   "expression": {
                     "baseExpression": {
-                      "id": 32646,
+                      "id": 33101,
                       "name": "_specToRaft",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32541,
+                      "referencedDeclaration": 32996,
                       "src": "1794:11:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_mapping$_t_string_memory_ptr_$_t_uint256_$",
                         "typeString": "mapping(string memory => uint256)"
                       }
                     },
-                    "id": 32648,
+                    "id": 33103,
                     "indexExpression": {
-                      "id": 32647,
+                      "id": 33102,
                       "name": "_specUri",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32641,
+                      "referencedDeclaration": 33096,
                       "src": "1806:8:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_string_calldata_ptr",
@@ -1682,15 +2184,15 @@
                       "typeString": "uint256"
                     }
                   },
-                  "functionReturnParameters": 32645,
-                  "id": 32649,
+                  "functionReturnParameters": 33100,
+                  "id": 33104,
                   "nodeType": "Return",
                   "src": "1787:28:50"
                 }
               ]
             },
             "baseFunctions": [
-              33233
+              33688
             ],
             "functionSelector": "3664a8e9",
             "implemented": true,
@@ -1699,17 +2201,17 @@
             "name": "getRaftTokenId",
             "nameLocation": "1694:14:50",
             "parameters": {
-              "id": 32642,
+              "id": 33097,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32641,
+                  "id": 33096,
                   "mutability": "mutable",
                   "name": "_specUri",
                   "nameLocation": "1725:8:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32651,
+                  "scope": 33106,
                   "src": "1709:24:50",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1718,7 +2220,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 32640,
+                    "id": 33095,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "1709:6:50",
@@ -1733,17 +2235,17 @@
               "src": "1708:26:50"
             },
             "returnParameters": {
-              "id": 32645,
+              "id": 33100,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32644,
+                  "id": 33099,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32651,
+                  "scope": 33106,
                   "src": "1770:7:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1752,7 +2254,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 32643,
+                    "id": 33098,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1770:7:50",
@@ -1766,17 +2268,17 @@
               ],
               "src": "1769:9:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
-            "id": 32665,
+            "id": 33120,
             "nodeType": "FunctionDefinition",
             "src": "1824:139:50",
             "body": {
-              "id": 32664,
+              "id": 33119,
               "nodeType": "Block",
               "src": "1919:44:50",
               "statements": [
@@ -1786,31 +2288,31 @@
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
                     },
-                    "id": 32662,
+                    "id": 33117,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftExpression": {
                       "baseExpression": {
-                        "id": 32658,
+                        "id": 33113,
                         "name": "_specToRaft",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32541,
+                        "referencedDeclaration": 32996,
                         "src": "1932:11:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_mapping$_t_string_memory_ptr_$_t_uint256_$",
                           "typeString": "mapping(string memory => uint256)"
                         }
                       },
-                      "id": 32660,
+                      "id": 33115,
                       "indexExpression": {
-                        "id": 32659,
+                        "id": 33114,
                         "name": "_specUri",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32653,
+                        "referencedDeclaration": 33108,
                         "src": "1944:8:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_string_calldata_ptr",
@@ -1832,7 +2334,7 @@
                     "operator": "!=",
                     "rightExpression": {
                       "hexValue": "30",
-                      "id": 32661,
+                      "id": 33116,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
@@ -1852,15 +2354,15 @@
                       "typeString": "bool"
                     }
                   },
-                  "functionReturnParameters": 32657,
-                  "id": 32663,
+                  "functionReturnParameters": 33112,
+                  "id": 33118,
                   "nodeType": "Return",
                   "src": "1925:33:50"
                 }
               ]
             },
             "baseFunctions": [
-              33214
+              33669
             ],
             "functionSelector": "fc0e204e",
             "implemented": true,
@@ -1869,17 +2371,17 @@
             "name": "isSpecRegistered",
             "nameLocation": "1833:16:50",
             "parameters": {
-              "id": 32654,
+              "id": 33109,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32653,
+                  "id": 33108,
                   "mutability": "mutable",
                   "name": "_specUri",
                   "nameLocation": "1866:8:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32665,
+                  "scope": 33120,
                   "src": "1850:24:50",
                   "stateVariable": false,
                   "storageLocation": "calldata",
@@ -1888,7 +2390,7 @@
                     "typeString": "string"
                   },
                   "typeName": {
-                    "id": 32652,
+                    "id": 33107,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "1850:6:50",
@@ -1903,17 +2405,17 @@
               "src": "1849:26:50"
             },
             "returnParameters": {
-              "id": 32657,
+              "id": 33112,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32656,
+                  "id": 33111,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32665,
+                  "scope": 33120,
                   "src": "1911:4:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -1922,7 +2424,7 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 32655,
+                    "id": 33110,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "1911:4:50",
@@ -1936,33 +2438,33 @@
               ],
               "src": "1910:6:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
-            "id": 32685,
+            "id": 33140,
             "nodeType": "FunctionDefinition",
             "src": "1967:179:50",
             "body": {
-              "id": 32684,
+              "id": 33139,
               "nodeType": "Block",
               "src": "2043:103:50",
               "statements": [
                 {
                   "assignments": [
-                    32674
+                    33129
                   ],
                   "declarations": [
                     {
                       "constant": false,
-                      "id": 32674,
+                      "id": 33129,
                       "mutability": "mutable",
                       "name": "raftInterface",
                       "nameLocation": "2057:13:50",
                       "nodeType": "VariableDeclaration",
-                      "scope": 32684,
+                      "scope": 33139,
                       "src": "2049:21:50",
                       "stateVariable": false,
                       "storageLocation": "default",
@@ -1971,10 +2473,10 @@
                         "typeString": "contract IERC721"
                       },
                       "typeName": {
-                        "id": 32673,
+                        "id": 33128,
                         "nodeType": "UserDefinedTypeName",
                         "pathNode": {
-                          "id": 32672,
+                          "id": 33127,
                           "name": "IERC721",
                           "nameLocations": [
                             "2049:7:50"
@@ -1993,15 +2495,15 @@
                       "visibility": "internal"
                     }
                   ],
-                  "id": 32678,
+                  "id": 33133,
                   "initialValue": {
                     "arguments": [
                       {
-                        "id": 32676,
+                        "id": 33131,
                         "name": "raftAddress",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32549,
+                        "referencedDeclaration": 33004,
                         "src": "2081:11:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -2016,7 +2518,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 32675,
+                      "id": 33130,
                       "name": "IERC721",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -2027,7 +2529,7 @@
                         "typeString": "type(contract IERC721)"
                       }
                     },
-                    "id": 32677,
+                    "id": 33132,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2050,11 +2552,11 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 32681,
+                        "id": 33136,
                         "name": "_raftTokenId",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32667,
+                        "referencedDeclaration": 33122,
                         "src": "2128:12:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_uint256",
@@ -2070,18 +2572,18 @@
                         }
                       ],
                       "expression": {
-                        "id": 32679,
+                        "id": 33134,
                         "name": "raftInterface",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32674,
+                        "referencedDeclaration": 33129,
                         "src": "2106:13:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_IERC721_$26502",
                           "typeString": "contract IERC721"
                         }
                       },
-                      "id": 32680,
+                      "id": 33135,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -2096,7 +2598,7 @@
                         "typeString": "function (uint256) view external returns (address)"
                       }
                     },
-                    "id": 32682,
+                    "id": 33137,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2112,15 +2614,15 @@
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 32671,
-                  "id": 32683,
+                  "functionReturnParameters": 33126,
+                  "id": 33138,
                   "nodeType": "Return",
                   "src": "2099:42:50"
                 }
               ]
             },
             "baseFunctions": [
-              33207
+              33662
             ],
             "functionSelector": "b2a0cb6b",
             "implemented": true,
@@ -2129,17 +2631,17 @@
             "name": "getRaftOwner",
             "nameLocation": "1976:12:50",
             "parameters": {
-              "id": 32668,
+              "id": 33123,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32667,
+                  "id": 33122,
                   "mutability": "mutable",
                   "name": "_raftTokenId",
                   "nameLocation": "1997:12:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32685,
+                  "scope": 33140,
                   "src": "1989:20:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2148,7 +2650,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 32666,
+                    "id": 33121,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "1989:7:50",
@@ -2163,17 +2665,17 @@
               "src": "1988:22:50"
             },
             "returnParameters": {
-              "id": 32671,
+              "id": 33126,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32670,
+                  "id": 33125,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32685,
+                  "scope": 33140,
                   "src": "2034:7:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2182,7 +2684,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32669,
+                    "id": 33124,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2034:7:50",
@@ -2197,17 +2699,17 @@
               ],
               "src": "2033:9:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           },
           {
-            "id": 32709,
+            "id": 33164,
             "nodeType": "FunctionDefinition",
             "src": "2244:215:50",
             "body": {
-              "id": 32708,
+              "id": 33163,
               "nodeType": "Block",
               "src": "2335:124:50",
               "statements": [
@@ -2216,7 +2718,7 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 32694,
+                      "id": 33149,
                       "name": "__Ownable_init",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -2227,7 +2729,7 @@
                         "typeString": "function ()"
                       }
                     },
-                    "id": 32695,
+                    "id": 33150,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2243,23 +2745,23 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 32696,
+                  "id": 33151,
                   "nodeType": "ExpressionStatement",
                   "src": "2341:16:50"
                 },
                 {
                   "expression": {
-                    "id": 32699,
+                    "id": 33154,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
-                      "id": 32697,
+                      "id": 33152,
                       "name": "raftAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32549,
+                      "referencedDeclaration": 33004,
                       "src": "2363:11:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -2269,11 +2771,11 @@
                     "nodeType": "Assignment",
                     "operator": "=",
                     "rightHandSide": {
-                      "id": 32698,
+                      "id": 33153,
                       "name": "_raftAddress",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 32687,
+                      "referencedDeclaration": 33142,
                       "src": "2377:12:50",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -2286,7 +2788,7 @@
                       "typeString": "address"
                     }
                   },
-                  "id": 32700,
+                  "id": 33155,
                   "nodeType": "ExpressionStatement",
                   "src": "2363:26:50"
                 },
@@ -2294,11 +2796,11 @@
                   "expression": {
                     "arguments": [
                       {
-                        "id": 32702,
+                        "id": 33157,
                         "name": "_nextOwner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32689,
+                        "referencedDeclaration": 33144,
                         "src": "2413:10:50",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
@@ -2313,7 +2815,7 @@
                           "typeString": "address"
                         }
                       ],
-                      "id": 32701,
+                      "id": 33156,
                       "name": "transferOwnership",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -2324,7 +2826,7 @@
                         "typeString": "function (address)"
                       }
                     },
-                    "id": 32703,
+                    "id": 33158,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2340,7 +2842,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 32704,
+                  "id": 33159,
                   "nodeType": "ExpressionStatement",
                   "src": "2395:29:50"
                 },
@@ -2349,7 +2851,7 @@
                     "arguments": [],
                     "expression": {
                       "argumentTypes": [],
-                      "id": 32705,
+                      "id": 33160,
                       "name": "__UUPSUpgradeable_init",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
@@ -2360,7 +2862,7 @@
                         "typeString": "function ()"
                       }
                     },
-                    "id": 32706,
+                    "id": 33161,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -2376,7 +2878,7 @@
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 32707,
+                  "id": 33162,
                   "nodeType": "ExpressionStatement",
                   "src": "2430:24:50"
                 }
@@ -2387,10 +2889,10 @@
             "kind": "function",
             "modifiers": [
               {
-                "id": 32692,
+                "id": 33147,
                 "kind": "modifierInvocation",
                 "modifierName": {
-                  "id": 32691,
+                  "id": 33146,
                   "name": "initializer",
                   "nameLocations": [
                     "2321:11:50"
@@ -2406,17 +2908,17 @@
             "name": "initialize",
             "nameLocation": "2253:10:50",
             "parameters": {
-              "id": 32690,
+              "id": 33145,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32687,
+                  "id": 33142,
                   "mutability": "mutable",
                   "name": "_raftAddress",
                   "nameLocation": "2272:12:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32709,
+                  "scope": 33164,
                   "src": "2264:20:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2425,7 +2927,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32686,
+                    "id": 33141,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2264:7:50",
@@ -2439,12 +2941,12 @@
                 },
                 {
                   "constant": false,
-                  "id": 32689,
+                  "id": 33144,
                   "mutability": "mutable",
                   "name": "_nextOwner",
                   "nameLocation": "2294:10:50",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32709,
+                  "scope": 33164,
                   "src": "2286:18:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2453,7 +2955,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32688,
+                    "id": 33143,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2286:7:50",
@@ -2469,22 +2971,22 @@
               "src": "2263:42:50"
             },
             "returnParameters": {
-              "id": 32693,
+              "id": 33148,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2335:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "public"
           },
           {
-            "id": 32718,
+            "id": 33173,
             "nodeType": "FunctionDefinition",
             "src": "2726:66:50",
             "body": {
-              "id": 32717,
+              "id": 33172,
               "nodeType": "Block",
               "src": "2790:2:50",
               "statements": []
@@ -2496,10 +2998,10 @@
             "kind": "function",
             "modifiers": [
               {
-                "id": 32715,
+                "id": 33170,
                 "kind": "modifierInvocation",
                 "modifierName": {
-                  "id": 32714,
+                  "id": 33169,
                   "name": "onlyOwner",
                   "nameLocations": [
                     "2780:9:50"
@@ -2515,23 +3017,23 @@
             "name": "_authorizeUpgrade",
             "nameLocation": "2735:17:50",
             "overrides": {
-              "id": 32713,
+              "id": 33168,
               "nodeType": "OverrideSpecifier",
               "overrides": [],
               "src": "2771:8:50"
             },
             "parameters": {
-              "id": 32712,
+              "id": 33167,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 32711,
+                  "id": 33166,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 32718,
+                  "scope": 33173,
                   "src": "2753:7:50",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -2540,7 +3042,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 32710,
+                    "id": 33165,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "2753:7:50",
@@ -2556,12 +3058,12 @@
               "src": "2752:9:50"
             },
             "returnParameters": {
-              "id": 32716,
+              "id": 33171,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "2790:0:50"
             },
-            "scope": 32719,
+            "scope": 33174,
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "internal"
@@ -2571,7 +3073,7 @@
         "baseContracts": [
           {
             "baseName": {
-              "id": 32532,
+              "id": 32987,
               "name": "UUPSUpgradeable",
               "nameLocations": [
                 "503:15:50"
@@ -2580,13 +3082,13 @@
               "referencedDeclaration": 22975,
               "src": "503:15:50"
             },
-            "id": 32533,
+            "id": 32988,
             "nodeType": "InheritanceSpecifier",
             "src": "503:15:50"
           },
           {
             "baseName": {
-              "id": 32534,
+              "id": 32989,
               "name": "OwnableUpgradeable",
               "nameLocations": [
                 "522:18:50"
@@ -2595,22 +3097,22 @@
               "referencedDeclaration": 22285,
               "src": "522:18:50"
             },
-            "id": 32535,
+            "id": 32990,
             "nodeType": "InheritanceSpecifier",
             "src": "522:18:50"
           },
           {
             "baseName": {
-              "id": 32536,
+              "id": 32991,
               "name": "ISpecDataHolder",
               "nameLocations": [
                 "544:15:50"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 33241,
+              "referencedDeclaration": 33696,
               "src": "544:15:50"
             },
-            "id": 32537,
+            "id": 32992,
             "nodeType": "InheritanceSpecifier",
             "src": "544:15:50"
           }
@@ -2620,8 +3122,8 @@
         "contractKind": "contract",
         "fullyImplemented": true,
         "linearizedBaseContracts": [
-          32719,
-          33241,
+          33174,
+          33696,
           22285,
           24864,
           22975,
@@ -2631,7 +3133,7 @@
         ],
         "name": "SpecDataHolder",
         "nameLocation": "483:14:50",
-        "scope": 32720,
+        "scope": 33175,
         "usedErrors": []
       }
     ],
