@@ -832,75 +832,39 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(active), 2);
   }
 
-  function testSafeCheckMerkleAgreementShouldPassForValidClaimants() public {
-    address from = raftHolderAddress;
-    address to = 0x0000000000000000000000000000000000000002;
-
-    Merkle m = new Merkle();
-    bytes32[] memory data = _getTestDataWithDistinctValues();
-    bytes32 root = m.getRoot(data);
-
-    bytes32[] memory proof = m.getProof(data, 2); // proofs for valid claimant
-    bytes memory signature = _getSignatureForMerkleAgreementHash(
-      from,
-      specUri,
-      root
-    );
-    // vm.prank(to); // valid claimant
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(
-      from,
-      to,
-      specUri,
-      signature,
-      root,
-      proof
-    );
-  }
-
   function testSafeCheckMerkleAgreementShouldFailForInvalidProofs() public {
     address from = raftHolderAddress;
-    address to = claimantAddress;
 
+    uint256 raftTokenId = createRaftAndRegisterSpec();
     Merkle m = new Merkle();
     bytes32[] memory data = _getTestDataWithDistinctValues();
     bytes32 root = m.getRoot(data);
-    bytes32[] memory proof = m.getProof(data, 0);
-    // bytes32 validClaimant = bytes32(uint256(uint160(0x0000000000000000000000000000000000000000)) << 96);
 
-    vm.prank(0x0000000000000000000000000000000000000003); // valid claimant
+    uint256 indexOfClaimant1 = 1;
+
+    bytes32[] memory proof = m.getProof(data, indexOfClaimant1);
+
     bytes memory signature = _getSignatureForMerkleAgreementHash(
       from,
       specUri,
       root
     );
+    vm.prank(0x0000000000000000000000000000000000000001); // valid claimant
+    badgesWrappedProxyV1.merkleTake(from, specUri, signature, root, proof);
 
-    vm.prank(0x0000000000000000000000000000000000000009); // invalid claimant
-    vm.expectRevert(bytes(errMerkleInvalidLeaf));
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(
-      from,
-      to,
-      specUri,
-      signature,
-      root,
-      proof
-    );
-
-    bytes32[] memory invalidProof = new bytes32[](1);
-    vm.expectRevert(bytes(errMerkleInvalidLeaf));
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(
-      from,
-      to,
-      specUri,
-      signature,
-      root,
-      invalidProof
+    assertEq(
+      badgesWrappedProxyV1.balanceOf(
+        0x0000000000000000000000000000000000000001
+      ),
+      1
     );
 
     bytes32 invalidRoot = bytes32("invalid_root");
+    vm.prank(0x0000000000000000000000000000000000000001);
     vm.expectRevert(bytes(errMerkleInvalidSignature));
-    badgesWrappedProxyV1.safeCheckMerkleAgreement(
+    // same as previous call but with invalid root
+    badgesWrappedProxyV1.merkleTake(
       from,
-      to,
       specUri,
       signature,
       invalidRoot,

@@ -403,8 +403,6 @@ contract Badges is
     return tokenId;
   }
 
-  // todo:: do we need to use a sparse markle tree? Is it more gas efficient?
-  // todo:: handling vouchers - what would be a voucherID here?
   function safeCheckMerkleAgreement(
     address _from,
     address _to,
@@ -412,7 +410,7 @@ contract Badges is
     bytes calldata _signature,
     bytes32 _root,
     bytes32[] calldata _proof
-  ) public view virtual {
+  ) internal view virtual {
     // this authenticates the signature coming from the issuer
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
@@ -424,7 +422,7 @@ contract Badges is
     );
 
     // this authenticates that the claimant (leaf) is indeed part of the tree whose root was signed
-    bytes32 leaf = keccak256(abi.encodePacked(_to)); //todo:: why not use abi.encode? which is appropriate?
+    bytes32 leaf = keccak256(abi.encodePacked(_to));
     require(
       MerkleProof.verify(_proof, _root, leaf),
       "safeCheckMerkleAgreement: invalid leaf"
