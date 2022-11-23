@@ -9,7 +9,11 @@ import "./interfaces/ISpecDataHolder.sol";
 
 // import "../../node_modules/hardhat/console.sol";
 
-contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder {
+contract SpecDataHolder is
+  UUPSUpgradeable,
+  OwnableUpgradeable,
+  ISpecDataHolder
+{
   mapping(string => uint256) private _specToRaft;
   mapping(uint256 => uint256) private _badgeToRaft;
 
@@ -34,11 +38,18 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder 
     raftAddress = _raftAddress;
   }
 
-  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId) external virtual onlyBadgesContract {
+  function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId)
+    external
+    virtual
+    onlyBadgesContract
+  {
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
-  function setSpecToRaft(string memory _specUri, uint256 _raftTokenId) external virtual {
+  function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
+    external
+    virtual
+  {
     _specToRaft[_specUri] = _raftTokenId;
   }
 
@@ -50,11 +61,19 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder 
     return raftAddress;
   }
 
-  function getRaftTokenId(string memory _specUri) external view returns (uint256) {
+  function getRaftTokenId(string calldata _specUri)
+    external
+    view
+    returns (uint256)
+  {
     return _specToRaft[_specUri];
   }
 
-  function isSpecRegistered(string memory _specUri) external view returns (bool) {
+  function isSpecRegistered(string calldata _specUri)
+    external
+    view
+    returns (bool)
+  {
     return _specToRaft[_specUri] != 0;
   }
 
@@ -64,7 +83,10 @@ contract SpecDataHolder is UUPSUpgradeable, OwnableUpgradeable, ISpecDataHolder 
   }
 
   // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
-  function initialize(address _raftAddress, address _nextOwner) public initializer {
+  function initialize(address _raftAddress, address _nextOwner)
+    public
+    initializer
+  {
     __Ownable_init();
     raftAddress = _raftAddress;
     transferOwnership(_nextOwner);

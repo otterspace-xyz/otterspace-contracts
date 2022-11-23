@@ -14,7 +14,12 @@ import "@openzeppelin-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgrad
 /// @notice The RAFT NFT gives the owner the ability to create a DAO within Otterspace
 /// @dev Inherits from ERC721Enumerable so that we can access useful functions for
 /// querying owners of tokens from the web app.
-contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeable, PausableUpgradeable {
+contract Raft is
+  ERC721EnumerableUpgradeable,
+  UUPSUpgradeable,
+  OwnableUpgradeable,
+  PausableUpgradeable
+{
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
@@ -42,7 +47,11 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
     _pause();
   }
 
-  function mint(address recipient, string memory uri) public virtual returns (uint256) {
+  function mint(address recipient, string memory uri)
+    public
+    virtual
+    returns (uint256)
+  {
     // owners can always mint tokens
     // non-owners can only mint when the contract is unpaused
     require(msg.sender == owner() || !paused(), "mint: unauthorized to mint");
@@ -64,14 +73,24 @@ contract Raft is ERC721EnumerableUpgradeable, UUPSUpgradeable, OwnableUpgradeabl
   }
 
   // we are basically implementing the functionality of ERC721URIStorage ourselves here
-  function setTokenURI(uint256 tokenId, string memory uri) public virtual onlyOwner {
+  function setTokenURI(uint256 tokenId, string memory uri)
+    public
+    virtual
+    onlyOwner
+  {
     require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
 
     emit MetadataUpdate(tokenId);
   }
 
-  function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+  function tokenURI(uint256 tokenId)
+    public
+    view
+    virtual
+    override
+    returns (string memory)
+  {
     return _tokenURIs[tokenId];
   }
 

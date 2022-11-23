@@ -8,9 +8,13 @@ import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";
 import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
+import { Merkle } from "murky/src/Merkle.sol";
+import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract UUPSProxy is ERC1967Proxy {
-  constructor(address _implementation, bytes memory _data) ERC1967Proxy(_implementation, _data) {}
+  constructor(address _implementation, bytes memory _data)
+    ERC1967Proxy(_implementation, _data)
+  {}
 }
 
 contract BadgesTest is Test {
@@ -27,28 +31,35 @@ contract BadgesTest is Test {
   SpecDataHolder specDataHolderWrappedProxyV1;
 
   address passiveAddress = 0x0f6A79A579658E401E0B81c6dde1F2cd51d97176;
-  uint256 passivePrivateKey = 0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
+  uint256 passivePrivateKey =
+    0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
 
-  uint256 randomPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+  uint256 randomPrivateKey =
+    0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
 
-  uint256 raftHolderPrivateKey = 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
-  address raftHolderAddress = vm.addr(0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d);
+  uint256 raftHolderPrivateKey =
+    0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
+  address raftHolderAddress =
+    vm.addr(0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d);
 
-  uint256 claimantPrivateKey = 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a;
-  address claimantAddress = vm.addr(0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a);
+  uint256 claimantPrivateKey =
+    0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a;
+  address claimantAddress =
+    vm.addr(0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a);
 
   string[] specUris = ["spec1", "spec2"];
   string badTokenUri = "bad token uri";
 
   string err721InvalidTokenId = "ERC721: invalid token ID";
   string errBadgeAlreadyRevoked = "revokeBadge: badge already revoked";
-  string errBalanceOfNotValidOwner = "balanceOf: address zero is not a valid owner_";
+  string errBalanceOfNotValidOwner =
+    "balanceOf: address zero is not a valid owner_";
   string errCannotGiveToSelf = "give: cannot give to self";
   string errCannotTakeFromSelf = "take: cannot take from self";
   string errInvalidSig = "safeCheckAgreement: invalid signature";
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
-  string errNotRaftOwner = "createSpec: unauthorized";
+  string errNotRaftOwner = "senderIsRaftOwner: unauthorized";
   string errNotRevoked = "reinstateBadge: badge not revoked";
   string errSafeCheckUsed = "safeCheckAgreement: already used";
   string errSpecAlreadyRegistered = "createSpec: spec already registered";
@@ -56,11 +67,18 @@ contract BadgesTest is Test {
   string errGiveUnauthorized = "give: unauthorized";
   string errUnequipSenderNotOwner = "unequip: sender must be owner";
   string errTakeUnauthorized = "take: unauthorized issuer";
+  string errMerkleInvalidLeaf = "safeCheckMerkleAgreement: invalid leaf";
+  string errMerkleInvalidSignature =
+    "safeCheckMerkleAgreement: invalid signature";
   string tokenDoesntExistErr = "tokenExists: token doesn't exist";
   string tokenExistsErr = "mint: tokenID exists";
   string specUri = "some spec uri";
 
-  event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+  event Transfer(
+    address indexed from,
+    address indexed to,
+    uint256 indexed tokenId
+  );
   event RefreshMetadata(string[] specUris, address sender);
 
   function setUp() public {
@@ -72,13 +90,22 @@ contract BadgesTest is Test {
 
     badgesProxy = new UUPSProxy(address(badgesImplementationV1), "");
     raftProxy = new UUPSProxy(address(raftImplementationV1), "");
-    specDataHolderProxy = new UUPSProxy(address(specDataHolderImplementationV1), "");
+    specDataHolderProxy = new UUPSProxy(
+      address(specDataHolderImplementationV1),
+      ""
+    );
 
     badgesWrappedProxyV1 = Badges(address(badgesProxy));
     raftWrappedProxyV1 = Raft(address(raftProxy));
     specDataHolderWrappedProxyV1 = SpecDataHolder(address(specDataHolderProxy));
 
-    badgesWrappedProxyV1.initialize("Badges", "BADGES", "0.1.0", contractOwner, address(specDataHolderProxy));
+    badgesWrappedProxyV1.initialize(
+      "Badges",
+      "BADGES",
+      "0.1.0",
+      contractOwner,
+      address(specDataHolderProxy)
+    );
     raftWrappedProxyV1.initialize(contractOwner, "Raft", "RAFT");
     specDataHolderWrappedProxyV1.initialize(address(raftProxy), contractOwner);
 
@@ -105,8 +132,15 @@ contract BadgesTest is Test {
   }
 
   // // helper function
-  function getSignature(address active, uint256 passive) internal returns (bytes memory) {
-    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(active, vm.addr(passive), specUri);
+  function getSignature(address active, uint256 passive)
+    internal
+    returns (bytes memory)
+  {
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      active,
+      vm.addr(passive),
+      specUri
+    );
     // passive is always the one signing away permission for the active party to do something
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passive, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
@@ -114,7 +148,9 @@ contract BadgesTest is Test {
   }
 
   function testIERC721Metadata() public {
-    assertTrue(badgesWrappedProxyV1.supportsInterface(type(IERC721Metadata).interfaceId));
+    assertTrue(
+      badgesWrappedProxyV1.supportsInterface(type(IERC721Metadata).interfaceId)
+    );
   }
 
   function testIERC4973() public {
@@ -263,7 +299,11 @@ contract BadgesTest is Test {
   function testTakeWithBadTokenUri() public {
     address active = claimantAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(active, vm.addr(raftHolderPrivateKey), badTokenUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      active,
+      vm.addr(raftHolderPrivateKey),
+      badTokenUri
+    );
     // passive is always the one signing away permission for the active party to do something
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(raftHolderPrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
@@ -331,7 +371,7 @@ contract BadgesTest is Test {
     bytes memory signature = getSignature(active, raftHolderPrivateKey);
     vm.prank(active);
 
-    vm.expectRevert(bytes(errSafeCheckUsed));
+    vm.expectRevert(bytes(tokenExistsErr));
     badgesWrappedProxyV1.take(passive, specUri, signature);
   }
 
@@ -349,7 +389,11 @@ contract BadgesTest is Test {
     address active = raftHolderAddress;
     address passive = passiveAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(active, passive, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      active,
+      passive,
+      specUri
+    );
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     vm.prank(active);
@@ -365,7 +409,11 @@ contract BadgesTest is Test {
     address active = raftHolderAddress;
     address passive = passiveAddress;
 
-    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(active, passive, falseTokenUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      active,
+      passive,
+      falseTokenUri
+    );
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 
@@ -388,7 +436,11 @@ contract BadgesTest is Test {
     vm.expectRevert(bytes(errInvalidSig));
     vm.prank(from);
 
-    uint256 tokenId = badgesWrappedProxyV1.give(randomAddress, specUri, signature);
+    uint256 tokenId = badgesWrappedProxyV1.give(
+      randomAddress,
+      specUri,
+      signature
+    );
     assertEq(0, tokenId);
   }
 
@@ -436,7 +488,7 @@ contract BadgesTest is Test {
     vm.prank(from);
     badgesWrappedProxyV1.give(to, specUri, signature);
 
-    vm.expectRevert(bytes(errSafeCheckUsed));
+    vm.expectRevert(bytes(tokenExistsErr));
     vm.prank(from);
     badgesWrappedProxyV1.give(to, specUri, signature);
   }
@@ -472,17 +524,11 @@ contract BadgesTest is Test {
     address active = claimantAddress;
     (, uint256 tokenId) = testBalanceIncreaseAfterTake();
 
-    uint256 voucherIdAfterTake = badgesWrappedProxyV1.getVoucherHash(tokenId);
-    assertTrue(voucherIdAfterTake != 0);
-
     vm.expectEmit(true, true, true, false);
     vm.prank(active);
     badgesWrappedProxyV1.unequip(tokenId);
     emit Transfer(active, zeroAddress, tokenId);
     assertEq(badgesWrappedProxyV1.balanceOf(active), 0);
-
-    uint256 voucherIdAfterUnequip = badgesWrappedProxyV1.getVoucherHash(tokenId);
-    assertTrue(voucherIdAfterUnequip == 0);
   }
 
   function testUnequippingAsNonAuthorizedAccount() public {
@@ -581,7 +627,11 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
     // create "valid" signature
-    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(active, raftHolderAddress, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      active,
+      raftHolderAddress,
+      specUri
+    );
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(raftHolderPrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     // transfer raft away from owner
@@ -591,7 +641,11 @@ contract BadgesTest is Test {
     raftWrappedProxyV1.approve(randomAddress, raftTokenId);
     vm.prank(raftHolderAddress);
 
-    raftWrappedProxyV1.transferFrom(raftHolderAddress, randomAddress, raftTokenId);
+    raftWrappedProxyV1.transferFrom(
+      raftHolderAddress,
+      randomAddress,
+      raftTokenId
+    );
     assertEq(raftWrappedProxyV1.balanceOf(randomAddress), 1);
 
     // try to take with signature
@@ -617,7 +671,11 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
     // create "valid" signature
-    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(raftHolderAddress, passive, specUri);
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      raftHolderAddress,
+      passive,
+      specUri
+    );
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     // transfer raft away from owner
@@ -627,7 +685,11 @@ contract BadgesTest is Test {
     raftWrappedProxyV1.approve(randomAddress, raftTokenId);
     vm.prank(raftHolderAddress);
 
-    raftWrappedProxyV1.transferFrom(raftHolderAddress, randomAddress, raftTokenId);
+    raftWrappedProxyV1.transferFrom(
+      raftHolderAddress,
+      randomAddress,
+      raftTokenId
+    );
     assertEq(raftWrappedProxyV1.balanceOf(randomAddress), 1);
 
     // try to give
@@ -635,5 +697,228 @@ contract BadgesTest is Test {
     vm.prank(raftHolderAddress);
     vm.expectRevert(bytes(errGiveUnauthorized));
     badgesWrappedProxyV1.give(passive, specUri, signature);
+  }
+
+  function testMerkleHappyPath()
+    public
+    returns (
+      bytes memory signature,
+      bytes32 root,
+      bytes32[] memory proof,
+      uint256 raftTokenId
+    )
+  {
+    address passive = raftHolderAddress;
+    address active = 0x0000000000000000000000000000000000000002;
+
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+    Merkle m = new Merkle();
+    bytes32[] memory data = _getTestDataWithDistinctValues();
+
+    bytes32 root = m.getRoot(data);
+
+    uint256 indexOfClaimant = 2;
+
+    bytes32[] memory proof = m.getProof(data, indexOfClaimant); // proofs for valid claimant
+
+    bytes memory signature = _getSignatureForMerkleAgreementHash(
+      passive,
+      specUri,
+      root
+    );
+    vm.prank(active); // valid claimant
+    badgesWrappedProxyV1.merkleTake(passive, specUri, signature, root, proof);
+    assertEq(badgesWrappedProxyV1.balanceOf(active), 1);
+    return (signature, root, proof, raftTokenId);
+  }
+
+  function testMerkleDoubleTake() public {
+    address passive = raftHolderAddress;
+    address active = 0x0000000000000000000000000000000000000002;
+
+    // first merkle take
+    (
+      bytes memory signature,
+      bytes32 root,
+      bytes32[] memory proof,
+      uint256 raftTokenId
+    ) = testMerkleHappyPath();
+
+    vm.prank(active);
+    vm.expectRevert(bytes(tokenExistsErr));
+    // second merkle take should fail
+    badgesWrappedProxyV1.merkleTake(passive, specUri, signature, root, proof);
+  }
+
+  function testTakeThenAttemptMerkleTake() public {
+    // address passive = raftHolderAddress;
+    address active = 0x0000000000000000000000000000000000000002;
+    // address active = claimantAddress;
+    address passive = raftHolderAddress;
+
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+
+    bytes memory standardTakeSig = getSignature(active, raftHolderPrivateKey);
+    vm.expectEmit(true, true, true, false);
+    vm.prank(active);
+    uint256 tokenId = badgesWrappedProxyV1.take(
+      passive,
+      specUri,
+      standardTakeSig
+    );
+
+    address zeroAddress = address(0);
+    emit Transfer(zeroAddress, active, tokenId);
+
+    assertEq(badgesWrappedProxyV1.balanceOf(active), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), active);
+
+    Merkle m = new Merkle();
+    bytes32[] memory data = _getTestDataWithDistinctValues();
+
+    bytes32 root = m.getRoot(data);
+
+    uint256 indexOfClaimant = 2;
+
+    bytes32[] memory proof = m.getProof(data, indexOfClaimant);
+
+    bytes memory signature = _getSignatureForMerkleAgreementHash(
+      passive,
+      specUri,
+      root
+    );
+    vm.prank(active);
+    vm.expectRevert(bytes(tokenExistsErr));
+    badgesWrappedProxyV1.merkleTake(passive, specUri, signature, root, proof);
+    assertEq(badgesWrappedProxyV1.balanceOf(active), 1);
+  }
+
+  function testMerkleClaimantOnTwoTrees() public {
+    address passive = raftHolderAddress;
+    address active = 0x0000000000000000000000000000000000000002;
+
+    (, , , uint256 raftTokenId) = testMerkleHappyPath();
+
+    /*** Create another spec ***/
+    vm.prank(passive);
+    badgesWrappedProxyV1.createSpec(specUris[1], raftTokenId);
+    assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUris[1]), true);
+    /*** END Create another spec ***/
+
+    bytes32[] memory tree2 = _getTree2();
+
+    Merkle m = new Merkle();
+
+    bytes32 rootOfTree2 = m.getRoot(tree2);
+
+    uint256 indexOfClaimant = 1;
+
+    bytes32[] memory proofOfTree2 = m.getProof(tree2, indexOfClaimant); // proofs for valid claimant
+
+    bytes memory signatureOfTree2 = _getSignatureForMerkleAgreementHash(
+      passive,
+      specUris[1],
+      rootOfTree2
+    );
+    vm.prank(active); // valid claimant
+    badgesWrappedProxyV1.merkleTake(
+      passive,
+      specUris[1],
+      signatureOfTree2,
+      rootOfTree2,
+      proofOfTree2
+    );
+    assertEq(badgesWrappedProxyV1.balanceOf(active), 2);
+  }
+
+  function testSafeCheckMerkleAgreementShouldFailForInvalidProofs() public {
+    address from = raftHolderAddress;
+
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+    Merkle m = new Merkle();
+    bytes32[] memory data = _getTestDataWithDistinctValues();
+    bytes32 root = m.getRoot(data);
+
+    uint256 indexOfClaimant1 = 1;
+
+    bytes32[] memory proof = m.getProof(data, indexOfClaimant1);
+
+    bytes memory signature = _getSignatureForMerkleAgreementHash(
+      from,
+      specUri,
+      root
+    );
+    vm.prank(0x0000000000000000000000000000000000000001); // valid claimant
+    badgesWrappedProxyV1.merkleTake(from, specUri, signature, root, proof);
+
+    assertEq(
+      badgesWrappedProxyV1.balanceOf(
+        0x0000000000000000000000000000000000000001
+      ),
+      1
+    );
+
+    bytes32 invalidRoot = bytes32("invalid_root");
+    vm.prank(0x0000000000000000000000000000000000000001);
+    vm.expectRevert(bytes(errMerkleInvalidSignature));
+    // same as previous call but with invalid root
+    badgesWrappedProxyV1.merkleTake(
+      from,
+      specUri,
+      signature,
+      invalidRoot,
+      proof
+    );
+  }
+
+  function _getTree2() private pure returns (bytes32[] memory data) {
+    data = new bytes32[](2);
+    data[0] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000001)
+    );
+    data[1] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000002)
+    );
+  }
+
+  function _getTestDataWithDistinctValues()
+    private
+    pure
+    returns (bytes32[] memory data)
+  {
+    data = new bytes32[](6);
+    data[0] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000000)
+    );
+    data[1] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000001)
+    );
+    data[2] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000002)
+    );
+    data[3] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000003)
+    );
+    data[4] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000004)
+    );
+    data[5] = keccak256(
+      abi.encodePacked(0x0000000000000000000000000000000000000004)
+    );
+  }
+
+  function _getSignatureForMerkleAgreementHash(
+    address issuer,
+    string storage uri,
+    bytes32 root
+  ) private returns (bytes memory signature) {
+    bytes32 hash = badgesWrappedProxyV1.getMerkleAgreementHash(
+      issuer,
+      uri,
+      root
+    );
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(raftHolderPrivateKey, hash);
+    signature = abi.encodePacked(r, s, v);
   }
 }
