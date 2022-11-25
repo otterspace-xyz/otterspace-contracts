@@ -115,6 +115,23 @@ contract Badges is
     specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
+  function multiGive(
+    address[] calldata _recipients,
+    string calldata _uri,
+    bytes[] calldata _signature
+  ) external {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      "give: unauthorized"
+    );
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      require(msg.sender != _recipients[i], "give: cannot give to self");
+      safeCheckAgreement(msg.sender, _recipients[i], _uri, _signature[i]);
+      mint(_recipients[i], _uri, raftTokenId);
+    }
+  }
+
   /**
    * @notice Allows the owner of a badge spec to mint a badge to someone who has requested it
    * @param _to the person who is receiving the badge
@@ -129,13 +146,11 @@ contract Badges is
     require(msg.sender != _to, "give: cannot give to self");
 
     safeCheckAgreement(msg.sender, _to, _uri, _signature);
-
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
       "give: unauthorized"
     );
-
     return mint(_to, _uri, raftTokenId);
   }
 

@@ -921,4 +921,81 @@ contract BadgesTest is Test {
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(raftHolderPrivateKey, hash);
     signature = abi.encodePacked(r, s, v);
   }
+
+  function testMultiGiveHappyPath() public {
+    address active = raftHolderAddress;
+    address recipient1 = claimantAddress;
+    uint256 recipient1PrivateKey = claimantPrivateKey;
+    address recipient2 = passiveAddress;
+    uint256 recipient2PrivateKey = passivePrivateKey;
+
+    createRaftAndRegisterSpec();
+
+    bytes memory recipient1Signature = getSignature(
+      active,
+      recipient1PrivateKey
+    );
+
+    bytes memory recipient2Signature = getSignature(
+      active,
+      recipient2PrivateKey
+    );
+
+    address[] memory recipientsAddresses = new address[](2);
+    recipientsAddresses[0] = recipient1;
+    recipientsAddresses[1] = recipient2;
+
+    bytes[] memory recipientsSignatures = new bytes[](2);
+    recipientsSignatures[0] = recipient1Signature;
+    recipientsSignatures[1] = recipient2Signature;
+
+    vm.prank(active);
+
+    badgesWrappedProxyV1.multiGive(
+      recipientsAddresses,
+      specUri,
+      recipientsSignatures
+    );
+
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 1);
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 1);
+  }
+
+  function testMultiGiveWithUnauthorizedClaimant() public {
+    address active = raftHolderAddress;
+    address recipient1 = claimantAddress;
+    uint256 recipient1PrivateKey = claimantPrivateKey;
+    address recipient2 = passiveAddress;
+    uint256 recipient2PrivateKey = passivePrivateKey;
+
+    createRaftAndRegisterSpec();
+
+    bytes memory recipient1Signature = getSignature(
+      active,
+      recipient1PrivateKey
+    );
+
+    bytes memory recipient2Signature = getSignature(
+      active,
+      recipient2PrivateKey
+    );
+
+    address[] memory recipientsAddresses = new address[](2);
+    recipientsAddresses[0] = recipient1;
+    // impersonate a bad actor adding in an address that is not authorized to claim
+    recipientsAddresses[1] = vm.addr(randomPrivateKey);
+
+    bytes[] memory recipientsSignatures = new bytes[](2);
+    recipientsSignatures[0] = recipient1Signature;
+    recipientsSignatures[1] = recipient2Signature;
+
+    vm.prank(active);
+
+    vm.expectRevert(bytes(errInvalidSig));
+    badgesWrappedProxyV1.multiGive(
+      recipientsAddresses,
+      specUri,
+      recipientsSignatures
+    );
+  }
 }
