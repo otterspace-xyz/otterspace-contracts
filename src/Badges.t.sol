@@ -333,7 +333,7 @@ contract BadgesTest is Test {
 
     address unauthorizedSender = address(0);
 
-    vm.expectRevert(bytes(errInvalidSig));
+    vm.expectRevert(bytes(errGiveUnauthorized));
     badgesWrappedProxyV1.give(unauthorizedSender, specUri, signature);
   }
 
@@ -922,7 +922,7 @@ contract BadgesTest is Test {
     signature = abi.encodePacked(r, s, v);
   }
 
-  function testMultiGiveHappyPath() public {
+  function testGiveToManyHappyPath() public {
     address active = raftHolderAddress;
     address recipient1 = claimantAddress;
     uint256 recipient1PrivateKey = claimantPrivateKey;
@@ -951,7 +951,7 @@ contract BadgesTest is Test {
 
     vm.prank(active);
 
-    badgesWrappedProxyV1.multiGive(
+    badgesWrappedProxyV1.giveToMany(
       recipientsAddresses,
       specUri,
       recipientsSignatures
@@ -961,7 +961,7 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 1);
   }
 
-  function testMultiGiveWithUnauthorizedClaimant() public {
+  function testGiveToManyWithUnauthorizedClaimant() public {
     address active = raftHolderAddress;
     address recipient1 = claimantAddress;
     uint256 recipient1PrivateKey = claimantPrivateKey;
@@ -992,7 +992,7 @@ contract BadgesTest is Test {
     vm.prank(active);
 
     vm.expectRevert(bytes(errInvalidSig));
-    badgesWrappedProxyV1.multiGive(
+    badgesWrappedProxyV1.giveToMany(
       recipientsAddresses,
       specUri,
       recipientsSignatures

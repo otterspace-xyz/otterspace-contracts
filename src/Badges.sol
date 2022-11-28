@@ -115,16 +115,22 @@ contract Badges is
     specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
-  function multiGive(
+  function _give(
+    address _recipient,
+    string calldata _uri,
+    bytes calldata _signature,
+    uint256 _raftTokenId
+  ) internal returns (uint256) {
+    require(msg.sender != _recipient, "give: cannot give to self");
+    safeCheckAgreement(msg.sender, _recipient, _uri, _signature);
+    return mint(_recipient, _uri, _raftTokenId);
+  }
+
+  function giveToMany(
     address[] calldata _recipients,
     string calldata _uri,
     bytes[] calldata _signatures
   ) external {
-    require(
-      _recipients.length == _signatures.length,
-      "multiGive: array length mismatch"
-    );
-
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
@@ -132,9 +138,7 @@ contract Badges is
     );
 
     for (uint256 i = 0; i < _recipients.length; i++) {
-      require(msg.sender != _recipients[i], "give: cannot give to self");
-      safeCheckAgreement(msg.sender, _recipients[i], _uri, _signatures[i]);
-      mint(_recipients[i], _uri, raftTokenId);
+      _give(_recipients[i], _uri, _signatures[i], raftTokenId);
     }
   }
 
@@ -149,15 +153,12 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) external virtual returns (uint256) {
-    require(msg.sender != _to, "give: cannot give to self");
-
-    safeCheckAgreement(msg.sender, _to, _uri, _signature);
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
       "give: unauthorized"
     );
-    return mint(_to, _uri, raftTokenId);
+    return _give(_to, _uri, _signature, raftTokenId);
   }
 
   /**
