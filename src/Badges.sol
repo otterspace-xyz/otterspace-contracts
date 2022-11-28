@@ -118,16 +118,22 @@ contract Badges is
   function multiGive(
     address[] calldata _recipients,
     string calldata _uri,
-    bytes[] calldata _signature
+    bytes[] calldata _signatures
   ) external {
+    require(
+      _recipients.length == _signatures.length,
+      "multiGive: array length mismatch"
+    );
+
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
       "give: unauthorized"
     );
+
     for (uint256 i = 0; i < _recipients.length; i++) {
       require(msg.sender != _recipients[i], "give: cannot give to self");
-      safeCheckAgreement(msg.sender, _recipients[i], _uri, _signature[i]);
+      safeCheckAgreement(msg.sender, _recipients[i], _uri, _signatures[i]);
       mint(_recipients[i], _uri, raftTokenId);
     }
   }
