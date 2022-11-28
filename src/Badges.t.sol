@@ -928,6 +928,8 @@ contract BadgesTest is Test {
     uint256 recipient1PrivateKey = claimantPrivateKey;
     address recipient2 = passiveAddress;
     uint256 recipient2PrivateKey = passivePrivateKey;
+    address recipient3 = vm.addr(randomPrivateKey);
+    uint256 recipient3PrivateKey = randomPrivateKey;
 
     createRaftAndRegisterSpec();
 
@@ -941,16 +943,22 @@ contract BadgesTest is Test {
       recipient2PrivateKey
     );
 
-    address[] memory recipientsAddresses = new address[](2);
+    bytes memory recipient3Signature = getSignature(
+      active,
+      recipient3PrivateKey
+    );
+
+    address[] memory recipientsAddresses = new address[](3);
     recipientsAddresses[0] = recipient1;
     recipientsAddresses[1] = recipient2;
+    recipientsAddresses[2] = recipient3;
 
-    bytes[] memory recipientsSignatures = new bytes[](2);
+    bytes[] memory recipientsSignatures = new bytes[](3);
     recipientsSignatures[0] = recipient1Signature;
     recipientsSignatures[1] = recipient2Signature;
+    recipientsSignatures[2] = recipient3Signature;
 
     vm.prank(active);
-
     badgesWrappedProxyV1.giveToMany(
       recipientsAddresses,
       specUri,
@@ -959,6 +967,54 @@ contract BadgesTest is Test {
 
     assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 1);
     assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 1);
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient3), 1);
+  }
+
+  function testGiveToManyWithOneBadSignature() public {
+    address active = raftHolderAddress;
+    address recipient1 = claimantAddress;
+    uint256 recipient1PrivateKey = claimantPrivateKey;
+    address recipient2 = passiveAddress;
+    uint256 recipient2PrivateKey = passivePrivateKey;
+    address recipient3 = vm.addr(randomPrivateKey);
+
+    createRaftAndRegisterSpec();
+
+    bytes memory recipient1Signature = getSignature(
+      active,
+      recipient1PrivateKey
+    );
+
+    bytes memory recipient2Signature = getSignature(
+      active,
+      recipient2PrivateKey
+    );
+
+    bytes memory recipient3Signature = bytes("bad signature");
+
+    address[] memory recipientsAddresses = new address[](3);
+    recipientsAddresses[0] = recipient1;
+    recipientsAddresses[1] = recipient2;
+    recipientsAddresses[2] = recipient3;
+
+    bytes[] memory recipientsSignatures = new bytes[](3);
+    recipientsSignatures[0] = recipient1Signature;
+    recipientsSignatures[1] = recipient2Signature;
+    recipientsSignatures[2] = recipient3Signature;
+
+    vm.prank(active);
+    // expect it to revert since we passed in a bad signature
+    vm.expectRevert(bytes(errInvalidSig));
+    badgesWrappedProxyV1.giveToMany(
+      recipientsAddresses,
+      specUri,
+      recipientsSignatures
+    );
+
+    // expect the balance of all 3 users to be 0 since it reverted
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 0);
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 0);
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient3), 0);
   }
 
   function testGiveToManyWithUnauthorizedClaimant() public {
