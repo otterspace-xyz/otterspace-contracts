@@ -984,7 +984,7 @@ describe('Badges', async function () {
 
     // the person calling "give" here is a random signer, not the owner of the raft token
     await expect(mintBadgeWithGive(randomSigner)).to.be.revertedWith(
-      errInvalidSig
+      errUnauthorizedGive
     )
   })
 
