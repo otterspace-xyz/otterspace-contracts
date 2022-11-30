@@ -122,7 +122,15 @@ contract Badges is
     uint256 _raftTokenId
   ) internal virtual returns (uint256) {
     require(msg.sender != _recipient, "give: cannot give to self");
-    safeCheckAgreement(msg.sender, _recipient, _uri, _signature);
+    bool isSigValid = safeCheckAgreement(
+      msg.sender,
+      _recipient,
+      _uri,
+      _signature
+    );
+    if (!isSigValid) {
+      return 0;
+    }
     return mint(_recipient, _uri, _raftTokenId);
   }
 
@@ -136,7 +144,7 @@ contract Badges is
     address[] calldata _recipients,
     string calldata _uri,
     bytes[] calldata _signatures
-  ) external virtual {
+  ) external virtual returns (address[] memory) {
     require(
       _recipients.length == _signatures.length,
       "giveToMany: recipients and signatures length mismatch"
@@ -148,9 +156,21 @@ contract Badges is
       "giveToMany: unauthorized"
     );
 
+    address[] memory invalidRecipients = new address[](_recipients.length);
+    uint256 invalidRecipientsIndex = 0;
     for (uint256 i = 0; i < _recipients.length; i++) {
-      _give(_recipients[i], _uri, _signatures[i], raftTokenId);
+      uint256 tokenId = _give(
+        _recipients[i],
+        _uri,
+        _signatures[i],
+        raftTokenId
+      );
+      if (tokenId == 0) {
+        invalidRecipients[invalidRecipientsIndex] = _recipients[i];
+        invalidRecipientsIndex++;
+      }
     }
+    return invalidRecipients;
   }
 
   /**
@@ -464,17 +484,15 @@ contract Badges is
     address _passive,
     string calldata _uri,
     bytes calldata _signature
-  ) internal view virtual {
+  ) internal view virtual returns (bool) {
     // active is always msg.sender
     // passive changes depending on whether it's give/take
-    require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(
-        _passive,
-        getAgreementHash(_active, _passive, _uri),
-        _signature
-      ),
-      "safeCheckAgreement: invalid signature"
+    bool isSigValid = SignatureCheckerUpgradeable.isValidSignatureNow(
+      _passive,
+      getAgreementHash(_active, _passive, _uri),
+      _signature
     );
+    return isSigValid;
   }
 
   function exists(uint256 _tokenId) internal view virtual returns (bool) {

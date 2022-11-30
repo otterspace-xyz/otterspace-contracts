@@ -2,6 +2,7 @@
 pragma solidity 0.8.16;
 
 import "forge-std/Test.sol";
+import "forge-std/console.sol";
 import { IERC721Metadata } from "./interfaces/IERC721Metadata.sol";
 import { IERC4973 } from "ERC4973/interfaces/IERC4973.sol";
 import { Badges } from "./Badges.sol";
@@ -980,6 +981,7 @@ contract BadgesTest is Test {
     address recipient2 = passiveAddress;
     uint256 recipient2PrivateKey = passivePrivateKey;
     address recipient3 = vm.addr(randomPrivateKey);
+    uint256 recipient3PrivateKey = randomPrivateKey;
 
     createRaftAndRegisterSpec();
 
@@ -988,12 +990,13 @@ contract BadgesTest is Test {
       recipient1PrivateKey
     );
 
-    bytes memory recipient2Signature = getSignature(
-      active,
-      recipient2PrivateKey
-    );
+    // 2nd recipient (of 3) is going to bad a bad sig
+    bytes memory recipient2Signature = bytes("bad signature");
 
-    bytes memory recipient3Signature = bytes("bad signature");
+    bytes memory recipient3Signature = getSignature(
+      active,
+      recipient3PrivateKey
+    );
 
     address[] memory recipientsAddresses = new address[](3);
     recipientsAddresses[0] = recipient1;
@@ -1006,18 +1009,16 @@ contract BadgesTest is Test {
     recipientsSignatures[2] = recipient3Signature;
 
     vm.prank(active);
-    // expect it to revert since we passed in a bad signature
-    vm.expectRevert(bytes(errInvalidSig));
-    badgesWrappedProxyV1.giveToMany(
+
+    // we set the result of giveToMany to a variable
+    address[] memory badAddresses = badgesWrappedProxyV1.giveToMany(
       recipientsAddresses,
       specUri,
       recipientsSignatures
     );
 
-    // expect the balance of all 3 users to be 0 since it reverted
-    assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 0);
-    assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 0);
-    assertEq(badgesWrappedProxyV1.balanceOf(recipient3), 0);
+    // and the first item in the list should be the bad signature from above
+    assertEq(badAddresses[0], recipient2);
   }
 
   function testGiveToManyWithUnauthorizedClaimant() public {
