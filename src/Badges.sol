@@ -120,7 +120,7 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature,
     uint256 _raftTokenId
-  ) internal returns (uint256) {
+  ) internal virtual returns (uint256) {
     require(msg.sender != _recipient, "give: cannot give to self");
     safeCheckAgreement(msg.sender, _recipient, _uri, _signature);
     return mint(_recipient, _uri, _raftTokenId);
@@ -136,7 +136,7 @@ contract Badges is
     address[] calldata _recipients,
     string calldata _uri,
     bytes[] calldata _signatures
-  ) external {
+  ) external virtual {
     require(
       _recipients.length == _signatures.length,
       "giveToMany: recipients and signatures length mismatch"
