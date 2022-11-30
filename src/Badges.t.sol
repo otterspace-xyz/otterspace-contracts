@@ -53,9 +53,11 @@ contract BadgesTest is Test {
   string err721InvalidTokenId = "ERC721: invalid token ID";
   string errBadgeAlreadyRevoked = "revokeBadge: badge already revoked";
   string errBalanceOfNotValidOwner =
-    "balanceOf: address zero is not a valid owner_";
+    "balanceOf: address(0) is not a valid owner";
   string errCannotGiveToSelf = "give: cannot give to self";
   string errCannotTakeFromSelf = "take: cannot take from self";
+  string errGiveToManyArrayMismatch =
+    "giveToMany: recipients and signatures length mismatch";
   string errInvalidSig = "safeCheckAgreement: invalid signature";
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
@@ -70,8 +72,9 @@ contract BadgesTest is Test {
   string errMerkleInvalidLeaf = "safeCheckMerkleAgreement: invalid leaf";
   string errMerkleInvalidSignature =
     "safeCheckMerkleAgreement: invalid signature";
-  string tokenDoesntExistErr = "tokenExists: token doesn't exist";
-  string tokenExistsErr = "mint: tokenID exists";
+  string errTokenDoesntExist = "tokenExists: token doesn't exist";
+  string errTokenExists = "mint: tokenID exists";
+
   string specUri = "some spec uri";
 
   event Transfer(
@@ -371,7 +374,7 @@ contract BadgesTest is Test {
     bytes memory signature = getSignature(active, raftHolderPrivateKey);
     vm.prank(active);
 
-    vm.expectRevert(bytes(tokenExistsErr));
+    vm.expectRevert(bytes(errTokenExists));
     badgesWrappedProxyV1.take(passive, specUri, signature);
   }
 
@@ -488,7 +491,7 @@ contract BadgesTest is Test {
     vm.prank(from);
     badgesWrappedProxyV1.give(to, specUri, signature);
 
-    vm.expectRevert(bytes(tokenExistsErr));
+    vm.expectRevert(bytes(errTokenExists));
     vm.prank(from);
     badgesWrappedProxyV1.give(to, specUri, signature);
   }
@@ -566,7 +569,7 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), active);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
 
-    vm.expectRevert(bytes(tokenDoesntExistErr));
+    vm.expectRevert(bytes(errTokenDoesntExist));
     badgesWrappedProxyV1.unequip(1337);
   }
 
@@ -745,7 +748,7 @@ contract BadgesTest is Test {
     ) = testMerkleHappyPath();
 
     vm.prank(active);
-    vm.expectRevert(bytes(tokenExistsErr));
+    vm.expectRevert(bytes(errTokenExists));
     // second merkle take should fail
     badgesWrappedProxyV1.merkleTake(passive, specUri, signature, root, proof);
   }
@@ -789,7 +792,7 @@ contract BadgesTest is Test {
       root
     );
     vm.prank(active);
-    vm.expectRevert(bytes(tokenExistsErr));
+    vm.expectRevert(bytes(errTokenExists));
     badgesWrappedProxyV1.merkleTake(passive, specUri, signature, root, proof);
     assertEq(badgesWrappedProxyV1.balanceOf(active), 1);
   }
@@ -1021,7 +1024,6 @@ contract BadgesTest is Test {
     address active = raftHolderAddress;
     address recipient1 = claimantAddress;
     uint256 recipient1PrivateKey = claimantPrivateKey;
-    address recipient2 = passiveAddress;
     uint256 recipient2PrivateKey = passivePrivateKey;
 
     createRaftAndRegisterSpec();
@@ -1048,6 +1050,36 @@ contract BadgesTest is Test {
     vm.prank(active);
 
     vm.expectRevert(bytes(errInvalidSig));
+    badgesWrappedProxyV1.giveToMany(
+      recipientsAddresses,
+      specUri,
+      recipientsSignatures
+    );
+  }
+
+  function testGiveToManyWithArrayMismatch() public {
+    address active = raftHolderAddress;
+    address recipient1 = claimantAddress;
+    uint256 recipient1PrivateKey = claimantPrivateKey;
+    address recipient2 = passiveAddress;
+
+    createRaftAndRegisterSpec();
+
+    bytes memory recipient1Signature = getSignature(
+      active,
+      recipient1PrivateKey
+    );
+
+    address[] memory recipientsAddresses = new address[](2);
+    recipientsAddresses[0] = recipient1;
+    recipientsAddresses[1] = recipient2;
+
+    bytes[] memory recipientsSignatures = new bytes[](1);
+    recipientsSignatures[0] = recipient1Signature;
+
+    vm.prank(active);
+
+    vm.expectRevert(bytes(errGiveToManyArrayMismatch));
     badgesWrappedProxyV1.giveToMany(
       recipientsAddresses,
       specUri,

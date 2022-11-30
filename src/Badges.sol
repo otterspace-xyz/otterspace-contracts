@@ -126,15 +126,26 @@ contract Badges is
     return mint(_recipient, _uri, _raftTokenId);
   }
 
+  /**
+   * @notice Allows the owner of a badge spec to mint a badge to multiple recipeients who have requested it
+   * @param _recipients array the addresses who will receive a badge
+   * @param _uri the uri of the badge spec
+   * @param _signatures array of signatures that verify that the person receiving the badge actually requested it
+   */
   function giveToMany(
     address[] calldata _recipients,
     string calldata _uri,
     bytes[] calldata _signatures
   ) external {
+    require(
+      _recipients.length == _signatures.length,
+      "giveToMany: recipients and signatures length mismatch"
+    );
+
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
-      "give: unauthorized"
+      "giveToMany: unauthorized"
     );
 
     for (uint256 i = 0; i < _recipients.length; i++) {
@@ -276,10 +287,7 @@ contract Badges is
     override
     returns (uint256)
   {
-    require(
-      _owner != address(0),
-      "balanceOf: address zero is not a valid owner_"
-    );
+    require(_owner != address(0), "balanceOf: address(0) is not a valid owner");
     return balances[_owner];
   }
 

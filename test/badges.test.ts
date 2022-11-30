@@ -23,17 +23,18 @@ const specUri = 'some spec uri'
 const specUri2 = 'another spec uri'
 const reasonChoice = 1
 const emptyBytes32String = ethers.utils.formatBytes32String('')
+
+// ** CONTRACT ERRORS **
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = 'spec is not registered'
 const errSpecAlreadyRegistered = 'createSpec: spec already registered'
 const errNotRaftOwner = 'senderIsRaftOwner: unauthorized'
 const errInvalidSig = 'safeCheckAgreement: invalid signature'
-const tokenExistsErr = 'mint: tokenID exists'
+const errTokenExists = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
 const errMerkleAlreadyUsed = 'merkleSafeCheckAgreement: already used'
-
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 const errUnauthorizedGive = 'give: unauthorized'
 const errUnauthorizedTake = 'take: unauthorized issuer'
@@ -41,6 +42,7 @@ const errCannotGiveToSelf = 'give: cannot give to self'
 const err721InvalidTokenId = 'ERC721: invalid token ID'
 const errSafeCheckMerkleInvalidSig =
   'safeCheckMerkleAgreement: invalid signature'
+
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -407,7 +409,7 @@ describe('Merkle minting', () => {
       badgesProxy
         .connect(claimant)
         .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
-    ).to.be.revertedWith(tokenExistsErr)
+    ).to.be.revertedWith(errTokenExists)
   })
 
   it('Should allow someone who is part of two separate merkle trees to mint both badges', async () => {
@@ -752,7 +754,7 @@ describe('Badges', async function () {
       badgesProxy
         .connect(claimant)
         .take(typedData.value.passive, typedData.value.tokenURI, compactSig2)
-    ).to.be.revertedWith(tokenExistsErr)
+    ).to.be.revertedWith(errTokenExists)
   })
 
   it('should fail to mint badge when trying as an unauthorized claimant', async () => {
