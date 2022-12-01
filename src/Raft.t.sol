@@ -22,6 +22,8 @@ contract RaftTest is Test {
     0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
   string specUri;
 
+  string errCantMintToZeroAddress = "cannot mint to zero address";
+
   Raft implementationV1;
   UUPSProxy proxy;
   Raft wrappedProxyV1;
@@ -153,5 +155,11 @@ contract RaftTest is Test {
     vm.prank(attacker);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
     wrappedProxyV1.transferOwnership(attacker);
+  }
+
+  function testCantMintToZeroAddress() public {
+    address to = address(0);
+    vm.expectRevert(bytes(errCantMintToZeroAddress));
+    wrappedProxyV1.mint(to, "some uri");
   }
 }
