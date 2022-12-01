@@ -54,8 +54,6 @@ contract BadgesTest is Test {
   string errBadgeAlreadyRevoked = "revokeBadge: badge already revoked";
   string errBalanceOfNotValidOwner =
     "balanceOf: address zero is not a valid owner_";
-  string errCannotGiveToSelf = "give: cannot give to self";
-  string errCannotTakeFromSelf = "take: cannot take from self";
   string errInvalidSig = "safeCheckAgreement: invalid signature";
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
@@ -375,14 +373,6 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.take(passive, specUri, signature);
   }
 
-  function testPreventTakingToSelf() public {
-    address to = address(this);
-    bytes memory signature;
-
-    vm.expectRevert(bytes(errCannotTakeFromSelf));
-    badgesWrappedProxyV1.take(to, specUri, signature);
-  }
-
   // GIVE TESTS
   function testBalanceIncreaseAfterGive() public {
     createRaftAndRegisterSpec();
@@ -491,17 +481,6 @@ contract BadgesTest is Test {
     vm.expectRevert(bytes(tokenExistsErr));
     vm.prank(from);
     badgesWrappedProxyV1.give(to, specUri, signature);
-  }
-
-  function testPreventGivingToSelf() public {
-    createRaftAndRegisterSpec();
-
-    address active = raftHolderAddress;
-    bytes memory signature = getSignature(active, passivePrivateKey);
-
-    vm.prank(active);
-    vm.expectRevert(bytes(errCannotGiveToSelf));
-    badgesWrappedProxyV1.give(active, specUri, signature);
   }
 
   // UNEQUIP TESTS

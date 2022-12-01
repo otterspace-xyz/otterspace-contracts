@@ -126,8 +126,6 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) external virtual returns (uint256) {
-    require(msg.sender != _to, "give: cannot give to self");
-
     safeCheckAgreement(msg.sender, _to, _uri, _signature);
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
@@ -151,8 +149,6 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) external virtual override returns (uint256) {
-    require(msg.sender != _from, "take: cannot take from self");
-
     safeCheckAgreement(msg.sender, _from, _uri, _signature);
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
@@ -171,8 +167,6 @@ contract Badges is
     bytes32 root,
     bytes32[] calldata proof
   ) external virtual returns (uint256) {
-    require(msg.sender != _from, "take: cannot take from self");
-
     safeCheckMerkleAgreement(_from, msg.sender, _uri, _signature, root, proof);
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
