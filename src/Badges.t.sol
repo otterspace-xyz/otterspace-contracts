@@ -313,18 +313,21 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.take(passiveAddress, specUri, signature);
   }
 
-  function testTakeWithUnauthorizedRaftHolder() public {
+  function testTakeWithUnauthorizedClaimant() public {
     address active = claimantAddress;
     createRaftAndRegisterSpec();
 
     bytes memory signature = getSignature(active, raftHolderPrivateKey);
 
-    address unauthorizedSender = address(0);
+    address unauthorizedClaimant = address(0);
 
     vm.expectRevert(bytes(errInvalidSig));
-    badgesWrappedProxyV1.take(unauthorizedSender, specUri, signature);
+    badgesWrappedProxyV1.take(unauthorizedClaimant, specUri, signature);
   }
 
+  // instead of passing in "unauthorized sender" here, I think we should vm.prank
+  // to test the same way as we do in "Should require that give is called by raft owner"
+  // in hardhat tests
   function testGiveWithUnauthorizedRaftHolder() public {
     address active = raftHolderAddress;
     createRaftAndRegisterSpec();
@@ -622,18 +625,22 @@ contract BadgesTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(raftHolderAddress), 1);
+
     // raft holder registers spec
     vm.prank(raftHolderAddress);
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
+
     // create "valid" signature
     bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
       active,
       raftHolderAddress,
       specUri
     );
+
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(raftHolderPrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
+
     // transfer raft away from owner
     address randomAddress = vm.addr(randomPrivateKey);
     vm.prank(raftHolderAddress);
