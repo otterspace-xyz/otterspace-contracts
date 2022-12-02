@@ -115,6 +115,44 @@ contract Badges is
     specDataHolder = ISpecDataHolder(_dataHolder);
   }
 
+  function _give(
+    address _recipient,
+    string calldata _uri,
+    bytes calldata _signature,
+    uint256 _raftTokenId
+  ) internal virtual returns (uint256) {
+    require(msg.sender != _recipient, "give: cannot give to self");
+    safeCheckAgreement(msg.sender, _recipient, _uri, _signature);
+    return mint(_recipient, _uri, _raftTokenId);
+  }
+
+  /**
+   * @notice Allows the owner of a badge spec to mint a badge to multiple recipeients who have requested it
+   * @param _recipients array the addresses who will receive a badge
+   * @param _uri the uri of the badge spec
+   * @param _signatures array of signatures that verify that the person receiving the badge actually requested it
+   */
+  function giveToMany(
+    address[] calldata _recipients,
+    string calldata _uri,
+    bytes[] calldata _signatures
+  ) external virtual {
+    require(
+      _recipients.length == _signatures.length,
+      "giveToMany: recipients and signatures length mismatch"
+    );
+
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      "giveToMany: unauthorized"
+    );
+
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      _give(_recipients[i], _uri, _signatures[i], raftTokenId);
+    }
+  }
+
   /**
    * @notice Allows the owner of a badge spec to mint a badge to someone who has requested it
    * @param _to the person who is receiving the badge
@@ -126,17 +164,12 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) external virtual returns (uint256) {
-    require(msg.sender != _to, "give: cannot give to self");
-
-    safeCheckAgreement(msg.sender, _to, _uri, _signature);
-
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
       "give: unauthorized"
     );
-
-    return mint(_to, _uri, raftTokenId);
+    return _give(_to, _uri, _signature, raftTokenId);
   }
 
   /**
@@ -254,10 +287,7 @@ contract Badges is
     override
     returns (uint256)
   {
-    require(
-      _owner != address(0),
-      "balanceOf: address zero is not a valid owner_"
-    );
+    require(_owner != address(0), "balanceOf: address(0) is not a valid owner");
     return balances[_owner];
   }
 
