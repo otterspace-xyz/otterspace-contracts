@@ -297,6 +297,41 @@ contract BadgesTest is Test {
     return (raftTokenId, tokenId);
   }
 
+  function testTakeWithSigFromBadActor() public returns (uint256, uint256) {
+    address active = claimantAddress;
+    address passive = raftHolderAddress;
+    uint256 badActorPrivateKey = 123;
+
+    createRaftAndRegisterSpec();
+
+    bytes memory signature = getSignature(active, badActorPrivateKey);
+    vm.prank(active);
+    vm.expectRevert(bytes(errInvalidSig));
+
+    badgesWrappedProxyV1.take(passive, specUri, signature);
+  }
+
+  function testTakeWithUnregisteredSpec() public returns (uint256, uint256) {
+    address passive = raftHolderAddress;
+    address zeroAddress = address(0);
+    address active = claimantAddress;
+
+    vm.expectEmit(true, true, true, false);
+    uint256 raftTokenId = raftWrappedProxyV1.mint(passive, specUri);
+    emit Transfer(zeroAddress, passive, raftTokenId);
+
+    assertEq(raftTokenId, 1);
+    assertEq(raftWrappedProxyV1.balanceOf(passive), 1);
+
+    // normally we would register the spec here
+    bytes memory signature = getSignature(active, raftHolderPrivateKey);
+    vm.prank(active);
+    // but we didn't, so we'll get this error when we try to "take"
+    // because when we look up the spec that's associated with this raft, which doesn't exist
+    vm.expectRevert(bytes(err721InvalidTokenId));
+    badgesWrappedProxyV1.take(passive, specUri, signature);
+  }
+
   function testTakeWithBadTokenUri() public {
     address active = claimantAddress;
 
@@ -324,21 +359,6 @@ contract BadgesTest is Test {
 
     vm.expectRevert(bytes(errInvalidSig));
     badgesWrappedProxyV1.take(unauthorizedClaimant, specUri, signature);
-  }
-
-  // instead of passing in "unauthorized sender" here, I think we should vm.prank
-  // to test the same way as we do in "Should require that give is called by raft owner"
-  // in hardhat tests
-  function testGiveWithUnauthorizedRaftHolder() public {
-    address active = raftHolderAddress;
-    createRaftAndRegisterSpec();
-
-    bytes memory signature = getSignature(active, raftHolderPrivateKey);
-
-    address unauthorizedSender = address(0);
-
-    vm.expectRevert(bytes(errGiveUnauthorized));
-    badgesWrappedProxyV1.give(unauthorizedSender, specUri, signature);
   }
 
   function testTakeAndUnequipAndRetake() public {
@@ -397,6 +417,25 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(passive), 1);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), passive);
+  }
+
+  function testGiveCalledByNonOwner() public {
+    createRaftAndRegisterSpec();
+    address active = raftHolderAddress;
+    address passive = passiveAddress;
+
+    bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
+      active,
+      passive,
+      specUri
+    );
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(passivePrivateKey, hash);
+    bytes memory signature = abi.encodePacked(r, s, v);
+
+    address randomAddress = vm.addr(123);
+    vm.prank(randomAddress);
+    vm.expectRevert(bytes(errGiveUnauthorized));
+    badgesWrappedProxyV1.give(passive, specUri, signature);
   }
 
   function testGiveWithDifferentTokenURI(string memory falseTokenUri) public {
@@ -555,13 +594,34 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.unequip(1337);
   }
 
-  function testRevokingBadge() public {
+  function testRevokeBadge() public {
     (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
     vm.prank(raftHolderAddress);
     badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+  }
+
+  function testRevokeBadgeThatsAlreadyRevoked() public {
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    vm.prank(raftHolderAddress);
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+
+    vm.prank(raftHolderAddress);
+    vm.expectRevert(bytes(errBadgeAlreadyRevoked));
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+  }
+
+  function testRevokeBadgeWithInvalidTokenId() public {
+    (uint256 raftTokenId, ) = testBalanceIncreaseAfterTake();
+    uint256 invalidTokenId = 123;
+    vm.prank(raftHolderAddress);
+    vm.expectRevert(bytes(errTokenDoesntExist));
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, invalidTokenId, 1);
   }
 
   function testReinstatingBadge() public {
@@ -576,6 +636,17 @@ contract BadgesTest is Test {
     vm.prank(raftHolderAddress);
     badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+  }
+
+  function testReinstatingBadgeThatsNotRevoked() public {
+    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    vm.prank(raftHolderAddress);
+    vm.expectRevert(bytes(errNotRevoked));
+
+    badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
   }
 
   function testIsBadgeValid() public {
@@ -593,6 +664,24 @@ contract BadgesTest is Test {
     vm.expectEmit(true, false, false, false);
 
     emit RefreshMetadata(specUris, msg.sender);
+    badgesWrappedProxyV1.refreshMetadata(specUris);
+  }
+
+  function testRefreshMetadataWithEmptySpecUris() public {
+    createRaftAndRegisterSpec();
+    vm.expectRevert(bytes(errNoSpecUris));
+
+    string[] memory emptySpecUriArray = new string[](0);
+    // will fail when you give it no spec uris
+    badgesWrappedProxyV1.refreshMetadata(emptySpecUriArray);
+  }
+
+  function testRefreshMetadataAsNonOwner() public {
+    createRaftAndRegisterSpec();
+
+    address randomAddress = vm.addr(123);
+    vm.prank(randomAddress);
+    vm.expectRevert(bytes(errNotOwner));
     badgesWrappedProxyV1.refreshMetadata(specUris);
   }
 
@@ -639,9 +728,9 @@ contract BadgesTest is Test {
 
     // try to take with signature
     vm.prank(active);
+    // expect failure because the "passive" address is not the owner of the raft anymore
     vm.expectRevert(bytes(errTakeUnauthorized));
     badgesWrappedProxyV1.take(raftHolderAddress, specUri, signature);
-    // expect failure
   }
 
   function testGiveValidSigTransferredRaftToken() public {
@@ -1071,5 +1160,38 @@ contract BadgesTest is Test {
       specUri,
       recipientsSignatures
     );
+  }
+
+  function testClaimFailsWhenClaimingWithAnotherVoucher() public {
+    address active = claimantAddress;
+    address passive = raftHolderAddress;
+    address newOwner = vm.addr(123);
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+
+    bytes memory signature = getSignature(active, raftHolderPrivateKey);
+    vm.expectEmit(true, true, true, false);
+    vm.prank(active);
+    uint256 tokenId = badgesWrappedProxyV1.take(passive, specUri, signature);
+
+    address zeroAddress = address(0);
+    emit Transfer(zeroAddress, active, tokenId);
+
+    assertEq(badgesWrappedProxyV1.balanceOf(active), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), active);
+
+    vm.prank(passive);
+
+    // raft holder should approve  the raft to be transferred
+    raftWrappedProxyV1.approve(newOwner, raftTokenId);
+    vm.prank(passive);
+    // raft holder should transfer the raft to the new owner
+    raftWrappedProxyV1.transferFrom(passive, newOwner, raftTokenId);
+    // new owner should create a signature for the same specUri
+    bytes memory newOwnerSignature = getSignature(active, 123);
+    // claimant should try to claim the same specUri with the new signature and expect to fail because the token exists
+    vm.expectRevert(bytes(errInvalidSig));
+    vm.prank(active);
+    badgesWrappedProxyV1.take(passive, specUri, newOwnerSignature);
   }
 }
