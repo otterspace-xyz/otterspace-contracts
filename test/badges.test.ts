@@ -37,8 +37,6 @@ const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
 const errMerkleAlreadyUsed = 'merkleSafeCheckAgreement: already used'
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 const errUnauthorizedGive = 'give: unauthorized'
-const errUnauthorizedTake = 'take: unauthorized issuer'
-const errCannotGiveToSelf = 'give: cannot give to self'
 const err721InvalidTokenId = 'ERC721: invalid token ID'
 const errSafeCheckMerkleInvalidSig =
   'safeCheckMerkleAgreement: invalid signature'
@@ -988,37 +986,5 @@ describe('Badges', async function () {
     await expect(mintBadgeWithGive(randomSigner)).to.be.revertedWith(
       errUnauthorizedGive
     )
-  })
-
-  it('Should shouldnt allow someone to call give to themself', async () => {
-    const { badgesProxy, raftProxy, typedData, issuer, claimant, owner } =
-      deployed
-    const specUri = typedData.value.tokenURI
-
-    const { raftTokenId } = await mintRaftToken(
-      raftProxy,
-      issuer.address,
-      specUri,
-      owner
-    )
-
-    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
-
-    typedData.value.active = issuer.address
-    typedData.value.passive = claimant.address
-
-    const { compact } = await getSignature(
-      typedData.domain,
-      typedData.types,
-      typedData.value,
-      claimant
-    )
-
-    // first param of give here is the "to" address (which is the same as the issuer)
-    await expect(
-      badgesProxy
-        .connect(issuer)
-        .give(typedData.value.active, typedData.value.tokenURI, compact)
-    ).to.be.revertedWith(errCannotGiveToSelf)
   })
 })
