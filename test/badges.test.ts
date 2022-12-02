@@ -23,24 +23,24 @@ const specUri = 'some spec uri'
 const specUri2 = 'another spec uri'
 const reasonChoice = 1
 const emptyBytes32String = ethers.utils.formatBytes32String('')
+
+// ** CONTRACT ERRORS **
 const errNotOwner = 'Ownable: caller is not the owner'
 const errSpecNotRegistered = 'spec is not registered'
 const errSpecAlreadyRegistered = 'createSpec: spec already registered'
 const errNotRaftOwner = 'senderIsRaftOwner: unauthorized'
 const errInvalidSig = 'safeCheckAgreement: invalid signature'
-const tokenExistsErr = 'mint: tokenID exists'
+const errTokenExists = 'mint: tokenID exists'
 const tokenDoesntExistErr = "tokenExists: token doesn't exist"
 const errNotRevoked = 'reinstateBadge: badge not revoked'
 const errBadgeAlreadyRevoked = 'revokeBadge: badge already revoked'
 const errMerkleAlreadyUsed = 'merkleSafeCheckAgreement: already used'
-
 const errNoSpecUris = 'refreshMetadata: no spec uris provided'
 const errUnauthorizedGive = 'give: unauthorized'
-const errUnauthorizedTake = 'take: unauthorized issuer'
-const errCannotGiveToSelf = 'give: cannot give to self'
 const err721InvalidTokenId = 'ERC721: invalid token ID'
 const errSafeCheckMerkleInvalidSig =
   'safeCheckMerkleAgreement: invalid signature'
+
 let deployed: any
 
 // fix ts badgesProxy: any
@@ -407,7 +407,7 @@ describe('Merkle minting', () => {
       badgesProxy
         .connect(claimant)
         .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
-    ).to.be.revertedWith(tokenExistsErr)
+    ).to.be.revertedWith(errTokenExists)
   })
 
   it('Should allow someone who is part of two separate merkle trees to mint both badges', async () => {
@@ -526,7 +526,6 @@ describe('Merkle minting', () => {
     ).to.be.revertedWith(errSafeCheckMerkleInvalidSig)
   })
 })
-
 
 describe('Badges', async function () {
   it('should deploy the contract with the right params', async function () {
@@ -667,7 +666,7 @@ describe('Badges', async function () {
       badgesProxy
         .connect(claimant)
         .take(typedData.value.passive, typedData.value.tokenURI, compactSig2)
-    ).to.be.revertedWith(tokenExistsErr)
+    ).to.be.revertedWith(errTokenExists)
   })
 
   // TODO: write in forge
@@ -705,7 +704,7 @@ describe('Badges', async function () {
         .take(typedData.value.passive, specUri, compact)
     ).to.be.revertedWith(errInvalidSig)
   })
- 
+
   // TODO: write in forge
   it('should fail to mint badge when using an unregistered spec', async () => {
     // deploy contracts
@@ -756,7 +755,7 @@ describe('Badges', async function () {
     ).to.be.revertedWith(errNotRevoked)
   })
 
-  // TODO: write in forge  
+  // TODO: write in forge
   it('Should fail to revoke a badge if its already revoked', async () => {
     const { raftTokenId, badgeId } = await mintBadgeWithTake()
     const { badgesProxy, issuer } = deployed
@@ -776,7 +775,7 @@ describe('Badges', async function () {
     ).to.be.revertedWith(errBadgeAlreadyRevoked)
   })
 
-  // TODO: write in forge  
+  // TODO: write in forge
   it('Should not refreshMetadata if caller isnt the owner', async () => {
     const { badgesProxy, issuer } = deployed
     await expect(
@@ -809,9 +808,7 @@ describe('Badges', async function () {
 
     // the person calling "give" here is a random signer, not the owner of the raft token
     await expect(mintBadgeWithGive(randomSigner)).to.be.revertedWith(
-      errInvalidSig
+      errUnauthorizedGive
     )
   })
-
-
 })

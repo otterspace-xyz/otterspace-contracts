@@ -57,7 +57,7 @@ contract Raft is
     require(msg.sender == owner() || !paused(), "mint: unauthorized to mint");
     _tokenIds.increment();
     uint256 newItemId = _tokenIds.current();
-
+    require(recipient != address(0), "cannot mint to zero address");
     _mint(recipient, newItemId);
     _tokenURIs[newItemId] = uri;
 
