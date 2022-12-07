@@ -30,7 +30,7 @@ contract Badges is
   mapping(address => uint256) private balances;
 
   ISpecDataHolder private specDataHolder;
-
+  string private george1;
   mapping(uint256 => uint256) private voucherHashIds; // redundant storage as of x/x/x
   BitMaps.BitMap private revokedBadgesHashes;
 
