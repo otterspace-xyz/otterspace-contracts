@@ -1,0 +1,1095 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "signature",
+          "type": "bytes"
+        }
+      ],
+      "name": "give",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "internalType": "bytes",
+          "name": "signature",
+          "type": "bytes"
+        }
+      ],
+      "name": "take",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "unequip",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "balanceOf(address)": "70a08231",
+    "give(address,string,bytes)": "ec64948e",
+    "ownerOf(uint256)": "6352211e",
+    "take(address,string,bytes)": "a3947803",
+    "unequip(uint256)": "d179e3d0"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"give\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"take\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"unequip\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"See https://eips.ethereum.org/EIPS/eip-4973 Note: the ERC-165 identifier for this interface is 0x5164cf47\",\"events\":{\"Transfer(address,address,uint256)\":{\"details\":\"This emits when ownership of any ABT changes by any mechanism.  This event emits when ABTs are given or equipped and unequipped  (`to` == 0).\"}},\"kind\":\"dev\",\"methods\":{\"balanceOf(address)\":{\"details\":\"ABTs assigned to the zero address are considered invalid, and this  function throws for queries about the zero address.\",\"params\":{\"owner\":\"An address for whom to query the balance\"},\"returns\":{\"_0\":\"The number of ABTs owned by `address owner`, possibly zero\"}},\"give(address,string,bytes)\":{\"details\":\"Throws unless `bytes signature` represents an EIP-2089 Compact  Signature of the EIP-712 structured data hash  `Agreement(address active,address passive,string tokenURI)` expressing  `address to`'s explicit agreement to be publicly associated with  `msg.sender` and `string tokenURI`. A unique `uint256 tokenId` must be  generated by type-casting the `bytes32` EIP-712 structured data hash to a  `uint256`. If `bytes signature` is empty or `address to` is a contract,  an EIP-1271-compatible call to `function isValidSignatureNow(...)` must  be made to `address to`. A successful execution must result in the  `event Transfer(msg.sender, to, tokenId)`. Once an ABT exists as an  `uint256 tokenId` in the contract, `function give(...)` must throw.\",\"params\":{\"signature\":\"A EIP-2089-compatible Compact Signature of the EIP-712  structured data hash  `Agreement(address active,address passive,string tokenURI)` signed by  `address to`.\",\"to\":\"The receiver of the ABT.\",\"uri\":\"A distinct Uniform Resource Identifier (URI) for a given ABT.\"},\"returns\":{\"_0\":\"A unique `uint256 tokenId` generated by type-casting the `bytes32`  EIP-712 structured data hash to a `uint256`.\"}},\"ownerOf(uint256)\":{\"details\":\"ABTs assigned to zero address are considered invalid, and queries  about them do throw.\",\"params\":{\"tokenId\":\"The identifier for an ABT.\"},\"returns\":{\"_0\":\"The address of the owner bound to the ABT.\"}},\"take(address,string,bytes)\":{\"details\":\"Throws unless `bytes signature` represents an EIP-2089 Compact  Signature of the EIP-712 structured data hash  `Agreement(address active,address passive,string tokenURI)` expressing  `address from`'s explicit agreement to be publicly associated with  `msg.sender` and `string tokenURI`. A unique `uint256 tokenId` must be  generated by type-casting the `bytes32` EIP-712 structured data hash to a  `uint256`. If `bytes signature` is empty or `address from` is a contract,  an EIP-1271-compatible call to `function isValidSignatureNow(...)` must  be made to `address from`. A successful execution must result in the  emission of an `event Transfer(from, msg.sender, tokenId)`. Once an ABT  exists as an `uint256 tokenId` in the contract, `function take(...)` must  throw.\",\"params\":{\"from\":\"The origin of the ABT.\",\"signature\":\"A EIP-2089-compatible Compact Signature of the EIP-712  structured data hash  `Agreement(address active,address passive,string tokenURI)` signed by  `address from`.\",\"uri\":\"A distinct Uniform Resource Identifier (URI) for a given ABT.\"},\"returns\":{\"_0\":\"A unique `uint256 tokenId` generated by type-casting the `bytes32`  EIP-712 structured data hash to a `uint256`.\"}},\"unequip(uint256)\":{\"details\":\"Must emit a `event Transfer` with the `address to` field pointing to  the zero address.\",\"params\":{\"tokenId\":\"The identifier for an ABT.\"}}},\"title\":\"Account-bound tokens\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"balanceOf(address)\":{\"notice\":\"Count all ABTs assigned to an owner\"},\"give(address,string,bytes)\":{\"notice\":\"Creates and transfers the ownership of an ABT from the  transaction's `msg.sender` to `address to`.\"},\"ownerOf(uint256)\":{\"notice\":\"Find the address bound to an ERC4973 account-bound token\"},\"take(address,string,bytes)\":{\"notice\":\"Creates and transfers the ownership of an ABT from an `address from` to the transaction's `msg.sender`.\"},\"unequip(uint256)\":{\"notice\":\"Removes the `uint256 tokenId` from an account. At any time, an  ABT receiver must be able to disassociate themselves from an ABT  publicly through calling this function. After successfully executing this  function, given the parameters for calling `function give` or  `function take` a token must be re-equipable.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"lib/ERC4973/src/interfaces/IERC4973.sol\":\"IERC4973\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/\",\":@openzeppelin/=lib/openzeppelin-contracts/\",\":ERC4973/=lib/ERC4973/src/\",\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":forge-std/=lib/forge-std/src/\",\":murky/=lib/murky/\",\":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/\",\":openzeppelin-contracts/=lib/openzeppelin-contracts/\"]},\"sources\":{\"lib/ERC4973/src/interfaces/IERC4973.sol\":{\"keccak256\":\"0x85bb14e7f703579db5246d659d4504d42cc095817f8fd7f1dc01b94f196a05c2\",\"license\":\"CC0-1.0\",\"urls\":[\"bzz-raw://1ec43e0c41b3a17f900fb08ed93fb5dabfff2bf144f6776240a3b72af476673e\",\"dweb:/ipfs/QmX7rXPmpmGaix1bP9TRssGJ9bTTnnsukP5cDS9shTrBKc\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.16+commit.07a7930e"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "Transfer",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes",
+              "name": "signature",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "give",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "ownerOf",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "uri",
+              "type": "string"
+            },
+            {
+              "internalType": "bytes",
+              "name": "signature",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "take",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "unequip"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "balanceOf(address)": {
+            "details": "ABTs assigned to the zero address are considered invalid, and this  function throws for queries about the zero address.",
+            "params": {
+              "owner": "An address for whom to query the balance"
+            },
+            "returns": {
+              "_0": "The number of ABTs owned by `address owner`, possibly zero"
+            }
+          },
+          "give(address,string,bytes)": {
+            "details": "Throws unless `bytes signature` represents an EIP-2089 Compact  Signature of the EIP-712 structured data hash  `Agreement(address active,address passive,string tokenURI)` expressing  `address to`'s explicit agreement to be publicly associated with  `msg.sender` and `string tokenURI`. A unique `uint256 tokenId` must be  generated by type-casting the `bytes32` EIP-712 structured data hash to a  `uint256`. If `bytes signature` is empty or `address to` is a contract,  an EIP-1271-compatible call to `function isValidSignatureNow(...)` must  be made to `address to`. A successful execution must result in the  `event Transfer(msg.sender, to, tokenId)`. Once an ABT exists as an  `uint256 tokenId` in the contract, `function give(...)` must throw.",
+            "params": {
+              "signature": "A EIP-2089-compatible Compact Signature of the EIP-712  structured data hash  `Agreement(address active,address passive,string tokenURI)` signed by  `address to`.",
+              "to": "The receiver of the ABT.",
+              "uri": "A distinct Uniform Resource Identifier (URI) for a given ABT."
+            },
+            "returns": {
+              "_0": "A unique `uint256 tokenId` generated by type-casting the `bytes32`  EIP-712 structured data hash to a `uint256`."
+            }
+          },
+          "ownerOf(uint256)": {
+            "details": "ABTs assigned to zero address are considered invalid, and queries  about them do throw.",
+            "params": {
+              "tokenId": "The identifier for an ABT."
+            },
+            "returns": {
+              "_0": "The address of the owner bound to the ABT."
+            }
+          },
+          "take(address,string,bytes)": {
+            "details": "Throws unless `bytes signature` represents an EIP-2089 Compact  Signature of the EIP-712 structured data hash  `Agreement(address active,address passive,string tokenURI)` expressing  `address from`'s explicit agreement to be publicly associated with  `msg.sender` and `string tokenURI`. A unique `uint256 tokenId` must be  generated by type-casting the `bytes32` EIP-712 structured data hash to a  `uint256`. If `bytes signature` is empty or `address from` is a contract,  an EIP-1271-compatible call to `function isValidSignatureNow(...)` must  be made to `address from`. A successful execution must result in the  emission of an `event Transfer(from, msg.sender, tokenId)`. Once an ABT  exists as an `uint256 tokenId` in the contract, `function take(...)` must  throw.",
+            "params": {
+              "from": "The origin of the ABT.",
+              "signature": "A EIP-2089-compatible Compact Signature of the EIP-712  structured data hash  `Agreement(address active,address passive,string tokenURI)` signed by  `address from`.",
+              "uri": "A distinct Uniform Resource Identifier (URI) for a given ABT."
+            },
+            "returns": {
+              "_0": "A unique `uint256 tokenId` generated by type-casting the `bytes32`  EIP-712 structured data hash to a `uint256`."
+            }
+          },
+          "unequip(uint256)": {
+            "details": "Must emit a `event Transfer` with the `address to` field pointing to  the zero address.",
+            "params": {
+              "tokenId": "The identifier for an ABT."
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "balanceOf(address)": {
+            "notice": "Count all ABTs assigned to an owner"
+          },
+          "give(address,string,bytes)": {
+            "notice": "Creates and transfers the ownership of an ABT from the  transaction's `msg.sender` to `address to`."
+          },
+          "ownerOf(uint256)": {
+            "notice": "Find the address bound to an ERC4973 account-bound token"
+          },
+          "take(address,string,bytes)": {
+            "notice": "Creates and transfers the ownership of an ABT from an `address from` to the transaction's `msg.sender`."
+          },
+          "unequip(uint256)": {
+            "notice": "Removes the `uint256 tokenId` from an account. At any time, an  ABT receiver must be able to disassociate themselves from an ABT  publicly through calling this function. After successfully executing this  function, given the parameters for calling `function give` or  `function take` a token must be re-equipable."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":@openzeppelin-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+        ":@openzeppelin/=lib/openzeppelin-contracts/",
+        ":ERC4973/=lib/ERC4973/src/",
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":forge-std/=lib/forge-std/src/",
+        ":murky/=lib/murky/",
+        ":openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+        ":openzeppelin-contracts/=lib/openzeppelin-contracts/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "lib/ERC4973/src/interfaces/IERC4973.sol": "IERC4973"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "lib/ERC4973/src/interfaces/IERC4973.sol": {
+        "keccak256": "0x85bb14e7f703579db5246d659d4504d42cc095817f8fd7f1dc01b94f196a05c2",
+        "urls": [
+          "bzz-raw://1ec43e0c41b3a17f900fb08ed93fb5dabfff2bf144f6776240a3b72af476673e",
+          "dweb:/ipfs/QmX7rXPmpmGaix1bP9TRssGJ9bTTnnsukP5cDS9shTrBKc"
+        ],
+        "license": "CC0-1.0"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "lib/ERC4973/src/interfaces/IERC4973.sol",
+    "id": 59,
+    "exportedSymbols": {
+      "IERC4973": [
+        58
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "36:4821:0",
+    "nodes": [
+      {
+        "id": 1,
+        "nodeType": "PragmaDirective",
+        "src": "36:23:0",
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".6"
+        ]
+      },
+      {
+        "id": 58,
+        "nodeType": "ContractDefinition",
+        "src": "212:4644:0",
+        "nodes": [
+          {
+            "id": 11,
+            "nodeType": "EventDefinition",
+            "src": "400:98:0",
+            "anonymous": false,
+            "documentation": {
+              "id": 3,
+              "nodeType": "StructuredDocumentation",
+              "src": "235:162:0",
+              "text": "@dev This emits when ownership of any ABT changes by any mechanism.\n  This event emits when ABTs are given or equipped and unequipped\n  (`to` == 0)."
+            },
+            "eventSelector": "ddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef",
+            "name": "Transfer",
+            "nameLocation": "406:8:0",
+            "parameters": {
+              "id": 10,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "from",
+                  "nameLocation": "436:4:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11,
+                  "src": "420:20:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 4,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "420:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 7,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "462:2:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11,
+                  "src": "446:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "446:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 9,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "tokenId",
+                  "nameLocation": "486:7:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 11,
+                  "src": "470:23:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 8,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "470:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "414:83:0"
+            }
+          },
+          {
+            "id": 19,
+            "nodeType": "FunctionDefinition",
+            "src": "821:66:0",
+            "documentation": {
+              "id": 12,
+              "nodeType": "StructuredDocumentation",
+              "src": "501:317:0",
+              "text": "@notice Count all ABTs assigned to an owner\n @dev ABTs assigned to the zero address are considered invalid, and this\n  function throws for queries about the zero address.\n @param owner An address for whom to query the balance\n @return The number of ABTs owned by `address owner`, possibly zero"
+            },
+            "functionSelector": "70a08231",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "balanceOf",
+            "nameLocation": "830:9:0",
+            "parameters": {
+              "id": 15,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 14,
+                  "mutability": "mutable",
+                  "name": "owner",
+                  "nameLocation": "848:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 19,
+                  "src": "840:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 13,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "840:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "839:15:0"
+            },
+            "returnParameters": {
+              "id": 18,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 17,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 19,
+                  "src": "878:7:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 16,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "878:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "877:9:0"
+            },
+            "scope": 58,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 27,
+            "nodeType": "FunctionDefinition",
+            "src": "1171:66:0",
+            "documentation": {
+              "id": 20,
+              "nodeType": "StructuredDocumentation",
+              "src": "890:278:0",
+              "text": "@notice Find the address bound to an ERC4973 account-bound token\n @dev ABTs assigned to zero address are considered invalid, and queries\n  about them do throw.\n @param tokenId The identifier for an ABT.\n @return The address of the owner bound to the ABT."
+            },
+            "functionSelector": "6352211e",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "ownerOf",
+            "nameLocation": "1180:7:0",
+            "parameters": {
+              "id": 23,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 22,
+                  "mutability": "mutable",
+                  "name": "tokenId",
+                  "nameLocation": "1196:7:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27,
+                  "src": "1188:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 21,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1188:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1187:17:0"
+            },
+            "returnParameters": {
+              "id": 26,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 25,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 27,
+                  "src": "1228:7:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 24,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1228:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1227:9:0"
+            },
+            "scope": 58,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 33,
+            "nodeType": "FunctionDefinition",
+            "src": "1745:43:0",
+            "documentation": {
+              "id": 28,
+              "nodeType": "StructuredDocumentation",
+              "src": "1240:502:0",
+              "text": "@notice Removes the `uint256 tokenId` from an account. At any time, an\n  ABT receiver must be able to disassociate themselves from an ABT\n  publicly through calling this function. After successfully executing this\n  function, given the parameters for calling `function give` or\n  `function take` a token must be re-equipable.\n @dev Must emit a `event Transfer` with the `address to` field pointing to\n  the zero address.\n @param tokenId The identifier for an ABT."
+            },
+            "functionSelector": "d179e3d0",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "unequip",
+            "nameLocation": "1754:7:0",
+            "parameters": {
+              "id": 31,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 30,
+                  "mutability": "mutable",
+                  "name": "tokenId",
+                  "nameLocation": "1770:7:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 33,
+                  "src": "1762:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 29,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1762:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1761:17:0"
+            },
+            "returnParameters": {
+              "id": 32,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1787:0:0"
+            },
+            "scope": 58,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 45,
+            "nodeType": "FunctionDefinition",
+            "src": "3186:116:0",
+            "documentation": {
+              "id": 34,
+              "nodeType": "StructuredDocumentation",
+              "src": "1791:1392:0",
+              "text": "@notice Creates and transfers the ownership of an ABT from the\n  transaction's `msg.sender` to `address to`.\n @dev Throws unless `bytes signature` represents an EIP-2089 Compact\n  Signature of the EIP-712 structured data hash\n  `Agreement(address active,address passive,string tokenURI)` expressing\n  `address to`'s explicit agreement to be publicly associated with\n  `msg.sender` and `string tokenURI`. A unique `uint256 tokenId` must be\n  generated by type-casting the `bytes32` EIP-712 structured data hash to a\n  `uint256`. If `bytes signature` is empty or `address to` is a contract,\n  an EIP-1271-compatible call to `function isValidSignatureNow(...)` must\n  be made to `address to`. A successful execution must result in the\n  `event Transfer(msg.sender, to, tokenId)`. Once an ABT exists as an\n  `uint256 tokenId` in the contract, `function give(...)` must throw.\n @param to The receiver of the ABT.\n @param uri A distinct Uniform Resource Identifier (URI) for a given ABT.\n @param signature A EIP-2089-compatible Compact Signature of the EIP-712\n  structured data hash\n  `Agreement(address active,address passive,string tokenURI)` signed by\n  `address to`.\n @return A unique `uint256 tokenId` generated by type-casting the `bytes32`\n  EIP-712 structured data hash to a `uint256`."
+            },
+            "functionSelector": "ec64948e",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "give",
+            "nameLocation": "3195:4:0",
+            "parameters": {
+              "id": 41,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 36,
+                  "mutability": "mutable",
+                  "name": "to",
+                  "nameLocation": "3213:2:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 45,
+                  "src": "3205:10:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 35,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3205:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 38,
+                  "mutability": "mutable",
+                  "name": "uri",
+                  "nameLocation": "3237:3:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 45,
+                  "src": "3221:19:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 37,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3221:6:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 40,
+                  "mutability": "mutable",
+                  "name": "signature",
+                  "nameLocation": "3261:9:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 45,
+                  "src": "3246:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 39,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3246:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3199:75:0"
+            },
+            "returnParameters": {
+              "id": 44,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 43,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 45,
+                  "src": "3293:7:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 42,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3293:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3292:9:0"
+            },
+            "scope": 58,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 57,
+            "nodeType": "FunctionDefinition",
+            "src": "4736:118:0",
+            "documentation": {
+              "id": 46,
+              "nodeType": "StructuredDocumentation",
+              "src": "3305:1428:0",
+              "text": "@notice Creates and transfers the ownership of an ABT from an\n `address from` to the transaction's `msg.sender`.\n @dev Throws unless `bytes signature` represents an EIP-2089 Compact\n  Signature of the EIP-712 structured data hash\n  `Agreement(address active,address passive,string tokenURI)` expressing\n  `address from`'s explicit agreement to be publicly associated with\n  `msg.sender` and `string tokenURI`. A unique `uint256 tokenId` must be\n  generated by type-casting the `bytes32` EIP-712 structured data hash to a\n  `uint256`. If `bytes signature` is empty or `address from` is a contract,\n  an EIP-1271-compatible call to `function isValidSignatureNow(...)` must\n  be made to `address from`. A successful execution must result in the\n  emission of an `event Transfer(from, msg.sender, tokenId)`. Once an ABT\n  exists as an `uint256 tokenId` in the contract, `function take(...)` must\n  throw.\n @param from The origin of the ABT.\n @param uri A distinct Uniform Resource Identifier (URI) for a given ABT.\n @param signature A EIP-2089-compatible Compact Signature of the EIP-712\n  structured data hash\n  `Agreement(address active,address passive,string tokenURI)` signed by\n  `address from`.\n @return A unique `uint256 tokenId` generated by type-casting the `bytes32`\n  EIP-712 structured data hash to a `uint256`."
+            },
+            "functionSelector": "a3947803",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "take",
+            "nameLocation": "4745:4:0",
+            "parameters": {
+              "id": 53,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 48,
+                  "mutability": "mutable",
+                  "name": "from",
+                  "nameLocation": "4763:4:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "4755:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 47,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4755:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 50,
+                  "mutability": "mutable",
+                  "name": "uri",
+                  "nameLocation": "4789:3:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "4773:19:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_calldata_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 49,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4773:6:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 52,
+                  "mutability": "mutable",
+                  "name": "signature",
+                  "nameLocation": "4813:9:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "4798:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 51,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4798:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4749:77:0"
+            },
+            "returnParameters": {
+              "id": 56,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 55,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 57,
+                  "src": "4845:7:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 54,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4845:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4844:9:0"
+            },
+            "scope": 58,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IERC4973",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 2,
+          "nodeType": "StructuredDocumentation",
+          "src": "61:151:0",
+          "text": "@title Account-bound tokens\n @dev See https://eips.ethereum.org/EIPS/eip-4973\n Note: the ERC-165 identifier for this interface is 0x5164cf47"
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          58
+        ],
+        "name": "IERC4973",
+        "nameLocation": "222:8:0",
+        "scope": 59,
+        "usedErrors": []
+      }
+    ],
+    "license": "CC0-1.0"
+  },
+  "id": 0
+}
