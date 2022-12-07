@@ -28,7 +28,7 @@ contract Badges is
   mapping(uint256 => address) private owners;
   mapping(uint256 => string) private tokenURIs;
   mapping(address => uint256) private balances;
-  uint256 private age;
+  uint256 private age1;
   ISpecDataHolder private specDataHolder;
 
   mapping(uint256 => uint256) private voucherHashIds; // redundant storage as of x/x/x
