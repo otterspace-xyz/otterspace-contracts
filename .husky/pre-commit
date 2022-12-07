@@ -2,3 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 npm run build
+git add -f out/Badges.sol/Badges.json
+git add -f out/Raft.sol/Raft.json
+git add -f out/SpecDataHolder.sol/SpecDataHolder.json
