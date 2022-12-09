@@ -708,7 +708,6 @@ contract BadgesTest is Test {
       raftHolderAddress,
       specUri
     );
-
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(raftHolderPrivateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
 

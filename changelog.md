@@ -2,9 +2,9 @@
 
 We're using https://semver.org/
 
-## 2.4.1
+## 2.5.0
 
-- Fix bug which allows signatures with non-authorized raft tokens to mint badges
+- Add multi-voucher issuance
 
 ## 2.4.0
 
@@ -103,7 +103,7 @@ We're using https://semver.org/
 
 ## 0.3.0
 
-- Replacing `Chain-Claim` with ` mintWithPermission`` from  `ERC4973Permit`
+- Replacing `Chain-Claim` with ` mintWithPermission`` from `ERC4973Permit`
 - `BadgeVendorFactory` and `BadgeVendor` are no longer existing in this version
 
 ## 0.2.0

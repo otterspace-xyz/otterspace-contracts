@@ -220,7 +220,6 @@ describe('Merkle minting', () => {
   it('Should allow minting when an address is allowlisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
       deployed
-
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
       issuer.address,
