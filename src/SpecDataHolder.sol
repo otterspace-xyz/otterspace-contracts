@@ -25,6 +25,14 @@ contract SpecDataHolder is
     _;
   }
 
+  modifier onlyRaftOwnerOrBadgesContract(uint256 _raftTokenId) {
+    require(
+      getRaftOwner(_raftTokenId) == msg.sender || msg.sender == badgesAddress,
+      "onlyRaftOwnerOrBadgesContract: unauthorized"
+    );
+    _;
+  }
+
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
     _disableInitializers();
@@ -49,6 +57,7 @@ contract SpecDataHolder is
   function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
+    onlyRaftOwnerOrBadgesContract(_raftTokenId)
   {
     _specToRaft[_specUri] = _raftTokenId;
   }
@@ -77,7 +86,7 @@ contract SpecDataHolder is
     return _specToRaft[_specUri] != 0;
   }
 
-  function getRaftOwner(uint256 _raftTokenId) external view returns (address) {
+  function getRaftOwner(uint256 _raftTokenId) public view returns (address) {
     IERC721 raftInterface = IERC721(raftAddress);
     return raftInterface.ownerOf(_raftTokenId);
   }
