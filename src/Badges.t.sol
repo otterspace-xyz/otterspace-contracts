@@ -1195,7 +1195,7 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.take(passive, specUri, newOwnerSignature);
   }
 
-  function testSetSpecToRaftAsAttacker() public {
+  function testSetSpecToRaftAsUnauthorizedAccount() public {
     address attackerAddress = vm.addr(randomPrivateKey);
     (uint256 raftTokenId, ) = testBalanceIncreaseAfterTake();
 
