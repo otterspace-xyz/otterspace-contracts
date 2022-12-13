@@ -6,7 +6,6 @@ import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./interfaces/ISpecDataHolder.sol";
-import "forge-std/console.sol";
 
 // import "../../node_modules/hardhat/console.sol";
 
