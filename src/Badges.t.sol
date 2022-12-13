@@ -57,8 +57,7 @@ contract BadgesTest is Test {
   string errGiveToManyArrayMismatch =
     "giveToMany: recipients and signatures length mismatch";
   string errInvalidSig = "safeCheckAgreement: invalid signature";
-  string errOnlyRaftOnwerOrBadgesContract =
-    "onlyRaftOwnerOrBadgesContract: unauthorized";
+  string errOnlyBadgesContract = "onlyBadgesContract: unauthorized";
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
   string errNotRaftOwner = "onlyRaftOwner: unauthorized";
@@ -1201,7 +1200,7 @@ contract BadgesTest is Test {
     (uint256 raftTokenId, ) = testBalanceIncreaseAfterTake();
 
     vm.prank(attackerAddress);
-    vm.expectRevert(bytes(errOnlyRaftOnwerOrBadgesContract));
+    vm.expectRevert(bytes(errOnlyBadgesContract));
     specDataHolderWrappedProxyV1.setSpecToRaft(specUri, raftTokenId);
   }
 }

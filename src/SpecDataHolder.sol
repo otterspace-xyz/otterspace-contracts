@@ -6,6 +6,7 @@ import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./interfaces/ISpecDataHolder.sol";
+import "forge-std/console.sol";
 
 // import "../../node_modules/hardhat/console.sol";
 
@@ -21,15 +22,7 @@ contract SpecDataHolder is
   address private raftAddress;
 
   modifier onlyBadgesContract() {
-    require(msg.sender == badgesAddress, "unauthorized");
-    _;
-  }
-
-  modifier onlyRaftOwnerOrBadgesContract(uint256 _raftTokenId) {
-    require(
-      getRaftOwner(_raftTokenId) == msg.sender || msg.sender == badgesAddress,
-      "onlyRaftOwnerOrBadgesContract: unauthorized"
-    );
+    require(msg.sender == badgesAddress, "onlyBadgesContract: unauthorized");
     _;
   }
 
@@ -57,7 +50,7 @@ contract SpecDataHolder is
   function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
-    onlyRaftOwnerOrBadgesContract(_raftTokenId)
+    onlyBadgesContract
   {
     _specToRaft[_specUri] = _raftTokenId;
   }
@@ -86,7 +79,7 @@ contract SpecDataHolder is
     return _specToRaft[_specUri] != 0;
   }
 
-  function getRaftOwner(uint256 _raftTokenId) public view returns (address) {
+  function getRaftOwner(uint256 _raftTokenId) external view returns (address) {
     IERC721 raftInterface = IERC721(raftAddress);
     return raftInterface.ownerOf(_raftTokenId);
   }
