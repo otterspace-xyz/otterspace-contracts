@@ -64,7 +64,6 @@ SpecDataHolder ABI
 import SpecDataHolder from '@otterspace-xyz/contracts/out/SpecDataHolder.sol/SpecDataHolder.json' assert { type: 'json' }
 ```
 
-
 We're exporting specific `.sol` files using the `"files"` property in
 `package.json`. Please familiarize yourself with the `.sol` files we're
 exporting by looking into `package.json`.
@@ -102,26 +101,42 @@ On [Hardhat's website](https://hardhat.org) you will find:
 - [Hardhat Network](https://hardhat.org/hardhat-network/)
 - [Plugin list](https://hardhat.org/plugins/)
 
-## Deploying and verifying the contract
+## Deploying contracts for the first time
 
 - create a `.env` file matching the variables seen in `.env.example`
 - run `./scripts/deployProxy.ts .env`
 - Hardhat will deploy the SpecDataHolder, Raft, and Badges contracts, then deploy a proxy for each one.
 - Once deployed, follow the logged instructions in your terminal to verify the contracts.
-- **VERY IMPORTANT**: call `setBadgesAddress` on the `SpecDataHolder` contract. Without this, it won't work.
+- it will tell you: `npx hardhat verify --network ${networkName} ${contractAddress}`
 
-## Running upgrades
-- Our contracts use the OpenZeppelin [UUPS](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable) proxy pattern for upgrades. 
+## Testing upgradability
+
+- Our contracts use the OpenZeppelin [UUPS](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable) proxy pattern for upgrades.
 - To test your working changes against the latest release:
-- 1. check out the `dev` branch
+- 1. make sure you're on the latest from the `dev` branch
 - 2. run `forge build` to make sure you've generated the latest ABIs
 - 3. copy the contents of:
 - - `artifacts/src/Badges.sol/Badges.json` into `src/test/abis/latest`
 - - `artifacts/src/Raft.sol/Raft.json` into `src/test/abis/latest`
 - - `artifacts/src/SpecDataHolder.sol/SpecDataHolder.json` into `src/test/abis/latest`
-- 4. make some changes in your working directory
+- 4. make some changes to the contracts
 - 5. run `npx hardhat testUpgrade`
 - 6. As long as you don't see errors, your new contract is upgrade safe!
+
+## Running upgrades (overview)
+
+- Once you've confirmed that the contracts are upgrade safe you'll
+- - deploy an implementation (not proxy) of each changed contract
+- - point the proxy at the new implementation
+
+## Running upgrades (steps)
+
+- make sure your `.env.implemntation` file has the correct values
+- run `./scripts deploy_and_verify_implementation.sh .env.implementation ${contractName} ${networkName}`
+- to deploy Badges on Optimism it would be
+- - `./scripts deploy_and_verify_implementation.sh .env.implementation Badges optimism`
+- watch the console for confirmation of deployment and verification, copy the implementation's address
+- go into Defender and propose and execute the upgrade
 
 ## Foundry setup for VS Code Users
 
@@ -142,7 +157,6 @@ See changelog.md file.
 ### Checklist for bumping version
 
 - update "version" in package.json
-- re-deploy contracts
 - update contract addresses in readme (if necessary)
 - update changelog
 
