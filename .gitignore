@@ -2,8 +2,7 @@
 .DS_Store
 .vscode
 .env
-.env.badges
-.env.raft
+.env.implementation
 # Hardhat
 cache/
 artifacts/
