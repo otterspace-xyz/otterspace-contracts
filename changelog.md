@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.5.1
+
+- Add modifier to setSpecToRaft
+
 ## 2.5.0
 
 - Add multi-voucher issuance
