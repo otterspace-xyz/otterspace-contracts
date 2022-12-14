@@ -21,7 +21,7 @@ contract SpecDataHolder is
   address private raftAddress;
 
   modifier onlyBadgesContract() {
-    require(msg.sender == badgesAddress, "unauthorized");
+    require(msg.sender == badgesAddress, "onlyBadgesContract: unauthorized");
     _;
   }
 
@@ -49,6 +49,7 @@ contract SpecDataHolder is
   function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
+    onlyBadgesContract
   {
     _specToRaft[_specUri] = _raftTokenId;
   }

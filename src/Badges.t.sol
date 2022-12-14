@@ -57,9 +57,10 @@ contract BadgesTest is Test {
   string errGiveToManyArrayMismatch =
     "giveToMany: recipients and signatures length mismatch";
   string errInvalidSig = "safeCheckAgreement: invalid signature";
+  string errOnlyBadgesContract = "onlyBadgesContract: unauthorized";
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
-  string errNotRaftOwner = "senderIsRaftOwner: unauthorized";
+  string errNotRaftOwner = "onlyRaftOwner: unauthorized";
   string errNotRevoked = "reinstateBadge: badge not revoked";
   string errSafeCheckUsed = "safeCheckAgreement: already used";
   string errSpecAlreadyRegistered = "createSpec: spec already registered";
@@ -1192,5 +1193,14 @@ contract BadgesTest is Test {
     vm.expectRevert(bytes(errInvalidSig));
     vm.prank(active);
     badgesWrappedProxyV1.take(passive, specUri, newOwnerSignature);
+  }
+
+  function testSetSpecToRaftAsUnauthorizedAccount() public {
+    address attackerAddress = vm.addr(randomPrivateKey);
+    (uint256 raftTokenId, ) = testBalanceIncreaseAfterTake();
+
+    vm.prank(attackerAddress);
+    vm.expectRevert(bytes(errOnlyBadgesContract));
+    specDataHolderWrappedProxyV1.setSpecToRaft(specUri, raftTokenId);
   }
 }

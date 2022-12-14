@@ -32,7 +32,7 @@ contract SpecDataHolderTest is Test {
     0xad54bdeade5537fb0a553190159783e45d02d316a992db05cbed606d3ca36b39;
   uint256 randomPrivateKey =
     0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
-  string specUri;
+  string specUri = "some spec uri";
 
   event Transfer(
     address indexed from,
@@ -41,7 +41,8 @@ contract SpecDataHolderTest is Test {
   );
 
   function setUp() public {
-    address to = address(this);
+    address contractOwner = address(this);
+
     badgesImplementationV1 = new Badges();
     specDataHolderImplementationV1 = new SpecDataHolder();
     raftImplementationV1 = new Raft();
@@ -52,7 +53,6 @@ contract SpecDataHolderTest is Test {
       address(specDataHolderImplementationV1),
       ""
     );
-
     badgesWrappedProxyV1 = Badges(address(badgesProxy));
     raftWrappedProxyV1 = Raft(address(raftProxy));
     specDataHolderWrappedProxyV1 = SpecDataHolder(address(specDataHolderProxy));
@@ -61,11 +61,13 @@ contract SpecDataHolderTest is Test {
       "Badges",
       "BADGES",
       "0.1.0",
-      to,
+      contractOwner,
       address(specDataHolderProxy)
     );
-    raftWrappedProxyV1.initialize(to, "Raft", "RAFT");
-    specDataHolderWrappedProxyV1.initialize(address(raftProxy), to);
+    raftWrappedProxyV1.initialize(contractOwner, "Raft", "RAFT");
+    specDataHolderWrappedProxyV1.initialize(address(raftProxy), contractOwner);
+
+    specDataHolderWrappedProxyV1.setBadgesAddress(address(badgesProxy));
   }
 
   function createRaft() public returns (uint256) {
@@ -106,13 +108,17 @@ contract SpecDataHolderTest is Test {
 
   function testGetRaftTokenId() public {
     uint256 raftTokenId = createRaft();
+
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
     assertEq(specDataHolderWrappedProxyV1.getRaftTokenId(specUri), 1);
   }
 
   function testSetBadgesAddress() public {
-    assertEq(specDataHolderWrappedProxyV1.getBadgesAddress(), address(0));
+    assertEq(
+      specDataHolderWrappedProxyV1.getBadgesAddress(),
+      address(badgesProxy)
+    );
     address randomAddress = vm.addr(randomPrivateKey);
 
     specDataHolderWrappedProxyV1.setBadgesAddress(randomAddress);
@@ -120,7 +126,10 @@ contract SpecDataHolderTest is Test {
   }
 
   function testSetBadgesAddressAsNonOwner() public {
-    assertEq(specDataHolderWrappedProxyV1.getBadgesAddress(), address(0));
+    assertEq(
+      specDataHolderWrappedProxyV1.getBadgesAddress(),
+      address(badgesProxy)
+    );
     address randomAddress = vm.addr(randomPrivateKey);
     vm.prank(randomAddress);
     vm.expectRevert(bytes("Ownable: caller is not the owner"));
