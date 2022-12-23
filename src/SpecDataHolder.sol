@@ -19,7 +19,7 @@ contract SpecDataHolder is
 
   address private badgesAddress;
   address private raftAddress;
-
+  string private george;
   modifier onlyBadgesContract() {
     require(msg.sender == badgesAddress, "onlyBadgesContract: unauthorized");
     _;

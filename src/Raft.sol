@@ -24,7 +24,7 @@ contract Raft is
   Counters.Counter private _tokenIds;
 
   mapping(uint256 => string) private _tokenURIs;
-
+  string private george;
   event MetadataUpdate(uint256 indexed tokenId);
 
   /// @custom:oz-upgrades-unsafe-allow constructor

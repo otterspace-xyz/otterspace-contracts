@@ -35,6 +35,7 @@ contract Badges is
   BitMaps.BitMap private revokedBadgesHashes;
   string private george;
   string private george2;
+  string private george3;
   event SpecCreated(
     address indexed to,
     string specUri,
