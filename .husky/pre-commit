@@ -28,4 +28,7 @@ then
 else
     # add all files in test/abis/latest to commit
     git add -A test/abis/latest
+    
+    # remove backup
+    rm -rf test/abis/backup
 fi
