@@ -28,11 +28,11 @@ npx hardhat testUpgrade
 if [ $? -ne 0 ]
 then
     # if there were errors
-    # remove the contents of test/abis/latest
+    # remove the contents of test/abis/latest (that we just copied above)
     rm -rf test/abis/latest
-    # copy the backup back to test/abis/latest
+    # restore the scripts as they were before
     cp -R test/abis/backup test/abis/latest
-    # remove the backup
+    # remove the backup directory
     rm -rf test/abis/backup
     
     echo "Errors were detected during testUpgrade. Aborting commit."
@@ -41,8 +41,21 @@ else
     # if testUpgrade passed
     # forge build to generate /out files
     npm run build
-    # add all files in out/ to this commit
-    git add -f out/Badges.sol/Badges.json out/Raft.sol/Raft.json out/SpecDataHolder.sol/SpecDataHolder.json
+
+    # check for changes in the /out directory
+    git diff --quiet --name-only HEAD -- out
+
+    # check the return code of the git diff command
+    if [ $? -eq 0 ]
+    then
+      # if there were no changes, exit the script
+      echo "No changes were detected in the /out directory. Exiting script."
+      exit 0
+    fi
+
+    ## if there were changes in the /out directory
+    # add only changed files in the /out directory to the commit
+    git add --update out/
 
     # add the hardhat ABIs we generated above to the commit
     git add -A test/abis/latest
@@ -50,3 +63,4 @@ else
     # remove backup
     rm -rf test/abis/backup
 fi
+
