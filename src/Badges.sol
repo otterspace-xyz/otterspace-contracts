@@ -33,7 +33,7 @@ contract Badges is
 
   mapping(uint256 => uint256) private voucherHashIds; // redundant storage as of x/x/x
   BitMaps.BitMap private revokedBadgesHashes;
-
+  string private george;
   event SpecCreated(
     address indexed to,
     string specUri,
