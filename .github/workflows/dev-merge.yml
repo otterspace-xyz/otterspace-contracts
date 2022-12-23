@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          version=$(grep '"version":' package.json | cut -d'"' -f4)
+          git tag $version
+          git push origin $version
