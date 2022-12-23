@@ -3,3 +3,32 @@
 
 npm run build
 git add -f out/Badges.sol/Badges.json out/Raft.sol/Raft.json out/SpecDataHolder.sol/SpecDataHolder.json
+
+# create backup of test/abis/latest
+cp -R test/abis/latest test/abis/backup
+
+# copy artifacts
+cp artifacts/src/Badges.sol/Badges.json test/abis/latest/Badges.json
+cp artifacts/src/Raft.sol/Raft.json test/abis/latest/Raft.json
+cp artifacts/src/SpecDataHolder.sol/SpecDataHolder.json test/abis/latest/SpecDataHolder.json
+
+# run testUpgrade
+npx hardhat testUpgrade
+
+# check if there were any errors
+if [ $? -ne 0 ]
+then
+    # restore backup
+    rm -rf test/abis/latest
+    cp -R test/abis/backup test/abis/latest
+    rm -rf test/abis/backup
+    
+    echo "Errors were detected during testUpgrade. Aborting commit."
+    exit 1
+else
+    # add all files in test/abis/latest to commit
+    git add -A test/abis/latest
+    
+    # remove backup
+    rm -rf test/abis/backup
+fi
