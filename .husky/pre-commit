@@ -1,6 +1,15 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# check for changes to files in /src directory
+git diff --quiet --name-only HEAD -- src
+
+if [ $? -eq 0 ]
+then
+  echo "No changes were detected in the /src directory. Exiting script."
+  exit 0
+fi
+
 # compile contracts and generate new ABIs
 npx hardhat compile
 
