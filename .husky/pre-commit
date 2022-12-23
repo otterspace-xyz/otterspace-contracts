@@ -1,8 +1,12 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# check for changes to files in /src directory
-git diff --quiet --name-only HEAD -- src
+
+echo "git diff"
+
+# print the exit status of the git diff command
+echo "git diff exit status: $?"
+
 
 if [ $? -eq 0 ]
 then
