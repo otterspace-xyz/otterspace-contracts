@@ -52,3 +52,20 @@ jobs:
 
       - name: Run snapshot
         run: forge snapshot
+
+      - name: Copy artifacts
+        run: |
+          cp artifacts/src/Badges.sol/Badges.json test/abis/latest/Badges.json
+          cp artifacts/src/Raft.sol/Raft.json test/abis/latest/Raft.json
+          cp artifacts/src/SpecDataHolder.sol/SpecDataHolder.json test/abis/latest/SpecDataHolder.json
+
+      - name: Run hardhat testUpgrade
+        run: |
+          npx hardhat testUpgrade
+      
+      - name: Confirm no errors
+        if: ${{ success() }}
+        run: |
+          if [ $? -ne 0 ]; then exit 1; fi
+
+
