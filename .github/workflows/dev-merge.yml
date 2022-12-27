@@ -12,13 +12,14 @@ jobs:
       - run: |
           # Check out the commit at the last tag
           last_tag=$(git tag | sort -r | head -n 1)
+          echo "Last tag: $last_tag"
           git checkout $last_tag
 
           # Save the contents of src/Badges.sol at the last tag to a temporary file
           git show HEAD:src/Badges.sol > last_tag_badges.sol
 
           # Print the contents of the last_tag and last_tag_badges.sol files
-          echo "Last tag: $last_tag"
+          echo "Last tag's code: $last_tag"
           cat last_tag_badges.sol
 
           # Check out the current commit
