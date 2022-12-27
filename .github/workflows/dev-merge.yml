@@ -30,6 +30,7 @@ jobs:
               echo "ITS DIFFERENT!"
           fi
       - run: |
+          # Tag the current commit with the version specified in package.json
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
           git push origin $version
