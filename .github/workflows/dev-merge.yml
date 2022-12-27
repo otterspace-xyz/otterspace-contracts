@@ -10,30 +10,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-        # Check out the commit at the last tag
-        last_tag=$(git tag | sort -r | head -n 1)
-        git checkout $last_tag
+          # Check out the commit at the last tag
+          last_tag=$(git tag | sort -r | head -n 1)
+          git checkout $last_tag
 
-        # Save the contents of src/Badges.sol at the last tag to a temporary file
-        git show HEAD:src/Badges.sol > last_tag_badges.sol
+          # Save the contents of src/Badges.sol at the last tag to a temporary file
+          git show HEAD:src/Badges.sol > last_tag_badges.sol
 
-        # Print the contents of the last_tag and last_tag_badges.sol files
-        echo "Last tag: $last_tag"
-        cat last_tag_badges.sol
+          # Print the contents of the last_tag and last_tag_badges.sol files
+          echo "Last tag: $last_tag"
+          cat last_tag_badges.sol
 
-        # Check out the current commit
-        git checkout HEAD
+          # Check out the current commit
+          git checkout HEAD
 
-        # Compare src/Badges.sol at the last tag with the current version
-        diff -q src/Badges.sol last_tag_badges.sol
-        if [ $? -ne 0 ]; then
-          echo "DIFFERENT"
-        fi
+          # Compare src/Badges.sol at the last tag with the current version
+          diff -q src/Badges.sol last_tag_badges.sol
+          if [ $? -ne 0 ]; then
+            echo "DIFFERENT"
+          fi
 
-        # Clean up the temporary file
-        rm last_tag_badges.sol
-
-
+          # Clean up the temporary file
+          rm last_tag_badges.sol
       - run: |
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
