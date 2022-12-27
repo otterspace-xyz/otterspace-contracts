@@ -11,6 +11,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           # Check out the commit at the last tag
+          echo "Number of tags: $(git tag | wc -l)"
+
           last_tag=$(git tag | sort -r | head -n 1)
           echo "last tag commit id"
           echo "Last tag: $last_tag"
