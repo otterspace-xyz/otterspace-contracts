@@ -76,7 +76,7 @@ contract Badges is
   }
 
   function getGeorge() public pure returns (string memory) {
-    return "george1234456";
+    return "george12344567";
   }
 
   /**
