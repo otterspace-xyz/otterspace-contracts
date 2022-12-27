@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          latest_tag=$(git rev-list --tags --max-count=1 --sort=-committerdate)
+          latest_tag=$(git for-each-ref --sort=-taggerdate --format '%(refname:short)' refs/tags | tail -n 1)
 
           git checkout $latest_tag
 
