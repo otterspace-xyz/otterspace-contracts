@@ -10,27 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          # Get the latest tag
-          latest_tag=$(git describe --tags --abbrev=0)
+          latest_tag=$(git rev-list --tags --max-count=1 --sort=-committerdate)
 
-          # Checkout the commit associated with the latest tag
           git checkout $latest_tag
 
-          # Get the contents of src/Badges.sol from the latest tag
           latest_badges=$(cat src/Badges.sol)
 
-          # Checkout the current commit
           git checkout HEAD
 
-          # Get the contents of src/Badges.sol from the current commit
           current_badges=$(cat src/Badges.sol)
 
-          # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$latest_badges" != "$current_badges" ]; then
               echo "ITS DIFFERENT!"
           fi
       - run: |
-          # Tag the current commit with the version specified in package.json
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
           git push origin $version
