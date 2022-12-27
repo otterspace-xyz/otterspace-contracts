@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: git show $(git describe --tags `git rev-list --tags --max-count=1`):src/Badges.sol > src/Badges.sol.last_tagged
       - run: diff src/Badges.sol src/Badges.sol.last_tagged > src/Badges.sol.diff
-      - if [[ -s src/Badges.sol.diff ]]; then run: echo "THERES A DIFF!!!"; fi
+      - run: if [[ -s src/Badges.sol.diff ]]; then echo "THERES A DIFF!!!"; fi
       - run: |
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
