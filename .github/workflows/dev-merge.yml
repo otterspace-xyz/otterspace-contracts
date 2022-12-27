@@ -10,10 +10,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          # Find the commit that corresponds to the last tag
-          last_tag_commit=$(git log --decorate --tags --simplify-by-decoration --pretty="format:%H" | head -1)
-          # Display the contents of src/Badges.sol at the commit corresponding to the last tag
-          git show $last_tag_commit:src/Badges.sol
+          # Check out the commit at the last tag
+          git checkout $(git describe --abbrev=0 --tags)
+
+          # Save the contents of src/Badges.sol at the last tag to a temporary file
+          git show HEAD:src/Badges.sol > last_tag_badges.sol
+
+          # Check out the current commit
+          git checkout HEAD
+
+          # Compare src/Badges.sol at the last tag with the current version
+          diff -q src/Badges.sol last_tag_badges.sol
+          if [ $? -ne 0 ]; then
+            echo "DIFFERENT"
+          fi
+
+          # Clean up the temporary file
+          rm last_tag_badges.sol
+
       - run: |
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
