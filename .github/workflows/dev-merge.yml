@@ -4,28 +4,18 @@ on:
       - closed
 
 jobs:
-  compare_badges:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: |
-          # Get a list of all the tags, sorted by commit date
-          tags=$(git rev-list --tags --sort=-committerdate)
-
-          # Get the second-to-last tag in the list (i.e., the previous tag)
-          previous_tag=$(echo "$tags" | tail -n 2 | head -n 1)
-
-          # Get the contents of src/Badges.sol in the previous tag
-          previous_badges=$(git show "$previous_tag:src/Badges.sol")
-
-          # Get the current contents of src/Badges.sol in the fork
-          current_badges=$(cat src/Badges.sol)
-
-          # Compare the contents of src/Badges.sol in the previous tag to the current version in the fork
-          if [ "$previous_badges" != "$current_badges" ]; then
-              echo "The contents of src/Badges.sol have changed since the previous tag!"
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0)
+          # Compare the current version of src/Badges.sol with the version at the latest tag
+          if ! git diff $latest_tag -- src/Badges.sol; then
+            echo "DIFFERENT"
           fi
-
       - run: |
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
