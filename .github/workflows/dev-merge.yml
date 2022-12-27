@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - run: |
           # Check out the commit at the last tag
           echo "Number of tags: $(git tag | wc -l)"
