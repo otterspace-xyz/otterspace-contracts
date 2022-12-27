@@ -11,7 +11,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           # Check out the commit at the last tag
-          git checkout $(git describe --abbrev=0 --tags)
+          last_tag=$(git tag | sort -r | head -n 1)
+          git checkout $last_tag
 
           # Save the contents of src/Badges.sol at the last tag to a temporary file
           git show HEAD:src/Badges.sol > last_tag_badges.sol
