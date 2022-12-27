@@ -9,9 +9,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git show $(git describe --tags `git rev-list --tags --max-count=1`):src/Badges.sol > src/Badges.sol.last_tagged
-      - run: diff src/Badges.sol src/Badges.sol.last_tagged > src/Badges.sol.diff
-      - run: if [[ -s src/Badges.sol.diff ]]; then echo "THERES A DIFF!!!"; fi
+      - run: |
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0)
+
+          # Checkout the commit associated with the latest tag
+          git checkout $latest_tag
+
+          # Get the contents of src/Badges.sol from the latest tag
+          latest_badges=$(cat src/Badges.sol)
+
+          # Checkout the current commit
+          git checkout HEAD
+
+          # Get the contents of src/Badges.sol from the current commit
+          current_badges=$(cat src/Badges.sol)
+
+          # Compare the contents of src/Badges.sol between the latest tag and the current commit
+          if [ "$latest_badges" != "$current_badges" ]; then
+              echo "ITS DIFFERENT!"
+          fi
       - run: |
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
