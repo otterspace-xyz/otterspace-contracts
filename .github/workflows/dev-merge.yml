@@ -12,33 +12,27 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          # Check out the commit at the last tag
-          echo "Number of tags: $(git tag | wc -l)"
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0)
 
-          last_tag=$(git tag | sort -r | head -n 1)
+          # Checkout the commit associated with the latest tag
+          git checkout $latest_tag
 
-          echo "Last tag: $last_tag"
-          git checkout $last_tag
+          # Get the contents of src/Badges.sol from the latest tag
+          latest_badges=$(cat src/Badges.sol)
 
-          # Save the contents of src/Badges.sol at the last tag to a temporary file
-          git show HEAD:src/Badges.sol > last_tag_badges.sol
-
-          # Print the contents of the last_tag and last_tag_badges.sol files
-          echo "Last tag's code: $last_tag"
-          cat last_tag_badges.sol
-
-          # Check out the current commit
+          # Checkout the current commit
           git checkout HEAD
 
-          # Compare src/Badges.sol at the last tag with the current version
-          diff -q src/Badges.sol last_tag_badges.sol
-          if [ $? -ne 0 ]; then
-            echo "DIFFERENT"
-          fi
+          # Get the contents of src/Badges.sol from the current commit
+          current_badges=$(cat src/Badges.sol)
 
-          # Clean up the temporary file
-          rm last_tag_badges.sol
+          # Compare the contents of src/Badges.sol between the latest tag and the current commit
+          if [ "$latest_badges" != "$current_badges" ]; then
+              echo "ITS DIFFERENT!"
+          fi
       - run: |
+          # Tag the current commit with the version specified in package.json
           version=$(grep '"version":' package.json | cut -d'"' -f4)
           git tag $version
           git push origin $version
