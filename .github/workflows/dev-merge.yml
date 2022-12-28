@@ -29,9 +29,6 @@ jobs:
       - name: Install submodules
         run: git submodule update --init
 
-      - name: Install yarn dependencies
-        run: yarn --frozen-lockfile
-
       - name: Run forge install
         run: forge install
       - run: |
