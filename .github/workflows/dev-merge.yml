@@ -34,7 +34,7 @@ jobs:
 
           echo "about to check out HEAD"
           # Checkout the current commit
-          git checkout HEAD
+          git switch dev
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
           echo "Current commit: $(git rev-parse HEAD)"
 
