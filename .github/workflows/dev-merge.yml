@@ -23,12 +23,16 @@ jobs:
 
           # Get the contents of src/Badges.sol from the latest tag
           last_tag_badges=$(cat src/Badges.sol)
+          echo "Last tag's code:"
+          echo "$last_tag_badges"
 
           # Checkout the current commit
           git checkout HEAD
 
           # Get the contents of src/Badges.sol from the current commit
           current_badges=$(cat src/Badges.sol)
+          echo "Current commit's code:"
+          echo "$current_badges"
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
