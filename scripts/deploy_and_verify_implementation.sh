@@ -14,7 +14,7 @@ if [ "$2" == "goerli" ]; then
   echo " "
   echo "GOERLI_RPC_URL=$GOERLI_RPC_URL"
   echo "ETHERSCAN_API_KEY=$ETHERSCAN_API_KEY"
-  # forge create src/$1.sol:$1 --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY
+  forge create src/$1.sol:$1 --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY
 elif [ "$2" == "optimism" ]; then
   echo " "
   echo "OPTIMISTIC_ETHERSCAN_API_KEY=$OPTIMISTIC_ETHERSCAN_API_KEY"
