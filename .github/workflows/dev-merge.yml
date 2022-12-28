@@ -20,8 +20,6 @@ jobs:
 
           # Create new branch from that tag
           git branch last_tag_branch $last_tag
-          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-          echo "Current commit: $(git rev-parse HEAD)"
 
           #switch to it
           git switch last_tag_branch
@@ -32,8 +30,9 @@ jobs:
           last_tag_badges=$(cat src/Badges.sol)
           echo "Last tag's code:"
           echo "$last_tag_badges"
+          echo "end of last tag's badges file"
 
-
+          echo "about to check out HEAD"
           # Checkout the current commit
           git checkout HEAD
           echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
