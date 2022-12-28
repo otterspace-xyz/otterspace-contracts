@@ -13,13 +13,16 @@ jobs:
           fetch-depth: 0
       - run: |
           # Get the latest tag
-          latest_tag=$(git describe --tags --abbrev=0)
+          last_tag=$(git describe --tags --abbrev=0)
 
-          # Checkout the commit associated with the latest tag
-          git checkout $latest_tag
+          # Create new branch from that tag
+          git branch last_tag_branch $last_tag
+
+          #switch to it
+          git switch last_tag_branch
 
           # Get the contents of src/Badges.sol from the latest tag
-          latest_badges=$(cat src/Badges.sol)
+          last_tag_badges=$(cat src/Badges.sol)
 
           # Checkout the current commit
           git checkout HEAD
@@ -28,7 +31,7 @@ jobs:
           current_badges=$(cat src/Badges.sol)
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
-          if [ "$latest_badges" != "$current_badges" ]; then
+          if [ "$last_tag_badges" != "$current_badges" ]; then
               echo "ITS DIFFERENT!"
           fi
       - run: |
