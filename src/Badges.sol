@@ -75,10 +75,6 @@ contract Badges is
     _disableInitializers();
   }
 
-  function getGeorge() public pure returns (string memory) {
-    return "george";
-  }
-
   /**
    * @notice Initialize the contract
    * @dev only called once when the proxy is deployed. Allows the contract to be upgraded
