@@ -1,11 +1,11 @@
 // scripts/propose-upgrade.js
 const { defender, ethers } = require('hardhat')
 
-const addresses = {
+const addresses: { [key: string]: string } = {
   Badges: '0xa6773847d3D2c8012C9cF62818b320eE278Ff722',
   SpecDataHolder: '0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25',
   Raft: '0xBb8997048e5F0bFe6C9D6BEe63Ede53BD0236Bb2',
-}
+};
 
 async function main() {
   // we'll call the script like node scripts/propose-upgrade.js Badges
