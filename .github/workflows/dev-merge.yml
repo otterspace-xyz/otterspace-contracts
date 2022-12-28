@@ -5,6 +5,10 @@ on:
 
 jobs:
   if_merged:
+    env:
+      DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+      GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
+      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
