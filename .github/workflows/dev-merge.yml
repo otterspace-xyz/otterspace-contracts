@@ -68,8 +68,9 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
+              echo "ECHO BEFORE SCRIPT RUNS"
               node scripts/propose-upgrade.ts Badges
-              echo "ECHO AFTER VERIFICATION"
+              echo "ECHO AFTER SCRIPT RUNS"
           fi
       - run: |
           # Tag the current commit with the version specified in package.json
