@@ -1,44 +1,43 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-
 # compile contracts and generate new ABIs
-npx hardhat compile
+# npx hardhat compile
 
-# create backup of test/abis/latest
-cp -R test/abis/latest test/abis/backup
+# # create backup of test/abis/latest
+# cp -R test/abis/latest test/abis/backup
 
-# copy artifacts over to test/abis/latest
-cp artifacts/src/Badges.sol/Badges.json test/abis/latest/Badges.json
-cp artifacts/src/Raft.sol/Raft.json test/abis/latest/Raft.json
-cp artifacts/src/SpecDataHolder.sol/SpecDataHolder.json test/abis/latest/SpecDataHolder.json
+# # copy artifacts over to test/abis/latest
+# cp artifacts/src/Badges.sol/Badges.json test/abis/latest/Badges.json
+# cp artifacts/src/Raft.sol/Raft.json test/abis/latest/Raft.json
+# cp artifacts/src/SpecDataHolder.sol/SpecDataHolder.json test/abis/latest/SpecDataHolder.json
 
-# run test the latest changes to make sure they don't break upgradeability
-npx hardhat testUpgrade
+# # run test the latest changes to make sure they don't break upgradeability
+# npx hardhat testUpgrade
 
-# check if there were any errors
-if [ $? -ne 0 ]
-then
-    # if there were errors
-    # remove the contents of test/abis/latest
-    rm -rf test/abis/latest
-    # copy the backup back to test/abis/latest
-    cp -R test/abis/backup test/abis/latest
-    # remove the backup
-    rm -rf test/abis/backup
-    
-    echo "Errors were detected during testUpgrade. Aborting commit."
-    exit 1
-else
-    # if testUpgrade passed
-    # forge build to generate /out files
-    npm run build
-    # add all files in out/ to this commit
-    git add -f out/Badges.sol/Badges.json out/Raft.sol/Raft.json out/SpecDataHolder.sol/SpecDataHolder.json
+# # check if there were any errors
+# if [ $? -ne 0 ]
+# then
+#     # if there were errors
+#     # remove the contents of test/abis/latest
+#     rm -rf test/abis/latest
+#     # copy the backup back to test/abis/latest
+#     cp -R test/abis/backup test/abis/latest
+#     # remove the backup
+#     rm -rf test/abis/backup
 
-    # add the hardhat ABIs we generated above to the commit
-    git add -A test/abis/latest
-    
-    # remove backup
-    rm -rf test/abis/backup
-fi
+#     echo "Errors were detected during testUpgrade. Aborting commit."
+#     exit 1
+# else
+#     # if testUpgrade passed
+#     # forge build to generate /out files
+#     npm run build
+#     # add all files in out/ to this commit
+#     git add -f out/Badges.sol/Badges.json out/Raft.sol/Raft.json out/SpecDataHolder.sol/SpecDataHolder.json
+
+#     # add the hardhat ABIs we generated above to the commit
+#     git add -A test/abis/latest
+
+#     # remove backup
+#     rm -rf test/abis/backup
+# fi
