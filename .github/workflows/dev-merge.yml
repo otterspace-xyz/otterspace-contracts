@@ -9,6 +9,8 @@ jobs:
       DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
       GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
       ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+      DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
+      DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -40,6 +42,8 @@ jobs:
           CI: true
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
+          DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
         run: |
           npx hardhat compile
 
@@ -64,7 +68,7 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
-              node .scripts/propose-upgrade.js Badges
+              node scripts/propose-upgrade.js Badges
               echo "ECHO AFTER VERIFICATION"
           fi
       - run: |
