@@ -69,7 +69,7 @@ jobs:
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
             echo "ECHO BEFORE SCRIPT RUNS"
-            npx hardhat run scripts/propose-upgrade.ts --network goerli
+            npx hardhat run scripts/propose-upgrade.ts Badges --network goerli
             echo "ECHO AFTER SCRIPT RUNS"
           fi
 

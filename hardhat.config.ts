@@ -11,6 +11,7 @@ import '@nomiclabs/hardhat-etherscan'
 import { HardhatUserConfig, task } from 'hardhat/config'
 
 import testUpgrade from './tasks/testUpgrade'
+import proposeUpgrade from './tasks/proposeUpgrade'
 require('dotenv').config()
 
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
@@ -26,6 +27,11 @@ function getRemappings() {
 }
 
 task('testUpgrade', 'Example task').setAction(testUpgrade)
+task('proposeUpgrade', 'Propose upgrade').setAction(proposeUpgrade)
+  .addPositionalParam("contractName")
+  .setAction(async (taskArgs) => {
+    console.log(taskArgs);
+  });
 
 const config: HardhatUserConfig = {
   defender: {
