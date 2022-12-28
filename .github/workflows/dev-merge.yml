@@ -68,7 +68,7 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
-              node scripts/propose-upgrade.js Badges
+              node scripts/propose-upgrade.ts Badges
               echo "ECHO AFTER VERIFICATION"
           fi
       - run: |
