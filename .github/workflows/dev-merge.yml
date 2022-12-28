@@ -68,10 +68,11 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
-              echo "ECHO BEFORE SCRIPT RUNS"
-              ts-node --input-type=script scripts/propose-upgrade.js Badges
-              echo "ECHO AFTER SCRIPT RUNS"
+            echo "ECHO BEFORE SCRIPT RUNS"
+            $(yarn bin)/ts-node --input-type=script scripts/propose-upgrade.js Badges
+            echo "ECHO AFTER SCRIPT RUNS"
           fi
+
       - run: |
           # Tag the current commit with the version specified in package.json
           version=$(grep '"version":' package.json | cut -d'"' -f4)
