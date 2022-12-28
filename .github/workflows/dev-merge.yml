@@ -53,6 +53,7 @@ jobs:
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
               forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY
+              echo "ECHO AFTER VERIFICATION"
           fi
       - run: |
           # Tag the current commit with the version specified in package.json
