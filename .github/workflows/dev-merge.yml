@@ -14,20 +14,30 @@ jobs:
       - run: |
           # Get the latest tag
           last_tag=$(git describe --tags --abbrev=0)
+          echo "Latest tag commit: $last_tag"
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)"
 
           # Create new branch from that tag
           git branch last_tag_branch $last_tag
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)"
 
           #switch to it
           git switch last_tag_branch
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)"          
 
           # Get the contents of src/Badges.sol from the latest tag
           last_tag_badges=$(cat src/Badges.sol)
           echo "Last tag's code:"
           echo "$last_tag_badges"
 
+
           # Checkout the current commit
           git checkout HEAD
+          echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current commit: $(git rev-parse HEAD)"
 
           # Get the contents of src/Badges.sol from the current commit
           current_badges=$(cat src/Badges.sol)
