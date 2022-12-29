@@ -71,7 +71,7 @@ jobs:
           if [ "$last_tag_badges" != "$current_badges" ]; then
             echo "ECHO BEFORE FORGE CREATE RUNS"
             # Run forge create without contract verification
-            implementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --no-verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY)
+            implementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY)
             echo "FORGE CREATE RAN, TIM TO VERIFY"
 
 
