@@ -49,5 +49,3 @@ async function createProposal(implementation) {
     }
   })
 }
-
-export default createProposal
