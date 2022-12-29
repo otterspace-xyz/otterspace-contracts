@@ -73,7 +73,7 @@ jobs:
             forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY
             echo "FORGE CREATE RAN"
             echo "ECHO BEFORE SCRIPT RUNS"
-            node scripts/createProposal.ts
+            node scripts/createProposal.js
             echo "ECHO AFTER SCRIPT RUNS"
           fi
 
