@@ -72,6 +72,7 @@ jobs:
             echo "ECHO BEFORE FORGE CREATE RUNS"
             implementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY)
             echo "FORGE CREATE RAN"
+            echo "new implementation address is $implementation"
             echo "ECHO BEFORE SCRIPT RUNS"
             node scripts/createProposal.js $implementation
             echo "ECHO AFTER SCRIPT RUNS"
