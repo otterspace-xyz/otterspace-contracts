@@ -28,7 +28,6 @@ jobs:
         with:
           version: nightly
 
-      - run: yarn add request
       - name: Install submodules
         run: git submodule update --init
 
