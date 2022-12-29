@@ -28,6 +28,7 @@ jobs:
         with:
           version: nightly
 
+      - run: npm install request
       - name: Install submodules
         run: git submodule update --init
 
@@ -68,8 +69,11 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
+            echo "ECHO BEFORE FORGE CREATE RUNS"
+            forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY
+            echo "FORGE CREATE RAN"
             echo "ECHO BEFORE SCRIPT RUNS"
-            npx hardhat proposeUpgrade Badges --network goerli
+            node scripts/create-proposal.js 
             echo "ECHO AFTER SCRIPT RUNS"
           fi
 

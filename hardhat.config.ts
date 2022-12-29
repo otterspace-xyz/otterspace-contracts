@@ -7,11 +7,16 @@ import 'hardhat-watcher'
 import '@openzeppelin/hardhat-upgrades'
 import '@openzeppelin/hardhat-defender'
 import '@nomiclabs/hardhat-etherscan'
+import { HardhatRuntimeEnvironment } from 'hardhat/types/runtime'
 
 import { HardhatUserConfig, task } from 'hardhat/config'
 
 import testUpgrade from './tasks/testUpgrade'
 import proposeUpgrade from './tasks/proposeUpgrade'
+
+
+
+
 require('dotenv').config()
 
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
@@ -27,11 +32,10 @@ function getRemappings() {
 }
 
 task('testUpgrade', 'Example task').setAction(testUpgrade)
-task('proposeUpgrade', 'Propose upgrade').setAction(proposeUpgrade)
-  .addPositionalParam("contractName")
-  .setAction(async (taskArgs) => {
-    console.log(taskArgs);
-  });
+
+task('proposeUpgrade', 'Propose upgrade').setAction(async (taskArgs, hre) => {
+  await proposeUpgrade(taskArgs, hre);
+}).addPositionalParam("contractName");  
 
 const config: HardhatUserConfig = {
   defender: {
