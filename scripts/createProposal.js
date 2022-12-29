@@ -12,7 +12,7 @@ async function createProposal(implementation) {
 
   const options = {
     method: 'POST',
-    url: 'https://api.defender.dev/proposals',
+    url: 'https://defender-api.openzeppelin.com/admin/proposals',
     headers: {
       Authorization: `Bearer ${bearerToken}`,
       'Content-Type': 'application/json',
@@ -32,6 +32,22 @@ async function createProposal(implementation) {
       },
     },
   }
+
+  request(options, (error, response, body) => {
+    if (error) {
+      console.log('🚀 ~ request ~ error', error)
+      // handle the error
+    } else {
+      if (response.statusCode === 200) {
+        const data = JSON.parse(body)
+        console.log('🚀 ~ request ~ data', data)
+        // do something with the data
+      } else {
+        console.log('🚀 ~ request ~ response', response)
+        // handle the error
+      }
+    }
+  })
 }
 
 export default createProposal
