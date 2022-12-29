@@ -28,7 +28,7 @@ jobs:
         with:
           version: nightly
 
-      - run: npm install request
+      - run: yarn add request
       - name: Install submodules
         run: git submodule update --init
 
