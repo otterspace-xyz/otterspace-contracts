@@ -8,6 +8,7 @@ cache/
 artifacts/
 cache_hardhat/
 typechain-types/
+test/abis/backup
 
 # Foundry
 out/
