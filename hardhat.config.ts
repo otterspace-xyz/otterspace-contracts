@@ -12,7 +12,6 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types/runtime'
 import { HardhatUserConfig, task } from 'hardhat/config'
 
 import testUpgrade from './tasks/testUpgrade'
-import proposeUpgrade from './tasks/proposeUpgrade'
 
 
 
@@ -33,9 +32,6 @@ function getRemappings() {
 
 task('testUpgrade', 'Example task').setAction(testUpgrade)
 
-task('proposeUpgrade', 'Propose upgrade').setAction(async (taskArgs, hre) => {
-  await proposeUpgrade(taskArgs, hre);
-}).addPositionalParam("contractName");  
 
 const config: HardhatUserConfig = {
   defender: {

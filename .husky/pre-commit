@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-
 # compile contracts and generate new ABIs
 npx hardhat compile
 
@@ -17,8 +16,7 @@ cp artifacts/src/SpecDataHolder.sol/SpecDataHolder.json test/abis/latest/SpecDat
 npx hardhat testUpgrade
 
 # check if there were any errors
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
     # if there were errors
     # remove the contents of test/abis/latest
     rm -rf test/abis/latest
@@ -26,7 +24,7 @@ then
     cp -R test/abis/backup test/abis/latest
     # remove the backup
     rm -rf test/abis/backup
-    
+
     echo "Errors were detected during testUpgrade. Aborting commit."
     exit 1
 else
@@ -38,7 +36,7 @@ else
 
     # add the hardhat ABIs we generated above to the commit
     git add -A test/abis/latest
-    
+
     # remove backup
     rm -rf test/abis/backup
 fi
