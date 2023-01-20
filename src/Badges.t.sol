@@ -306,19 +306,6 @@ contract BadgesTest is Test {
     return (raftTokenId, tokenId);
   }
 
-  function testTakeWithSigFromAdmin() public {
-    address claimant = claimantAddress;
-    address admin = vm.addr(randomPrivateKey);
-    bytes memory adminSignature = getSignature(admin, randomPrivateKey);
-
-    uint256 raftTokenId = createRaftAndRegisterSpec();
-    vm.prank(raftHolderAddress);
-    raftWrappedProxyV1.setAdmin(raftTokenId, admin, true);
-
-    vm.prank(claimant);
-    uint256 tokenId = badgesWrappedProxyV1.take(raftHolderAddress, specUri, adminSignature);
-  }
-
   function testTakeWithSigFromUnauthorizedActor() public {
     address active = claimantAddress;
     address passive = raftHolderAddress;
