@@ -225,8 +225,12 @@ contract Badges is
   function createSpec(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
-    onlyRaftOwner(_raftTokenId)
   {
+    require(
+      specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
+      "createSpec: unauthorized"
+    );
+
     require(
       !specDataHolder.isSpecRegistered(_specUri),
       "createSpec: spec already registered"

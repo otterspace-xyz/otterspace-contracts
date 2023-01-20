@@ -13,4 +13,6 @@ interface ISpecDataHolder {
   function getRaftTokenId(string memory) external view returns (uint256);
 
   function setBadgeToRaft(uint256, uint256) external;
+
+  function isAuthorizedAdmin(uint256 _raftTokenId, address _admin) external view returns (bool);
 }

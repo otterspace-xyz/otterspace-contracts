@@ -61,6 +61,7 @@ contract BadgesTest is Test {
   string errNoSpecUris = "refreshMetadata: no spec uris provided";
   string errNotOwner = "Ownable: caller is not the owner";
   string errNotRaftOwner = "onlyRaftOwner: unauthorized";
+  string errCreateSpecUnauthorized = "createSpec: unauthorized";
   string errNotRevoked = "reinstateBadge: badge not revoked";
   string errSafeCheckUsed = "safeCheckAgreement: already used";
   string errSpecAlreadyRegistered = "createSpec: spec already registered";
@@ -127,9 +128,11 @@ contract BadgesTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
+
     vm.prank(to);
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUri), true);
+
     return raftTokenId;
   }
 
@@ -225,27 +228,48 @@ contract BadgesTest is Test {
 
   // // CREATE SPEC TESTS
 
-  function testCreateSpecAsNonRaftOwner() public {
+  function testCreateSpecAsRaftOwner() public {
+    address raftOwner = address(this);
+    uint256 raftTokenId = raftWrappedProxyV1.mint(raftOwner, specUri);
+
+    vm.prank(raftOwner);
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
+  }
+
+  function testCreateSpecAsAdmin() public {
+    address raftOwner = address(this);
+    address admin = address(123);
+    uint256 raftTokenId = raftWrappedProxyV1.mint(raftOwner, specUri);
+    raftWrappedProxyV1.setAdmin(raftTokenId, admin, true);
+
+    vm.prank(admin);
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
+  }
+
+  function testCreateSpecAsDeactivatedAdmin() public {
+    address raftOwner = address(this);
+    address admin = address(123);
+    uint256 raftTokenId = raftWrappedProxyV1.mint(raftOwner, specUri);
+    raftWrappedProxyV1.setAdmin(raftTokenId, admin, false);
+
+    vm.prank(admin);
+    vm.expectRevert(bytes(errCreateSpecUnauthorized));
+    badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
+  }
+
+  function testCreateSpecAsUnauthorizedAccount() public {
     address to = address(this);
-    address zeroAddress = address(0);
-
-    vm.expectEmit(true, true, true, false);
-    uint256 raftTokenId = raftWrappedProxyV1.mint(to, specUri);
-    emit Transfer(zeroAddress, to, raftTokenId);
-
-    assertEq(raftTokenId, 1);
-    assertEq(raftWrappedProxyV1.balanceOf(to), 1);
-
     address randomAddress = vm.addr(randomPrivateKey);
-    vm.prank(randomAddress);
+    uint256 raftTokenId = raftWrappedProxyV1.mint(to, specUri);
 
-    vm.expectRevert(bytes(errNotRaftOwner));
+    vm.prank(randomAddress);
+    vm.expectRevert(bytes(errCreateSpecUnauthorized));
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
   }
 
   // can't test this one with fuzzing because the owner is set in the "setup"
   // function above, so replacing "to" with "fuzzAddress" will always fail
-  function testCreateSpecTwice() public {
+  function testCreatingWithExistingSpecUriShouldRevert() public {
     address to = address(this);
     address zeroAddress = address(0);
 
@@ -254,22 +278,10 @@ contract BadgesTest is Test {
     emit Transfer(zeroAddress, to, raftTokenId);
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);
+
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
+
     vm.expectRevert(bytes(errSpecAlreadyRegistered));
-    badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
-  }
-
-  function testSenderIsntRaftOwner() public {
-    address to = address(this);
-    address zeroAddress = address(0);
-
-    vm.expectEmit(true, true, true, false);
-    uint256 raftTokenId = raftWrappedProxyV1.mint(to, specUri);
-    emit Transfer(zeroAddress, to, raftTokenId);
-    assertEq(raftTokenId, 1);
-    assertEq(raftWrappedProxyV1.balanceOf(to), 1);
-    vm.prank(address(0));
-    vm.expectRevert(bytes(errNotRaftOwner));
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
   }
 

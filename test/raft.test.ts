@@ -10,7 +10,7 @@ const symbol = 'RAFT'
 const chainId = 31337
 const tokenURI = 'blah'
 const errNotOwner = 'Ownable: caller is not the owner'
-const errNonExitentTokenToSet = '_setTokenURI: URI set of nonexistent token'
+const errNonExitentTokenToSet = 'setTokenURI: URI set of nonexistent token'
 const raftTokenUri = 'someUri'
 
 const setup = async () => {
