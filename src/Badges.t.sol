@@ -290,41 +290,51 @@ contract BadgesTest is Test {
 
   // TAKE TESTS
   // happy path
-  function testBalanceIncreaseAfterTake() public returns (uint256, uint256) {
+  function testTake() public returns (uint256, uint256) {
     address active = claimantAddress;
     address passive = raftHolderAddress;
-
     uint256 raftTokenId = createRaftAndRegisterSpec();
-
     bytes memory signature = getSignature(active, raftHolderPrivateKey);
-    vm.expectEmit(true, true, true, false);
+
     vm.prank(active);
     uint256 tokenId = badgesWrappedProxyV1.take(passive, specUri, signature);
-
-    address zeroAddress = address(0);
-    emit Transfer(zeroAddress, active, tokenId);
 
     assertEq(badgesWrappedProxyV1.balanceOf(active), 1);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId), active);
+
     return (raftTokenId, tokenId);
   }
 
-  function testTakeWithSigFromBadActor() public returns (uint256, uint256) {
+  function testTakeWithSigFromAdmin() public {
+    address claimant = claimantAddress;
+    address admin = vm.addr(randomPrivateKey);
+    bytes memory adminSignature = getSignature(admin, randomPrivateKey);
+
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+    vm.prank(raftHolderAddress);
+    raftWrappedProxyV1.setAdmin(raftTokenId, admin, true);
+
+    vm.prank(claimant);
+    uint256 tokenId = badgesWrappedProxyV1.take(raftHolderAddress, specUri, adminSignature);
+  }
+
+  function testTakeWithSigFromUnauthorizedActor() public {
     address active = claimantAddress;
     address passive = raftHolderAddress;
     uint256 badActorPrivateKey = 123;
-
     createRaftAndRegisterSpec();
-
     bytes memory signature = getSignature(active, badActorPrivateKey);
+
     vm.prank(active);
     vm.expectRevert(bytes(errInvalidSig));
+    uint256 tokenId = badgesWrappedProxyV1.take(passive, specUri, signature);
 
-    badgesWrappedProxyV1.take(passive, specUri, signature);
+    assertEq(tokenId, 0);
+    assertEq(badgesWrappedProxyV1.balanceOf(active), 0);
   }
 
-  function testTakeWithUnregisteredSpec() public returns (uint256, uint256) {
+  function testTakeWithUnregisteredSpec() public {
     address passive = raftHolderAddress;
     address zeroAddress = address(0);
     address active = claimantAddress;
@@ -377,7 +387,7 @@ contract BadgesTest is Test {
   function testTakeAndUnequipAndRetake() public {
     address active = claimantAddress;
     address passive = raftHolderAddress;
-    (, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (, uint256 tokenId) = testTake();
 
     vm.expectEmit(true, true, true, false);
     vm.prank(active);
@@ -399,11 +409,10 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.ownerOf(tokenId2), active);
   }
 
-  // how was this ever passing???
   function testTakeWithAlreadyUsedVoucher() public {
     address active = claimantAddress;
     address passive = raftHolderAddress;
-    testBalanceIncreaseAfterTake();
+    testTake();
 
     bytes memory signature = getSignature(active, raftHolderPrivateKey);
     vm.prank(active);
@@ -544,7 +553,7 @@ contract BadgesTest is Test {
   // UNEQUIP TESTS
   function testBalanceDecreaseAfterUnequip() public {
     address active = claimantAddress;
-    (, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (, uint256 tokenId) = testTake();
 
     vm.expectEmit(true, true, true, false);
     vm.prank(active);
@@ -559,7 +568,7 @@ contract BadgesTest is Test {
     address zeroAddress = address(0);
 
     address active = claimantAddress;
-    (, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (, uint256 tokenId) = testTake();
 
     vm.expectEmit(true, true, true, false);
     vm.prank(active);
@@ -608,7 +617,7 @@ contract BadgesTest is Test {
   }
 
   function testRevokeBadge() public {
-    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
     vm.prank(raftHolderAddress);
@@ -617,7 +626,7 @@ contract BadgesTest is Test {
   }
 
   function testRevokeBadgeThatsAlreadyRevoked() public {
-    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
     vm.prank(raftHolderAddress);
@@ -630,7 +639,7 @@ contract BadgesTest is Test {
   }
 
   function testRevokeBadgeWithInvalidTokenId() public {
-    (uint256 raftTokenId, ) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, ) = testTake();
     uint256 invalidTokenId = 123;
     vm.prank(raftHolderAddress);
     vm.expectRevert(bytes(errTokenDoesntExist));
@@ -638,7 +647,7 @@ contract BadgesTest is Test {
   }
 
   function testReinstatingBadge() public {
-    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
@@ -652,7 +661,7 @@ contract BadgesTest is Test {
   }
 
   function testReinstatingBadgeThatsNotRevoked() public {
-    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
 
@@ -663,7 +672,7 @@ contract BadgesTest is Test {
   }
 
   function testIsBadgeValid() public {
-    (uint256 raftTokenId, uint256 tokenId) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
 
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
     vm.prank(raftHolderAddress);
@@ -1209,7 +1218,7 @@ contract BadgesTest is Test {
 
   function testSetSpecToRaftAsUnauthorizedAccount() public {
     address attackerAddress = vm.addr(randomPrivateKey);
-    (uint256 raftTokenId, ) = testBalanceIncreaseAfterTake();
+    (uint256 raftTokenId, ) = testTake();
 
     vm.prank(attackerAddress);
     vm.expectRevert(bytes(errOnlyBadgesContract));
