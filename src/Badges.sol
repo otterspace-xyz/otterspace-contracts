@@ -316,7 +316,11 @@ contract Badges is
     uint256 _raftTokenId,
     uint256 _badgeId,
     uint8 _reason
-  ) external tokenExists(_badgeId) onlyRaftOwner(_raftTokenId) {
+  ) external tokenExists(_badgeId) {
+    require(
+      specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
+      "revokeBadge: unauthorized"
+    );
     require(
       !revokedBadgesHashes.get(_badgeId),
       "revokeBadge: badge already revoked"
@@ -336,8 +340,11 @@ contract Badges is
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
     external
     tokenExists(_badgeId)
-    onlyRaftOwner(_raftTokenId)
   {
+    require(
+      specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
+      "reinstateBadge: unauthorized"
+    );
     require(
       revokedBadgesHashes.get(_badgeId),
       "reinstateBadge: badge not revoked"

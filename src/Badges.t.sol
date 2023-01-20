@@ -74,6 +74,8 @@ contract BadgesTest is Test {
     "safeCheckMerkleAgreement: invalid signature";
   string errTokenDoesntExist = "tokenExists: token doesn't exist";
   string errTokenExists = "mint: tokenID exists";
+  string errRevokeUnauthorized = "revokeBadge: unauthorized";
+  string errReinstateUnauthorized = "reinstateBadge: unauthorized";
 
   string specUri = "some spec uri";
 
@@ -603,12 +605,26 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.unequip(1337);
   }
 
+  // REVOCATION TESTS
   function testRevokeBadge() public {
     (uint256 raftTokenId, uint256 tokenId) = testTake();
 
-    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
     vm.prank(raftHolderAddress);
     badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+  }
+
+  function testRevokeBadgeAsAdmin() public {
+    address admin = vm.addr(randomPrivateKey);
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
+
+    vm.prank(raftHolderAddress);
+    raftWrappedProxyV1.setAdmin(raftTokenId, admin, true);
+
+    vm.prank(admin);
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
   }
 
@@ -628,10 +644,26 @@ contract BadgesTest is Test {
   function testRevokeBadgeWithInvalidTokenId() public {
     (uint256 raftTokenId, ) = testTake();
     uint256 invalidTokenId = 123;
+
     vm.prank(raftHolderAddress);
     vm.expectRevert(bytes(errTokenDoesntExist));
     badgesWrappedProxyV1.revokeBadge(raftTokenId, invalidTokenId, 1);
   }
+
+  function testRevokeBadgeAsUnauthorizedAccountShouldError() public {
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
+    address unauthorizedAccount = address(123);
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    vm.prank(unauthorizedAccount);
+    vm.expectRevert(bytes(errRevokeUnauthorized));
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+  }
+
+  // REINSTATE tests
 
   function testReinstatingBadge() public {
     (uint256 raftTokenId, uint256 tokenId) = testTake();
@@ -658,6 +690,25 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
   }
 
+  function testReinstateBadgeAsUnauthorizedAccountShouldError() public {
+    address unauthorizedAccount = address(123);
+    (uint256 raftTokenId, uint256 tokenId) = testTake();
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), true);
+
+    vm.prank(raftHolderAddress);
+    badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+
+    vm.prank(unauthorizedAccount);
+    vm.expectRevert(bytes(errReinstateUnauthorized));
+    badgesWrappedProxyV1.reinstateBadge(raftTokenId, tokenId);
+
+    assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
+  }
+
+  // BADGE VALIDITY TESTS
+
   function testIsBadgeValid() public {
     (uint256 raftTokenId, uint256 tokenId) = testTake();
 
@@ -666,6 +717,8 @@ contract BadgesTest is Test {
     badgesWrappedProxyV1.revokeBadge(raftTokenId, tokenId, 1);
     assertEq(badgesWrappedProxyV1.isBadgeValid(tokenId), false);
   }
+
+  // REFRESH METADATA TESTS
 
   function testRefreshMetadata() public {
     createRaftAndRegisterSpec();
