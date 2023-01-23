@@ -174,6 +174,12 @@ contract Badges is
     return _give(_to, _uri, _signature, raftTokenId);
   }
 
+  /**
+   * @notice Allows an admin of the raft to mint a requested badge
+   * @param _to the person who is receiving the badge
+   * @param _uri the uri of the badge spec
+   * @param _signature the signature used to verify that the person receiving the badge actually requested it
+   */
   function giveRequestedBadge(
     address _to,
     string calldata _uri,
