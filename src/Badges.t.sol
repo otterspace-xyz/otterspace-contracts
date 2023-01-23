@@ -76,6 +76,7 @@ contract BadgesTest is Test {
   string errTokenExists = "mint: tokenID exists";
   string errRevokeUnauthorized = "revokeBadge: unauthorized";
   string errReinstateUnauthorized = "reinstateBadge: unauthorized";
+  string errRequestedBadgeUnauthorized = "giveRequestedBadge: unauthorized";
 
   string specUri = "some spec uri";
 
@@ -408,6 +409,75 @@ contract BadgesTest is Test {
 
     vm.expectRevert(bytes(errTokenExists));
     badgesWrappedProxyV1.take(passive, specUri, signature);
+  }
+
+  // REQUEST BADGE TESTS
+  function testGiveRequestedBadgeAsRaftHolder() public {
+    createRaftAndRegisterSpec();
+
+    bytes32 hash = badgesWrappedProxyV1.getRequestHash(
+      claimantAddress,
+      specUri
+    );
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(claimantPrivateKey, hash);
+    bytes memory signature = abi.encodePacked(r, s, v);
+
+    vm.prank(raftHolderAddress);
+    uint256 tokenId = badgesWrappedProxyV1.giveRequestedBadge(
+      claimantAddress,
+      specUri,
+      signature
+    );
+    assertEq(badgesWrappedProxyV1.balanceOf(claimantAddress), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), claimantAddress);
+  }
+
+  function testGiveRequestedBadgeAsAdmin() public {
+    uint256 raftTokenId = createRaftAndRegisterSpec();
+    address admin = address(123);
+
+    vm.prank(raftHolderAddress);
+    raftWrappedProxyV1.setAdmin(raftTokenId, admin, true);
+
+    bytes32 hash = badgesWrappedProxyV1.getRequestHash(
+      claimantAddress,
+      specUri
+    );
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(claimantPrivateKey, hash);
+    bytes memory signature = abi.encodePacked(r, s, v);
+
+    vm.prank(admin);
+    uint256 tokenId = badgesWrappedProxyV1.giveRequestedBadge(
+      claimantAddress,
+      specUri,
+      signature
+    );
+    assertEq(badgesWrappedProxyV1.balanceOf(claimantAddress), 1);
+    assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
+    assertEq(badgesWrappedProxyV1.ownerOf(tokenId), claimantAddress);
+  }
+
+  function testGiveRequestedBadgeAsUnauthorizedActor() public {
+    createRaftAndRegisterSpec();
+
+    bytes32 hash = badgesWrappedProxyV1.getRequestHash(
+      claimantAddress,
+      specUri
+    );
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(claimantPrivateKey, hash);
+    bytes memory signature = abi.encodePacked(r, s, v);
+
+    address unauthorizedAccount = address(123456);
+
+    vm.prank(unauthorizedAccount);
+    vm.expectRevert(bytes(errRequestedBadgeUnauthorized));
+    badgesWrappedProxyV1.giveRequestedBadge(
+      claimantAddress,
+      specUri,
+      signature
+    );
+    assertEq(badgesWrappedProxyV1.balanceOf(claimantAddress), 0);
   }
 
   // GIVE TESTS

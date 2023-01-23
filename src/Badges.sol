@@ -57,6 +57,9 @@ contract Badges is
   bytes32 constant MERKLE_AGREEMENT_HASH =
     keccak256("MerkleAgreement(address passive,string tokenURI,bytes32 root)");
 
+  bytes32 constant REQUEST_HASH =
+    keccak256("Request(address requester,string tokenURI)");
+
   modifier onlyRaftOwner(uint256 _raftTokenId) {
     require(
       specDataHolder.getRaftOwner(_raftTokenId) == msg.sender,
@@ -171,6 +174,31 @@ contract Badges is
     return _give(_to, _uri, _signature, raftTokenId);
   }
 
+  function giveRequestedBadge(
+    address _to,
+    string calldata _uri,
+    bytes calldata _signature
+  ) external virtual returns (uint256) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        _to, // requester
+        getRequestHash(_to, _uri),
+        _signature
+      ),
+      "giveRequestedBadge: invalid signature"
+    );
+
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "giveRequestedBadge: unauthorized"
+    );
+
+    return mint(_to, _uri, raftTokenId);
+  }
+
+  // todo - can we sole stale voucher problem here with isAdmin() even if they're 'inactive'?
   /**
    * @notice Allows a user to mint a badge from a voucher
    * @dev Take is called by somebody who has already been added to an allow list.
@@ -407,6 +435,18 @@ contract Badges is
       );
   }
 
+  function getRequestHash(address _requester, string calldata _uri)
+    public
+    view
+    virtual
+    returns (bytes32)
+  {
+    return
+      _hashTypedDataV4(
+        keccak256(abi.encode(REQUEST_HASH, _requester, keccak256(bytes(_uri))))
+      );
+  }
+
   function getBadgeIdHash(address _to, string calldata _uri)
     public
     view
@@ -421,9 +461,6 @@ contract Badges is
     string calldata _uri,
     uint256 _raftTokenId
   ) internal virtual returns (uint256) {
-    // only registered specs can be used for minting
-    require(_raftTokenId != 0, "mint: spec is not registered");
-
     // ensures that a badge spec can only be owned once by an account
     uint256 tokenId = uint256(getBadgeIdHash(_to, _uri));
     require(!exists(tokenId), "mint: tokenID exists");
