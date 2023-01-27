@@ -45,7 +45,7 @@ jobs:
 
       - run: |
           # Get the latest tag
-          last_tag=$(git describe --tags --abbrev=0 --always)
+          last_tag=$(git describe --tags --abbrev=0 --always
 
           # Create new branch from that tag
           git branch last_tag_branch $last_tag
