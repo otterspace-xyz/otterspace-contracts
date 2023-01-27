@@ -34,7 +34,14 @@ contract RaftTest is Test {
     address indexed to,
     uint256 indexed tokenId
   );
+
   event MetadataUpdate(uint256 indexed tokenId);
+
+  event AdminUpdate(
+    uint256 indexed tokenId,
+    address indexed admin,
+    bool isAdded
+  );
 
   function setUp() public {
     address to = address(this);
@@ -119,7 +126,7 @@ contract RaftTest is Test {
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
-    vm.expectRevert(bytes("_setTokenURI: URI set of nonexistent token"));
+    vm.expectRevert(bytes("setTokenURI: URI set of nonexistent token"));
     wrappedProxyV1.setTokenURI(999999999, "some new uri");
   }
 
@@ -161,5 +168,36 @@ contract RaftTest is Test {
     address to = address(0);
     vm.expectRevert(bytes(errCantMintToZeroAddress));
     wrappedProxyV1.mint(to, "some uri");
+  }
+
+  function testSetAdmin() public {
+    address tokenOwner = address(1);
+    uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");
+
+    address admin = address(2);
+
+    // checking for an address in a raft that was never an admin
+    bool isActive = false;
+    bool actual = wrappedProxyV1.isAdminActive(tokenId, admin);
+    assertEq(actual, isActive);
+
+    // checking for a new address being added as an admin
+    isActive = true;
+    vm.expectEmit(true, true, false, true);
+    vm.prank(tokenOwner);
+    wrappedProxyV1.setAdmin(tokenId, admin, isActive);
+    emit AdminUpdate(tokenId, admin, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin);
+    assertEq(actual, isActive);
+
+    // expect error if a tokenid does not exist
+    vm.expectRevert(bytes("addAdmin: tokenId does not exist"));
+    vm.prank(tokenOwner);
+    wrappedProxyV1.setAdmin(123, admin, isActive);
+
+    // expect error if the called is not the owner of the raftTokenid
+    vm.expectRevert(bytes("addAdmin: unauthorized"));
+    wrappedProxyV1.setAdmin(tokenId, address(123), isActive);
   }
 }

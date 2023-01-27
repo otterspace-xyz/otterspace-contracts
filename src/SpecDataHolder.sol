@@ -6,6 +6,7 @@ import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./interfaces/ISpecDataHolder.sol";
+import { Raft } from "./Raft.sol";
 
 // import "../../node_modules/hardhat/console.sol";
 
@@ -78,9 +79,15 @@ contract SpecDataHolder is
     return _specToRaft[_specUri] != 0;
   }
 
-  function getRaftOwner(uint256 _raftTokenId) external view returns (address) {
-    IERC721 raftInterface = IERC721(raftAddress);
-    return raftInterface.ownerOf(_raftTokenId);
+  function isAuthorizedAdmin(uint256 _raftTokenId, address _admin)
+    external
+    view
+    returns (bool)
+  {
+    Raft raft = Raft(raftAddress);
+    address raftOwner = raft.ownerOf(_raftTokenId);
+
+    return raftOwner == _admin || raft.isAdminActive(_raftTokenId, _admin);
   }
 
   // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
