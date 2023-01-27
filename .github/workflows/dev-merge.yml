@@ -68,9 +68,12 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
+            # if the code of the Badges contract has changed since the time we tagged the repo, we should deploy a new implementation
+            
             ## deploy and verify 
             # note: here we're getting the output of forge create and grabbing the address
             badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
+            
             # run our js file that creates the proposal
             node scripts/createProposal.js $badgesImplementation 'badges' 'goerli'
             echo "BADGES: deployed implementation, verified, proposed"
@@ -79,9 +82,12 @@ jobs:
           fi
 
           if [ "$last_tag_raft" != "$current_raft" ]; then
+            # if the code of the Raft contract has changed since the time we tagged the repo, we should deploy a new implementation
+
             ## deploy and verify 
             # note: here we're getting the output of forge create and grabbing the address
             raftImplementation=$(forge create src/Raft.sol:Raft --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
+            
             # run our js file that creates the proposal
             node scripts/createProposal.js $raftImplementation 'raft' 'goerli'
             echo "RAFT: deployed implementation, verified, proposed"
@@ -90,9 +96,12 @@ jobs:
           fi
 
           if [ "$last_tag_sdh" != "$current_sdh" ]; then
+            # if the code of the SpecDataHolder contract has changed since the time we tagged the repo, we should deploy a new implementation
+
             ## deploy and verify 
             # note: here we're getting the output of forge create and grabbing the address
             sdhImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
+            
             # run our js file that creates the proposal
             node scripts/createProposal.js $sdhImplementation 'specDataHolder' 'goerli'
             echo "SpecDataHolder: deployed implementation, verified, proposed"
