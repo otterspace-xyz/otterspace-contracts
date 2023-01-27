@@ -60,14 +60,6 @@ contract Badges is
   bytes32 constant REQUEST_HASH =
     keccak256("Request(address requester,string tokenURI)");
 
-  modifier onlyRaftOwner(uint256 _raftTokenId) {
-    require(
-      specDataHolder.getRaftOwner(_raftTokenId) == msg.sender,
-      "onlyRaftOwner: unauthorized"
-    );
-    _;
-  }
-
   modifier tokenExists(uint256 _badgeId) {
     require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
     _;
@@ -146,7 +138,7 @@ contract Badges is
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
       "giveToMany: unauthorized"
     );
 
@@ -168,7 +160,7 @@ contract Badges is
   ) external virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
       "give: unauthorized"
     );
     return _give(_to, _uri, _signature, raftTokenId);
@@ -222,7 +214,7 @@ contract Badges is
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.isAuthorizedAdmin(raftTokenId, _from),
-      "take: unauthorized issuer"
+      "take: unauthorized"
     );
 
     return mint(msg.sender, _uri, raftTokenId);
@@ -239,8 +231,8 @@ contract Badges is
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == _from,
-      "take: unauthorized issuer"
+      specDataHolder.isAuthorizedAdmin(raftTokenId, _from),
+      "merkleTake: unauthorized"
     );
 
     return mint(msg.sender, _uri, raftTokenId);

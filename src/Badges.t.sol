@@ -68,7 +68,7 @@ contract BadgesTest is Test {
   string errSpecNotRegistered = "mint: spec is not registered";
   string errGiveUnauthorized = "give: unauthorized";
   string errUnequipSenderNotOwner = "unequip: sender must be owner";
-  string errTakeUnauthorized = "take: unauthorized issuer";
+  string errTakeUnauthorized = "take: unauthorized";
   string errMerkleInvalidLeaf = "safeCheckMerkleAgreement: invalid leaf";
   string errMerkleInvalidSignature =
     "safeCheckMerkleAgreement: invalid signature";

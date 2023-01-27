@@ -79,11 +79,6 @@ contract SpecDataHolder is
     return _specToRaft[_specUri] != 0;
   }
 
-  function getRaftOwner(uint256 _raftTokenId) external view returns (address) {
-    IERC721 raftInterface = IERC721(raftAddress);
-    return raftInterface.ownerOf(_raftTokenId);
-  }
-
   function isAuthorizedAdmin(uint256 _raftTokenId, address _admin)
     external
     view
