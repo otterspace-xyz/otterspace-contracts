@@ -221,7 +221,7 @@ contract Badges is
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == _from,
+      specDataHolder.isAuthorizedAdmin(raftTokenId, _from),
       "take: unauthorized issuer"
     );
 
