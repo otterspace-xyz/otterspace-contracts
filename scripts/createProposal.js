@@ -20,6 +20,10 @@ async function createProposal() {
     apiSecret: DEFENDER_TEAM_API_SECRET_KEY,
   })
   const newImplementation = process.argv[2]
+  console.log('🚀 ~ createProposal ~ process.argv[0]', process.argv[0])
+  console.log('🚀 ~ createProposal ~ process.argv[1]', process.argv[1])
+  console.log('🚀 ~ createProposal ~ process.argv[2]', process.argv[2])
+  console.log('🚀 ~ createProposal ~ process.argv[3]', process.argv[3])
   console.log('🚀 ~ createProposal ~ newImplementation', newImplementation)
 
   const contract = {}
