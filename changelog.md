@@ -2,6 +2,11 @@
 
 We're using https://semver.org/
 
+## 2.6.0
+- Raft contract now supports adding multiple admins via `isAdminActive` and `setAdmin` functions.
+- Other contracts now verify all admin authorization by checking with `isAdminActive`
+- A new minting functionality in added with `giveRequestedBadge` where any of the admins can issue a requested badge
+
 ## 2.5.1
 
 - Add modifier to setSpecToRaft
