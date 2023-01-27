@@ -45,7 +45,7 @@ jobs:
 
       - run: |
           # Get the latest tag
-          last_tag=$(git describe --tags --abbrev=0)
+          last_tag=$(git describe --tags --abbrev=0 --always)
 
           # Create new branch from that tag
           git branch last_tag_branch $last_tag
@@ -68,6 +68,7 @@ jobs:
 
           # Compare the contents of src/Badges.sol between the latest tag and the current commit
           if [ "$last_tag_badges" != "$current_badges" ]; then
+            echo "theres a difference!"
             # if the code of the Badges contract has changed since the time we tagged the repo, we should deploy a new implementation
             
             ## deploy and verify 
