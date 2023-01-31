@@ -309,39 +309,67 @@ contract BadgesTest is Test {
     return (raftTokenId, tokenId);
   }
 
-  function testTakeAfterIssuerTransferredRaftShouldFail() public returns (uint256, uint256) {
+  function testTakeAfterIssuerTransferredRaftShouldFail()
+    public
+    returns (uint256, uint256)
+  {
     uint256 raftTokenId = createRaftAndRegisterSpec();
-    bytes memory signature = getSignature(claimantAddress, raftHolderPrivateKey);
+    bytes memory signature = getSignature(
+      claimantAddress,
+      raftHolderPrivateKey
+    );
     address newRaftHolder = address(123);
 
     // transfer raft to new holder
     vm.prank(raftHolderAddress);
-    raftWrappedProxyV1.transferFrom(raftHolderAddress, newRaftHolder, raftTokenId);
+    raftWrappedProxyV1.transferFrom(
+      raftHolderAddress,
+      newRaftHolder,
+      raftTokenId
+    );
 
     vm.prank(claimantAddress);
     vm.expectRevert(bytes(errTakeUnauthorized));
-    uint256 tokenId = badgesWrappedProxyV1.take(raftHolderAddress, specUri, signature);
+    uint256 tokenId = badgesWrappedProxyV1.take(
+      raftHolderAddress,
+      specUri,
+      signature
+    );
 
     assertEq(badgesWrappedProxyV1.balanceOf(claimantAddress), 0);
 
     return (raftTokenId, tokenId);
   }
 
-  function testTakeAfterIssuerTransferredRaftAndSetPreviousHolderAsAdmin() public returns (uint256, uint256) {
+  function testTakeAfterIssuerTransferredRaftAndSetPreviousHolderAsAdmin()
+    public
+    returns (uint256, uint256)
+  {
     uint256 raftTokenId = createRaftAndRegisterSpec();
-    bytes memory signature = getSignature(claimantAddress, raftHolderPrivateKey);
+    bytes memory signature = getSignature(
+      claimantAddress,
+      raftHolderPrivateKey
+    );
     address newRaftHolder = address(123);
 
     // transfer raft to new holder
     vm.prank(raftHolderAddress);
-    raftWrappedProxyV1.transferFrom(raftHolderAddress, newRaftHolder, raftTokenId);
+    raftWrappedProxyV1.transferFrom(
+      raftHolderAddress,
+      newRaftHolder,
+      raftTokenId
+    );
 
     // mark the old holder as admin
     vm.prank(newRaftHolder);
     raftWrappedProxyV1.setAdmin(raftTokenId, raftHolderAddress, true);
 
     vm.prank(claimantAddress);
-    uint256 tokenId = badgesWrappedProxyV1.take(raftHolderAddress, specUri, signature);
+    uint256 tokenId = badgesWrappedProxyV1.take(
+      raftHolderAddress,
+      specUri,
+      signature
+    );
 
     assertEq(badgesWrappedProxyV1.balanceOf(claimantAddress), 1);
     assertEq(badgesWrappedProxyV1.tokenURI(tokenId), specUri);
@@ -1374,5 +1402,26 @@ contract BadgesTest is Test {
     vm.prank(attackerAddress);
     vm.expectRevert(bytes(errOnlyBadgesContract));
     specDataHolderWrappedProxyV1.setSpecToRaft(specUri, raftTokenId);
+  }
+
+  function testAirdropHappyPath() public {
+    address active = raftHolderAddress;
+    address recipient1 = claimantAddress;
+    address recipient2 = passiveAddress;
+    address recipient3 = vm.addr(randomPrivateKey);
+
+    createRaftAndRegisterSpec();
+
+    address[] memory recipientsAddresses = new address[](3);
+    recipientsAddresses[0] = recipient1;
+    recipientsAddresses[1] = recipient2;
+    recipientsAddresses[2] = recipient3;
+
+    vm.prank(active);
+    badgesWrappedProxyV1.airdrop(recipientsAddresses, specUri);
+
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 1);
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 1);
+    assertEq(badgesWrappedProxyV1.balanceOf(recipient3), 1);
   }
 }
