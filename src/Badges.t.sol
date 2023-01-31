@@ -50,6 +50,7 @@ contract BadgesTest is Test {
   string[] specUris = ["spec1", "spec2"];
   string badTokenUri = "bad token uri";
 
+  string errAirdropUnauthorized = "airdrop: unauthorized";
   string err721InvalidTokenId = "ERC721: invalid token ID";
   string errBadgeAlreadyRevoked = "revokeBadge: badge already revoked";
   string errBalanceOfNotValidOwner =
@@ -1409,9 +1410,7 @@ contract BadgesTest is Test {
     address recipient1 = claimantAddress;
     address recipient2 = passiveAddress;
     address recipient3 = vm.addr(randomPrivateKey);
-
     createRaftAndRegisterSpec();
-
     address[] memory recipientsAddresses = new address[](3);
     recipientsAddresses[0] = recipient1;
     recipientsAddresses[1] = recipient2;
@@ -1423,5 +1422,21 @@ contract BadgesTest is Test {
     assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 1);
     assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 1);
     assertEq(badgesWrappedProxyV1.balanceOf(recipient3), 1);
+  }
+
+  function testAirdropFromNonAdmin() public {
+    address recipient1 = claimantAddress;
+    address recipient2 = passiveAddress;
+    address recipient3 = vm.addr(randomPrivateKey);
+    createRaftAndRegisterSpec();
+    address[] memory recipientsAddresses = new address[](3);
+    recipientsAddresses[0] = recipient1;
+    recipientsAddresses[1] = recipient2;
+    recipientsAddresses[2] = recipient3;
+
+    // try to airdrop from a non admin account
+    vm.prank(recipient3);
+    vm.expectRevert(bytes(errAirdropUnauthorized));
+    badgesWrappedProxyV1.airdrop(recipientsAddresses, specUri);
   }
 }
