@@ -147,6 +147,11 @@ contract Badges is
     }
   }
 
+  /**
+   * @notice Allows an admin of a Raft token to mint a badge to multiple recipeients
+   * @param _recipients array the addresses who will receive a badge
+   * @param _uri the uri of the badge spec
+   */
   function airdrop(address[] calldata _recipients, string calldata _uri)
     external
     virtual
