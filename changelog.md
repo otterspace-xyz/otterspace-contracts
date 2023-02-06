@@ -2,10 +2,16 @@
 
 We're using https://semver.org/
 
+## 2.6.2
+
+- Allow Raft admins to airdrop badges
+
 ## 2.6.1
+
 - All minting actions now rely on checking admin list for authorization
 
 ## 2.6.0
+
 - Raft contract now supports adding multiple admins via `isAdminActive` and `setAdmin` functions.
 - A new minting functionality is added with `giveRequestedBadge` where any of the admins can issue a requested badge
 - giveRequestBadge admin authorization by checking with `isAdminActive`
