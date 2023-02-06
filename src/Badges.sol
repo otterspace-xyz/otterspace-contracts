@@ -148,6 +148,26 @@ contract Badges is
   }
 
   /**
+   * @notice Allows an admin of a Raft token to mint a badge to multiple recipeients
+   * @param _recipients array the addresses who will receive a badge
+   * @param _uri the uri of the badge spec
+   */
+  function airdrop(address[] calldata _recipients, string calldata _uri)
+    external
+    virtual
+  {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "airdrop: unauthorized"
+    );
+
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      mint(_recipients[i], _uri, raftTokenId);
+    }
+  }
+
+  /**
    * @notice Allows the owner of a badge spec to mint a badge to someone who has requested it
    * @param _to the person who is receiving the badge
    * @param _uri the uri of the badge spec
