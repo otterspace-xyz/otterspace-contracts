@@ -57,6 +57,8 @@ contract BadgesTest is Test {
     "balanceOf: address(0) is not a valid owner";
   string errGiveToManyArrayMismatch =
     "giveToMany: recipients and signatures length mismatch";
+  string errGiveRequestedBadgeToManyArrayMismatch =
+    "giveRequestedBadgeToMany: recipients and signatures length mismatch";
   string errInvalidSig = "safeCheckAgreement: invalid signature";
   string errGiveRequestedBadgeInvalidSig =
     "giveRequestedBadge: invalid signature";
@@ -1472,6 +1474,31 @@ contract BadgesTest is Test {
 
     vm.expectRevert(bytes(errGiveToManyArrayMismatch));
     badgesWrappedProxyV1.giveToMany(
+      recipientsAddresses,
+      specUri,
+      recipientsSignatures
+    );
+  }
+
+  function testGiveBadgeToManyWithArrayMismatch() public {
+    address active = raftHolderAddress;
+    address recipient1 = claimantAddress;
+    uint256 recipient1PrivateKey = claimantPrivateKey;
+    address recipient2 = passiveAddress;
+    createRaftAndRegisterSpec();
+    bytes memory recipient1Signature = getSignatureForRequestedBadge(
+      active,
+      recipient1PrivateKey
+    );
+    address[] memory recipientsAddresses = new address[](2);
+    recipientsAddresses[0] = recipient1;
+    recipientsAddresses[1] = recipient2;
+    bytes[] memory recipientsSignatures = new bytes[](1);
+    recipientsSignatures[0] = recipient1Signature;
+
+    vm.prank(active);
+    vm.expectRevert(bytes(errGiveRequestedBadgeToManyArrayMismatch));
+    badgesWrappedProxyV1.giveRequestedBadgeToMany(
       recipientsAddresses,
       specUri,
       recipientsSignatures

@@ -238,7 +238,7 @@ contract Badges is
 
     require(
       specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
-      "giveToMany: unauthorized"
+      "giveRequestedBadgeToMany: unauthorized"
     );
 
     for (uint256 i = 0; i < _recipients.length; i++) {
