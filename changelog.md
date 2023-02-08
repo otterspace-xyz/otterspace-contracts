@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.6.3
+
+- Add `giveRequestedBadgeToMany` and tests
+
 ## 2.6.2
 
 - Allow Raft admins to airdrop badges

@@ -200,6 +200,20 @@ contract Badges is
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
 
     require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "giveRequestedBadge: unauthorized"
+    );
+
+    return _giveRequestedBadge(_to, _uri, _signature, raftTokenId);
+  }
+
+  function _giveRequestedBadge(
+    address _to,
+    string calldata _uri,
+    bytes calldata _signature,
+    uint256 raftTokenId
+  ) internal virtual returns (uint256) {
+    require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _to, // requester
         getRequestHash(_to, _uri),
@@ -208,12 +222,28 @@ contract Badges is
       "giveRequestedBadge: invalid signature"
     );
 
+    return mint(_to, _uri, raftTokenId);
+  }
+
+  function giveRequestedBadgeToMany(
+    address[] memory _recipients,
+    string calldata _uri,
+    bytes[] calldata _signatures
+  ) external virtual {
+    require(
+      _recipients.length == _signatures.length,
+      "giveRequestedBadgeToMany: recipients and signatures length mismatch"
+    );
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+
     require(
       specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
-      "giveRequestedBadge: unauthorized"
+      "giveRequestedBadgeToMany: unauthorized"
     );
 
-    return mint(_to, _uri, raftTokenId);
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      _giveRequestedBadge(_recipients[i], _uri, _signatures[i], raftTokenId);
+    }
   }
 
   // todo - can we sole stale voucher problem here with isAdmin() even if they're 'inactive'?
