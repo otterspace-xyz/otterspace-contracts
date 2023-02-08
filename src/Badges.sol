@@ -196,7 +196,7 @@ contract Badges is
     address _to,
     string calldata _uri,
     bytes calldata _signature
-  ) public virtual returns (uint256) {
+  ) external virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
 
     require(
