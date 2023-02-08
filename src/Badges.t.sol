@@ -1343,32 +1343,28 @@ contract BadgesTest is Test {
 
   function testGiveRequestedBadgeToManyWithBadSignature() public {
     address active = raftHolderAddress;
-    address recipient1 = claimantAddress;
-    uint256 recipient1PrivateKey = claimantPrivateKey;
-    address recipient2 = passiveAddress;
-    uint256 recipient2PrivateKey = passivePrivateKey;
-    address recipient3 = vm.addr(randomPrivateKey);
-    createRaftAndRegisterSpec();
-    bytes memory recipient1Signature = getSignatureForRequestedBadge(
-      recipient1,
-      recipient1PrivateKey
-    );
-    bytes memory recipient2Signature = getSignatureForRequestedBadge(
-      recipient2,
-      recipient2PrivateKey
-    );
-    bytes memory recipient3Signature = bytes("bad signature");
     address[] memory recipientsAddresses = new address[](3);
-    recipientsAddresses[0] = recipient1;
-    recipientsAddresses[1] = recipient2;
-    recipientsAddresses[2] = recipient3;
+    recipientsAddresses[0] = claimantAddress;
+    recipientsAddresses[1] = passiveAddress;
+    recipientsAddresses[2] = vm.addr(randomPrivateKey);
     bytes[] memory recipientsSignatures = new bytes[](3);
-    recipientsSignatures[0] = recipient1Signature;
-    recipientsSignatures[1] = recipient2Signature;
-    recipientsSignatures[2] = recipient3Signature;
-
+    for (uint256 i = 0; i < recipientsAddresses.length; i++) {
+      uint256 privateKey;
+      if (i == 0) {
+        privateKey = claimantPrivateKey;
+      } else if (i == 1) {
+        privateKey = passivePrivateKey;
+      } else {
+        privateKey = randomPrivateKey;
+      }
+      recipientsSignatures[i] = getSignatureForRequestedBadge(
+        recipientsAddresses[i],
+        privateKey
+      );
+    }
+    recipientsSignatures[2] = bytes("bad signature");
+    createRaftAndRegisterSpec();
     vm.prank(active);
-    // expect it to revert since we passed in a bad signature
     vm.expectRevert(bytes(errGiveRequestedBadgeInvalidSig));
     badgesWrappedProxyV1.giveRequestedBadgeToMany(
       recipientsAddresses,
@@ -1376,9 +1372,9 @@ contract BadgesTest is Test {
       recipientsSignatures
     );
 
-    assertEq(badgesWrappedProxyV1.balanceOf(recipient1), 0);
-    assertEq(badgesWrappedProxyV1.balanceOf(recipient2), 0);
-    assertEq(badgesWrappedProxyV1.balanceOf(recipient3), 0);
+    for (uint256 i = 0; i < recipientsAddresses.length; i++) {
+      assertEq(badgesWrappedProxyV1.balanceOf(recipientsAddresses[i]), 0);
+    }
   }
 
   function testGiveToManyWithUnauthorizedClaimant() public {
