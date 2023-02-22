@@ -136,7 +136,7 @@ contract SpecDataHolderTest is Test {
     specDataHolderWrappedProxyV1.setBadgesAddress(randomAddress);
   }
 
-  function testSetBadgesToRafts() public {
+  function testSetBadgesToRaftsShouldFailForUnauthorizedCaller() public {
     uint256[] memory badgeTokenIds = new uint256[](3);
     badgeTokenIds[0] = 1;
     badgeTokenIds[1] = 2;
