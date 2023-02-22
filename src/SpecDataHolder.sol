@@ -21,8 +21,11 @@ contract SpecDataHolder is
   address private badgesAddress;
   address private raftAddress;
 
-  modifier onlyBadgesContract() {
-    require(msg.sender == badgesAddress, "onlyBadgesContract: unauthorized");
+  modifier onlyAuthorized() {
+    require(
+      msg.sender == badgesAddress || msg.sender == owner(),
+      "onlyAuthorized: unauthorized"
+    );
     _;
   }
 
@@ -42,15 +45,58 @@ contract SpecDataHolder is
   function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId)
     external
     virtual
-    onlyBadgesContract
+    onlyAuthorized
   {
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
+  // functions for re-creating the data
+  function setBadgesToRafts(
+    uint256[] calldata _badgeTokenId,
+    uint256[] calldata _raftTokenId
+  ) external virtual onlyAuthorized {
+    require(
+      _badgeTokenId.length == _raftTokenId.length,
+      "setBadgesToRafts: arrays must be the same length"
+    );
+    for (uint256 i = 0; i < _badgeTokenId.length; i++) {
+      _badgeToRaft[_badgeTokenId[i]] = _raftTokenId[i];
+    }
+  }
+
+  function setSpecsToRafts(
+    string[] calldata _specUri,
+    uint256[] calldata _raftTokenId
+  ) external virtual onlyAuthorized {
+    require(
+      _specUri.length == _raftTokenId.length,
+      "setSpecsToRafts: arrays must be the same length"
+    );
+    for (uint256 i = 0; i < _specUri.length; i++) {
+      _specToRaft[_specUri[i]] = _raftTokenId[i];
+    }
+  }
+
+  // create setSpecsToRaft
+
+  // create setBadgesToRaft
+
+  // write tests for all of these
+
+  // create new wallet for this
+
+  // badges address needs to point to the new specDataHolder
+
+  // raft address needs to point to the new specDataHolder
+
+  // call setDataHolder
+
+  // update specDataholder in API and frontend
+
   function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
-    onlyBadgesContract
+    onlyAuthorized
   {
     _specToRaft[_specUri] = _raftTokenId;
   }

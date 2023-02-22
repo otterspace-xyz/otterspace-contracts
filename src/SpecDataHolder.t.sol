@@ -136,6 +136,58 @@ contract SpecDataHolderTest is Test {
     specDataHolderWrappedProxyV1.setBadgesAddress(randomAddress);
   }
 
+  function testSetBadgesToRafts() public {
+    uint256[] memory badgeTokenIds = new uint256[](3);
+    badgeTokenIds[0] = 1;
+    badgeTokenIds[1] = 2;
+    badgeTokenIds[2] = 3;
+
+    uint256[] memory raftTokenIds = new uint256[](3);
+    raftTokenIds[0] = 10;
+    raftTokenIds[1] = 20;
+    raftTokenIds[2] = 30;
+
+    // Test that only authorized parties can set the mappings
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("onlyAuthorized: unauthorized"));
+    specDataHolderWrappedProxyV1.setBadgesToRafts(badgeTokenIds, raftTokenIds);
+  }
+
+  function testSetBadgesToRaftsDifferentLength() public {
+    uint256[] memory badgeTokenIds = new uint256[](3);
+    badgeTokenIds[0] = 1;
+    badgeTokenIds[1] = 2;
+    badgeTokenIds[2] = 3;
+
+    uint256[] memory raftTokenIds = new uint256[](2);
+    raftTokenIds[0] = 10;
+    raftTokenIds[1] = 20;
+
+    vm.expectRevert(bytes("setBadgesToRafts: arrays must be the same length"));
+    specDataHolderWrappedProxyV1.setBadgesToRafts(badgeTokenIds, raftTokenIds);
+  }
+
+  function testSetSpecsToRafts() public {
+    string[] memory specUris = new string[](3);
+    specUris[0] = "spec uri 1";
+    specUris[1] = "spec uri 2";
+    specUris[2] = "spec uri 3";
+
+    uint256[] memory raftTokenIds = new uint256[](3);
+    raftTokenIds[0] = 1;
+    raftTokenIds[1] = 2;
+    raftTokenIds[2] = 3;
+
+    // Test that only authorized parties can set the mappings
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("onlyAuthorized: unauthorized"));
+    specDataHolderWrappedProxyV1.setSpecsToRafts(specUris, raftTokenIds);
+
+    specDataHolderWrappedProxyV1.setSpecsToRafts(specUris, raftTokenIds);
+    assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUris[2]), true);
+  }
   // setBadgeToRaft
 
   // isSpecRegistered
