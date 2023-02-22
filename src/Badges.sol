@@ -57,13 +57,8 @@ contract Badges is
   bytes32 constant MERKLE_AGREEMENT_HASH =
     keccak256("MerkleAgreement(address passive,string tokenURI,bytes32 root)");
 
-  modifier onlyRaftOwner(uint256 _raftTokenId) {
-    require(
-      specDataHolder.getRaftOwner(_raftTokenId) == msg.sender,
-      "onlyRaftOwner: unauthorized"
-    );
-    _;
-  }
+  bytes32 constant REQUEST_HASH =
+    keccak256("Request(address requester,string tokenURI)");
 
   modifier tokenExists(uint256 _badgeId) {
     require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
@@ -143,12 +138,32 @@ contract Badges is
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
       "giveToMany: unauthorized"
     );
 
     for (uint256 i = 0; i < _recipients.length; i++) {
       _give(_recipients[i], _uri, _signatures[i], raftTokenId);
+    }
+  }
+
+  /**
+   * @notice Allows an admin of a Raft token to mint a badge to multiple recipeients
+   * @param _recipients array the addresses who will receive a badge
+   * @param _uri the uri of the badge spec
+   */
+  function airdrop(address[] calldata _recipients, string calldata _uri)
+    external
+    virtual
+  {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "airdrop: unauthorized"
+    );
+
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      mint(_recipients[i], _uri, raftTokenId);
     }
   }
 
@@ -165,12 +180,73 @@ contract Badges is
   ) external virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == msg.sender,
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
       "give: unauthorized"
     );
     return _give(_to, _uri, _signature, raftTokenId);
   }
 
+  /**
+   * @notice Allows an admin of the raft to mint a requested badge
+   * @param _to the person who is receiving the badge
+   * @param _uri the uri of the badge spec
+   * @param _signature the signature used to verify that the person receiving the badge actually requested it
+   */
+  function giveRequestedBadge(
+    address _to,
+    string calldata _uri,
+    bytes calldata _signature
+  ) external virtual returns (uint256) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "giveRequestedBadge: unauthorized"
+    );
+
+    return _giveRequestedBadge(_to, _uri, _signature, raftTokenId);
+  }
+
+  function _giveRequestedBadge(
+    address _to,
+    string calldata _uri,
+    bytes calldata _signature,
+    uint256 raftTokenId
+  ) internal virtual returns (uint256) {
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        _to, // requester
+        getRequestHash(_to, _uri),
+        _signature
+      ),
+      "giveRequestedBadge: invalid signature"
+    );
+
+    return mint(_to, _uri, raftTokenId);
+  }
+
+  function giveRequestedBadgeToMany(
+    address[] memory _recipients,
+    string calldata _uri,
+    bytes[] calldata _signatures
+  ) external virtual {
+    require(
+      _recipients.length == _signatures.length,
+      "giveRequestedBadgeToMany: recipients and signatures length mismatch"
+    );
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "giveRequestedBadgeToMany: unauthorized"
+    );
+
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      _giveRequestedBadge(_recipients[i], _uri, _signatures[i], raftTokenId);
+    }
+  }
+
+  // todo - can we sole stale voucher problem here with isAdmin() even if they're 'inactive'?
   /**
    * @notice Allows a user to mint a badge from a voucher
    * @dev Take is called by somebody who has already been added to an allow list.
@@ -187,8 +263,8 @@ contract Badges is
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == _from,
-      "take: unauthorized issuer"
+      specDataHolder.isAuthorizedAdmin(raftTokenId, _from),
+      "take: unauthorized"
     );
 
     return mint(msg.sender, _uri, raftTokenId);
@@ -205,8 +281,8 @@ contract Badges is
 
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.getRaftOwner(raftTokenId) == _from,
-      "take: unauthorized issuer"
+      specDataHolder.isAuthorizedAdmin(raftTokenId, _from),
+      "merkleTake: unauthorized"
     );
 
     return mint(msg.sender, _uri, raftTokenId);
@@ -225,8 +301,12 @@ contract Badges is
   function createSpec(string calldata _specUri, uint256 _raftTokenId)
     external
     virtual
-    onlyRaftOwner(_raftTokenId)
   {
+    require(
+      specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
+      "createSpec: unauthorized"
+    );
+
     require(
       !specDataHolder.isSpecRegistered(_specUri),
       "createSpec: spec already registered"
@@ -312,7 +392,11 @@ contract Badges is
     uint256 _raftTokenId,
     uint256 _badgeId,
     uint8 _reason
-  ) external tokenExists(_badgeId) onlyRaftOwner(_raftTokenId) {
+  ) external tokenExists(_badgeId) {
+    require(
+      specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
+      "revokeBadge: unauthorized"
+    );
     require(
       !revokedBadgesHashes.get(_badgeId),
       "revokeBadge: badge already revoked"
@@ -332,8 +416,11 @@ contract Badges is
   function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
     external
     tokenExists(_badgeId)
-    onlyRaftOwner(_raftTokenId)
   {
+    require(
+      specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
+      "reinstateBadge: unauthorized"
+    );
     require(
       revokedBadgesHashes.get(_badgeId),
       "reinstateBadge: badge not revoked"
@@ -396,6 +483,18 @@ contract Badges is
       );
   }
 
+  function getRequestHash(address _requester, string calldata _uri)
+    public
+    view
+    virtual
+    returns (bytes32)
+  {
+    return
+      _hashTypedDataV4(
+        keccak256(abi.encode(REQUEST_HASH, _requester, keccak256(bytes(_uri))))
+      );
+  }
+
   function getBadgeIdHash(address _to, string calldata _uri)
     public
     view
@@ -410,9 +509,6 @@ contract Badges is
     string calldata _uri,
     uint256 _raftTokenId
   ) internal virtual returns (uint256) {
-    // only registered specs can be used for minting
-    require(_raftTokenId != 0, "mint: spec is not registered");
-
     // ensures that a badge spec can only be owned once by an account
     uint256 tokenId = uint256(getBadgeIdHash(_to, _uri));
     require(!exists(tokenId), "mint: tokenID exists");

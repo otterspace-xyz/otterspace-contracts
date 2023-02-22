@@ -24,8 +24,14 @@ contract Raft is
   Counters.Counter private _tokenIds;
 
   mapping(uint256 => string) private _tokenURIs;
+  mapping(uint256 => mapping(address => bool)) private _admins;
 
   event MetadataUpdate(uint256 indexed tokenId);
+  event AdminUpdate(
+    uint256 indexed tokenId,
+    address indexed admin,
+    bool isAdded
+  );
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor() {
@@ -78,10 +84,32 @@ contract Raft is
     virtual
     onlyOwner
   {
-    require(_exists(tokenId), "_setTokenURI: URI set of nonexistent token");
+    require(_exists(tokenId), "setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
 
     emit MetadataUpdate(tokenId);
+  }
+
+  function setAdmin(
+    uint256 tokenId,
+    address admin,
+    bool isActive
+  ) public virtual {
+    require(_exists(tokenId), "addAdmin: tokenId does not exist");
+    require(ownerOf(tokenId) == msg.sender, "addAdmin: unauthorized");
+
+    _admins[tokenId][admin] = isActive;
+
+    emit AdminUpdate(tokenId, admin, isActive);
+  }
+
+  function isAdminActive(uint256 tokenId, address admin)
+    public
+    view
+    virtual
+    returns (bool)
+  {
+    return _admins[tokenId][admin];
   }
 
   function tokenURI(uint256 tokenId)
