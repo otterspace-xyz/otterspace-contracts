@@ -154,7 +154,7 @@ contract SpecDataHolderTest is Test {
     specDataHolderWrappedProxyV1.setBadgesToRafts(badgeTokenIds, raftTokenIds);
   }
 
-  function testSetBadgesToRaftsDifferentLength() public {
+  function testSetBadgesToRaftsShouldFailWhenProvidingDifferentInputLengths() public {
     uint256[] memory badgeTokenIds = new uint256[](3);
     badgeTokenIds[0] = 1;
     badgeTokenIds[1] = 2;
