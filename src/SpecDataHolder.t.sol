@@ -168,7 +168,7 @@ contract SpecDataHolderTest is Test {
     specDataHolderWrappedProxyV1.setBadgesToRafts(badgeTokenIds, raftTokenIds);
   }
 
-  function testSetSpecsToRafts() public {
+  function testSetSpecsToRaftsShouldFailForUnauthorizedCaller() public {
     string[] memory specUris = new string[](3);
     specUris[0] = "spec uri 1";
     specUris[1] = "spec uri 2";
