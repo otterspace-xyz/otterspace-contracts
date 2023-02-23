@@ -101,7 +101,7 @@ jobs:
 
             ## deploy and verify 
             # note: here we're getting the output of forge create and grabbing the address
-            sdhImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $OPTIMISM_RPC_URL --etherscan-api-key $OPTIMISTIC_ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
+            sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $OPTIMISM_RPC_URL --etherscan-api-key $OPTIMISTIC_ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
 
             # run our js file that creates the proposal
             node scripts/createProposal.js $sdhImplementation 'specDataHolder' 'optimism'
