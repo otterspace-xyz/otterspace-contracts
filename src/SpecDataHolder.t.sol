@@ -152,9 +152,15 @@ contract SpecDataHolderTest is Test {
     vm.prank(attacker);
     vm.expectRevert(bytes("onlyAuthorized: unauthorized"));
     specDataHolderWrappedProxyV1.setBadgesToRafts(badgeTokenIds, raftTokenIds);
+
+    // happy path where the owner sets the mappings
+    specDataHolderWrappedProxyV1.setBadgesToRafts(badgeTokenIds, raftTokenIds);
+    assertEq(specDataHolderWrappedProxyV1.getRaftByBadgeId(1), 10);
   }
 
-  function testSetBadgesToRaftsShouldFailWhenProvidingDifferentInputLengths() public {
+  function testSetBadgesToRaftsShouldFailWhenProvidingDifferentInputLengths()
+    public
+  {
     uint256[] memory badgeTokenIds = new uint256[](3);
     badgeTokenIds[0] = 1;
     badgeTokenIds[1] = 2;
@@ -185,18 +191,11 @@ contract SpecDataHolderTest is Test {
     vm.expectRevert(bytes("onlyAuthorized: unauthorized"));
     specDataHolderWrappedProxyV1.setSpecsToRafts(specUris, raftTokenIds);
 
+    // happy path
     specDataHolderWrappedProxyV1.setSpecsToRafts(specUris, raftTokenIds);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUris[2]), true);
+
+    // test getRaftBySpecUri
+    assertEq(specDataHolderWrappedProxyV1.getRaftBySpecUri(specUris[2]), 3);
   }
-  // setBadgeToRaft
-
-  // isSpecRegistered
-
-  // setSpecToRaft
-
-  // getRaftOwner
-
-  // transfer ownership
-
-  // transfer ownership as non-owner
 }

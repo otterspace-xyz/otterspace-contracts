@@ -62,6 +62,24 @@ contract SpecDataHolder is
     }
   }
 
+  function getRaftByBadgeId(uint256 _badgeTokenId)
+    external
+    view
+    virtual
+    returns (uint256)
+  {
+    return _badgeToRaft[_badgeTokenId];
+  }
+
+  function getRaftBySpecUri(string calldata _specUri)
+    external
+    view
+    virtual
+    returns (uint256)
+  {
+    return _specToRaft[_specUri];
+  }
+
   function setSpecsToRafts(
     string[] calldata _specUri,
     uint256[] calldata _raftTokenId
