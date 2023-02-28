@@ -38,7 +38,7 @@ jobs:
         run: git submodule update --init
 
       - name: Install yarn dependencies
-        run: yarn --frozen-lockfile
+        run: yarn
 
       - name: Run forge install
         run: forge install
@@ -75,11 +75,7 @@ jobs:
             # note: here we're getting the output of forge create and grabbing the address
             badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
             echo "badgesImplementation = $badgesImplementation"
-            echo "DEPLOYER_PRIVATE_KEY = $DEPLOYER_PRIVATE_KEY"
-            echo "GOERLI_RPC_URL = $GOERLI_RPC_URL"
-            echo "ETHERSCAN_API_KEY = $ETHERSCAN_API_KEY"
-            echo "badgesImplementation = $badgesImplementation"
-            echo "badgesImplementation = $badgesImplementation"
+            
             # run our js file that creates the proposal
             node scripts/createProposal.js $badgesImplementation 'badges' 'goerli'
             echo "BADGES: deployed implementation, verified, proposed"
@@ -106,8 +102,9 @@ jobs:
 
             ## deploy and verify 
             # note: here we're getting the output of forge create and grabbing the address
-            sdhImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
-            
+            sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
+            echo "sdhImplementation = $sdhImplementation"
+
             # run our js file that creates the proposal
             node scripts/createProposal.js $sdhImplementation 'specDataHolder' 'goerli'
             echo "SpecDataHolder: deployed implementation, verified, proposed"

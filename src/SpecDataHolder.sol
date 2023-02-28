@@ -8,8 +8,6 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./interfaces/ISpecDataHolder.sol";
 import { Raft } from "./Raft.sol";
 
-// import "../../node_modules/hardhat/console.sol";
-
 contract SpecDataHolder is
   UUPSUpgradeable,
   OwnableUpgradeable,
@@ -76,22 +74,6 @@ contract SpecDataHolder is
       _specToRaft[_specUri[i]] = _raftTokenId[i];
     }
   }
-
-  // create setSpecsToRaft
-
-  // create setBadgesToRaft
-
-  // write tests for all of these
-
-  // create new wallet for this
-
-  // badges address needs to point to the new specDataHolder
-
-  // raft address needs to point to the new specDataHolder
-
-  // call setDataHolder
-
-  // update specDataholder in API and frontend
 
   function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
