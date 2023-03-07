@@ -195,7 +195,7 @@ contract SpecDataHolderTest is Test {
     specDataHolderWrappedProxyV1.setSpecsToRafts(specUris, raftTokenIds);
     assertEq(specDataHolderWrappedProxyV1.isSpecRegistered(specUris[2]), true);
 
-    // test getRaftBySpecUri
-    assertEq(specDataHolderWrappedProxyV1.getRaftBySpecUri(specUris[2]), 3);
+    // test getRaftTokenId
+    assertEq(specDataHolderWrappedProxyV1.getRaftTokenId(specUris[2]), 3);
   }
 }

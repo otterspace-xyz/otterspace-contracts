@@ -32,12 +32,39 @@ contract SpecDataHolder is
     _disableInitializers();
   }
 
+  function initialize(address _raftAddress, address _nextOwner)
+    public
+    initializer
+  {
+    __Ownable_init();
+    raftAddress = _raftAddress;
+    transferOwnership(_nextOwner);
+    __UUPSUpgradeable_init();
+  }
+
+  function getBadgesAddress() external view returns (address) {
+    return badgesAddress;
+  }
+
   function setBadgesAddress(address _badgesAddress) external virtual onlyOwner {
     badgesAddress = _badgesAddress;
   }
 
+  function getRaftAddress() external view returns (address) {
+    return raftAddress;
+  }
+
   function setRaftAddress(address _raftAddress) external virtual onlyOwner {
     raftAddress = _raftAddress;
+  }
+
+  function getRaftByBadgeId(uint256 _badgeTokenId)
+    external
+    view
+    virtual
+    returns (uint256)
+  {
+    return _badgeToRaft[_badgeTokenId];
   }
 
   function setBadgeToRaft(uint256 _badgeTokenId, uint256 _raftTokenId)
@@ -48,7 +75,6 @@ contract SpecDataHolder is
     _badgeToRaft[_badgeTokenId] = _raftTokenId;
   }
 
-  // functions for re-creating the data
   function setBadgesToRafts(
     uint256[] calldata _badgeTokenId,
     uint256[] calldata _raftTokenId
@@ -62,22 +88,12 @@ contract SpecDataHolder is
     }
   }
 
-  function getRaftByBadgeId(uint256 _badgeTokenId)
+  function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
     external
-    view
     virtual
-    returns (uint256)
+    onlyAuthorized
   {
-    return _badgeToRaft[_badgeTokenId];
-  }
-
-  function getRaftBySpecUri(string calldata _specUri)
-    external
-    view
-    virtual
-    returns (uint256)
-  {
-    return _specToRaft[_specUri];
+    _specToRaft[_specUri] = _raftTokenId;
   }
 
   function setSpecsToRafts(
@@ -91,22 +107,6 @@ contract SpecDataHolder is
     for (uint256 i = 0; i < _specUri.length; i++) {
       _specToRaft[_specUri[i]] = _raftTokenId[i];
     }
-  }
-
-  function setSpecToRaft(string calldata _specUri, uint256 _raftTokenId)
-    external
-    virtual
-    onlyAuthorized
-  {
-    _specToRaft[_specUri] = _raftTokenId;
-  }
-
-  function getBadgesAddress() external view returns (address) {
-    return badgesAddress;
-  }
-
-  function getRaftAddress() external view returns (address) {
-    return raftAddress;
   }
 
   function getRaftTokenId(string calldata _specUri)
@@ -134,17 +134,6 @@ contract SpecDataHolder is
     address raftOwner = raft.ownerOf(_raftTokenId);
 
     return raftOwner == _admin || raft.isAdminActive(_raftTokenId, _admin);
-  }
-
-  // Passing in the owner's address allows an EOA to deploy and set a multi-sig as the owner.
-  function initialize(address _raftAddress, address _nextOwner)
-    public
-    initializer
-  {
-    __Ownable_init();
-    raftAddress = _raftAddress;
-    transferOwnership(_nextOwner);
-    __UUPSUpgradeable_init();
   }
 
   // The {_authorizeUpgrade} function must be overridden to include access restriction to the upgrade mechanism.
