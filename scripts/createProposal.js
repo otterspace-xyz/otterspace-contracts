@@ -59,8 +59,24 @@ async function createProposal() {
       }
       break
   }
+
+  let via
+
+  switch (network) {
+    case 'goerli':
+      via = GOERLI_GNOSIS_SAFE
+      break
+    case 'optimism-goerli':
+      via = GOERLI_GNOSIS_SAFE
+      break
+    case 'optimism':
+      via = OPTIMISM_GNOSIS_SAFE
+      break
+    default:
+      throw new Error('Invalid network')
+  }
   console.log('🚀 ~ createProposal ~ contract', contract)
-  const via = network === 'goerli' ? GOERLI_GNOSIS_SAFE : OPTIMISM_GNOSIS_SAFE
+
   console.log('🚀 ~ createProposal ~ via', via)
   const viaType = 'Gnosis Safe'
   client.proposeUpgrade({ newImplementation, via, viaType }, contract)
