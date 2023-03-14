@@ -58,9 +58,9 @@ jobs:
           current_sdh=$(cat src/SpecDataHolder.sol)
 
           networks=(
-            ( name "optimism-goerli" rpc_url "$OPTIMISM_GOERLI_RPC_URL" etherscan_api_key "$OPTIMISTIC_ETHERSCAN_API_KEY" )
-            ( name "goerli" rpc_url "$GOERLI_RPC_URL" etherscan_api_key "$GOERLI_ETHERSCAN_API_KEY" )
-            ( name "optimism" rpc_url "$OPTIMISM_RPC_URL" etherscan_api_key "$OPTIMISTIC_ETHERSCAN_API_KEY" )
+            { name: "optimism-goerli", rpc_url: $OPTIMISM_GOERLI_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY }
+            { name: "goerli", rpc_url: $GOERLI_RPC_URL, etherscan_api_key: $GOERLI_ETHERSCAN_API_KEY }
+            { name: "optimism", rpc_url: $OPTIMISM_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY }
           )
 
           for network in "${networks[@]}"; do
