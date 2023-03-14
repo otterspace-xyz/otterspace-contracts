@@ -61,7 +61,6 @@ jobs:
             { name: "optimism-goerli", rpc_url: $OPTIMISM_GOERLI_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY },
             { name: "goerli", rpc_url: $GOERLI_RPC_URL, etherscan_api_key: $GOERLI_ETHERSCAN_API_KEY },
             { name: "optimism", rpc_url: $OPTIMISM_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY },
-
           )
 
           for network in "${networks[@]}"; do
@@ -70,37 +69,37 @@ jobs:
             last_tag_sdh=$(cat src/SpecDataHolder.sol)
 
             if [ "$last_tag_badges" != "$current_badges" ]; then
-              badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
-                echo "Failed to deploy the new Badges implementation on ${network.name}"
+              badgesImplementation=$(forge create src/Badges.sol:Badges --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "${network[rpc_url]}" --etherscan-api-key "${network[etherscan_api_key]}" | grep "Deployed to:" | cut -d " " -f 3) || {
+                echo "Failed to deploy the new Badges implementation on ${network[name]}"
                 exit 1
               }
-              node scripts/createProposal.js $badgesImplementation 'badges' ${network.name} || {
-                echo "Failed to create a proposal for the new Badges implementation on ${network.name}"
+              node scripts/createProposal.js "$badgesImplementation" 'badges' "${network[name]}" || {
+                echo "Failed to create a proposal for the new Badges implementation on ${network[name]}"
                 exit 1
               }
             fi
 
             if [ "$last_tag_raft" != "$current_raft" ]; then
-              raftImplementation=$(forge create src/Raft.sol:Raft --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
-                echo "Failed to deploy the new Raft implementation on ${network.name}"
+              raftImplementation=$(forge create src/Raft.sol:Raft --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "${network[rpc_url]}" --etherscan-api-key "${network[etherscan_api_key]}" | grep "Deployed to:" | cut -d " " -f 3) || {
+                echo "Failed to deploy the new Raft implementation on ${network[name]}"
                 exit 1
               }
-              node scripts/createProposal.js $raftImplementation 'raft' ${network.name} || {
-                echo "Failed to create a proposal for the new Raft implementation on ${network.name}"
+              node scripts/createProposal.js "$raftImplementation" 'raft' "${network[name]}" || {
+                echo "Failed to create a proposal for the new Raft implementation on ${network[name]}"
                 exit 1
               }
             fi
 
             if [ "$last_tag_sdh" != "$current_sdh" ]; then
-              sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
-                echo "Failed to deploy the new SpecDataHolder implementation on ${network.name}"
+              sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "${network[rpc_url]}" --etherscan-api-key "${network[etherscan_api_key]}" | grep "Deployed to:" | cut -d " " -f 3) || {
+                echo "Failed to deploy the new SpecDataHolder implementation on ${network[name]}"
                 exit 1
               }
-              node scripts/createProposal.js $sdhImplementation 'specDataHolder' ${network.name} || {
-                echo "Failed to create a proposal for the new SpecDataHolder implementation on ${network.name}"
+              node scripts/createProposal.js "$sdhImplementation" 'specDataHolder' "${network[name]}" || {
+                echo "Failed to create a proposal for the new SpecDataHolder implementation on ${network[name]}"
                 exit 1
               }
-            fi
+            }
 
-            echo "All implementations deployed successfully on ${network.name}"
+            echo "All implementations deployed successfully on ${network[name]}"
           done
