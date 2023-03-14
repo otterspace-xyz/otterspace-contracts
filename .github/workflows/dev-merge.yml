@@ -39,6 +39,7 @@ jobs:
       - name: Run forge install
         run: forge install
 
+      - name: Deploy contracts
       - run: |
           set -e
 
