@@ -84,6 +84,8 @@ jobs:
                 echo "Failed to deploy the new Badges implementation on $name"
                 exit 1
               }
+              echo $badgesImplementation
+              echo $name
               node scripts/createProposal.js "$badgesImplementation" 'badges' "$name" || {
                 echo "Failed to create a proposal for the new Badges implementation on $name"
                 exit 1
