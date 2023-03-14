@@ -9,14 +9,10 @@ jobs:
   if_merged:
     env:
       DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+      OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+      OPTIMISTIC_ETHERSCAN_API_KEY: ${{ secrets.OPTIMISTIC_ETHERSCAN_API_KEY }}
       GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
       ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
-      DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
-      DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
-      GOERLI_BADGES_ADDRESS: ${{ secrets.GOERLI_BADGES_ADDRESS }}
-      GOERLI_RAFT_ADDRESS: ${{ secrets.GOERLI_RAFT_ADDRESS }}
-      GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.GOERLI_SPECDATAHOLDER_ADDRESS }}
-      GOERLI_GNOSIS_SAFE: ${{ secrets.GOERLI_GNOSIS_SAFE }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -38,30 +34,26 @@ jobs:
         run: git submodule update --init
 
       - name: Install yarn dependencies
-        run: yarn --frozen-lockfile
+        run: yarn
 
       - name: Run forge install
         run: forge install
 
+      - name: Deploy contracts
       - run: |
-          # Get the latest tag
-          last_tag=$(git describe --tags --abbrev=0 --always)
+          set -e
 
-          # Create new branch from that tag
+          last_tag=$(git describe --tags --abbrev=0)
+
           git branch last_tag_branch $last_tag
-
-          #switch to it
           git switch last_tag_branch
 
-          # Get the contents of src/Badges.sol from the latest tag
           last_tag_badges=$(cat src/Badges.sol)
           last_tag_raft=$(cat src/Raft.sol)
           last_tag_sdh=$(cat src/SpecDataHolder.sol)
 
-          # Checkout the current commit
           git switch dev
 
-          # Get the contents of src/Badges.sol from the current commit
           current_badges=$(cat src/Badges.sol)
           current_raft=$(cat src/Raft.sol)
           current_sdh=$(cat src/SpecDataHolder.sol)
@@ -75,11 +67,7 @@ jobs:
             # note: here we're getting the output of forge create and grabbing the address
             badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
             echo "badgesImplementation = $badgesImplementation"
-            echo "DEPLOYER_PRIVATE_KEY = $DEPLOYER_PRIVATE_KEY"
-            echo "GOERLI_RPC_URL = $GOERLI_RPC_URL"
-            echo "ETHERSCAN_API_KEY = $ETHERSCAN_API_KEY"
-            echo "badgesImplementation = $badgesImplementation"
-            echo "badgesImplementation = $badgesImplementation"
+            
             # run our js file that creates the proposal
             node scripts/createProposal.js $badgesImplementation 'badges' 'goerli'
             echo "BADGES: deployed implementation, verified, proposed"
@@ -87,27 +75,29 @@ jobs:
             echo "no changes in Badges between this commit and the last tagged version"
           fi
 
-          if [ "$last_tag_raft" != "$current_raft" ]; then
-            # if the code of the Raft contract has changed since the time we tagged the repo, we should deploy a new implementation
+          )
 
-            ## deploy and verify 
-            # note: here we're getting the output of forge create and grabbing the address
-            raftImplementation=$(forge create src/Raft.sol:Raft --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
-            
-            # run our js file that creates the proposal
-            node scripts/createProposal.js $raftImplementation 'raft' 'goerli'
-            echo "RAFT: deployed implementation, verified, proposed"
-          else
-            echo "no changes in Raft between this commit and the last tagged version"            
-          fi
+          for network in "${networks[@]}"; do
+            last_tag_badges=$(cat src/Badges.sol)
+            last_tag_raft=$(cat src/Raft.sol)
+            last_tag_sdh=$(cat src/SpecDataHolder.sol)
 
-          if [ "$last_tag_sdh" != "$current_sdh" ]; then
-            # if the code of the SpecDataHolder contract has changed since the time we tagged the repo, we should deploy a new implementation
+            if [ "$last_tag_badges" != "$current_badges" ]; then
+              badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
+                echo "Failed to deploy the new Badges implementation on ${network.name}"
+                exit 1
+              }
+              node scripts/createProposal.js $badgesImplementation 'badges' ${network.name} || {
+                echo "Failed to create a proposal for the new Badges implementation on ${network.name}"
+                exit 1
+              }
+            fi
 
             ## deploy and verify 
             # note: here we're getting the output of forge create and grabbing the address
             sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
-            
+            echo "sdhImplementation = $sdhImplementation"
+
             # run our js file that creates the proposal
             node scripts/createProposal.js $sdhImplementation 'specDataHolder' 'goerli'
             echo "SpecDataHolder: deployed implementation, verified, proposed"
