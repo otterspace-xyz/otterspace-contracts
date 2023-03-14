@@ -39,7 +39,6 @@ jobs:
       - name: Run forge install
         run: forge install
 
-      - name: Deploy contracts
       - run: |
           set -e
 
@@ -58,22 +57,10 @@ jobs:
           current_raft=$(cat src/Raft.sol)
           current_sdh=$(cat src/SpecDataHolder.sol)
 
-          # Compare the contents of src/Badges.sol between the latest tag and the current commit
-          if [ "$last_tag_badges" != "$current_badges" ]; then
-            echo "theres a difference!"
-            # if the code of the Badges contract has changed since the time we tagged the repo, we should deploy a new implementation
-            
-            ## deploy and verify 
-            # note: here we're getting the output of forge create and grabbing the address
-            badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
-            echo "badgesImplementation = $badgesImplementation"
-            
-            # run our js file that creates the proposal
-            node scripts/createProposal.js $badgesImplementation 'badges' 'goerli'
-            echo "BADGES: deployed implementation, verified, proposed"
-          else
-            echo "no changes in Badges between this commit and the last tagged version"
-          fi
+          networks=(
+            { name: "optimism-goerli", rpc_url: $OPTIMISM_GOERLI_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY },
+            { name: "goerli", rpc_url: $GOERLI_RPC_URL, etherscan_api_key: $GOERLI_ETHERSCAN_API_KEY },
+            { name: "optimism", rpc_url: $OPTIMISM_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY },
 
           )
 
@@ -93,14 +80,27 @@ jobs:
               }
             fi
 
-            ## deploy and verify 
-            # note: here we're getting the output of forge create and grabbing the address
-            sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url $GOERLI_RPC_URL --etherscan-api-key $ETHERSCAN_API_KEY | grep "Deployed to:" | cut -d " " -f 3)
-            echo "sdhImplementation = $sdhImplementation"
+            if [ "$last_tag_raft" != "$current_raft" ]; then
+              raftImplementation=$(forge create src/Raft.sol:Raft --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
+                echo "Failed to deploy the new Raft implementation on ${network.name}"
+                exit 1
+              }
+              node scripts/createProposal.js $raftImplementation 'raft' ${network.name} || {
+                echo "Failed to create a proposal for the new Raft implementation on ${network.name}"
+                exit 1
+              }
+            fi
 
-            # run our js file that creates the proposal
-            node scripts/createProposal.js $sdhImplementation 'specDataHolder' 'goerli'
-            echo "SpecDataHolder: deployed implementation, verified, proposed"
-          else
-            echo "no changes in SpecDataHolder between this commit and the last tagged version"            
-          fi
+            if [ "$last_tag_sdh" != "$current_sdh" ]; then
+              sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
+                echo "Failed to deploy the new SpecDataHolder implementation on ${network.name}"
+                exit 1
+              }
+              node scripts/createProposal.js $sdhImplementation 'specDataHolder' ${network.name} || {
+                echo "Failed to create a proposal for the new SpecDataHolder implementation on ${network.name}"
+                exit 1
+              }
+            fi
+
+            echo "All implementations deployed successfully on ${network.name}"
+          done
