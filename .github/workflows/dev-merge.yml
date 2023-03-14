@@ -80,10 +80,12 @@ jobs:
             read rpc_url etherscan_api_key <<< "${networks[$name]}"
 
             if [ "$last_tag_badges" != "$current_badges" ]; then
-              badgesImplementation=$(forge create src/Badges.sol:Badges --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" | grep "Deployed to:" | cut -d " " -f 3) || {
+              badgesImplementation=$(forge create src/Badges.sol:Badges --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 8000000 | grep "Deployed to:" | cut -d " " -f 3) || {
                 echo "Failed to deploy the new Badges implementation on $name"
                 exit 1
               }
+              echo $badgesImplementation
+              echo $name
               node scripts/createProposal.js "$badgesImplementation" 'badges' "$name" || {
                 echo "Failed to create a proposal for the new Badges implementation on $name"
                 exit 1
@@ -91,7 +93,7 @@ jobs:
             fi
 
             if [ "$last_tag_raft" != "$current_raft" ]; then
-              raftImplementation=$(forge create src/Raft.sol:Raft --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" | grep "Deployed to:" | cut -d " " -f 3) || {
+              raftImplementation=$(forge create src/Raft.sol:Raft --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 8000000 | grep "Deployed to:" | cut -d " " -f 3) || {
                 echo "Failed to deploy the new Raft implementation on $name"
                 exit 1
               }
@@ -102,7 +104,7 @@ jobs:
             fi
 
             if [ "$last_tag_sdh" != "$current_sdh" ]; then
-              sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" | grep "Deployed to:" | cut -d " " -f 3) || {
+              sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 8000000 | grep "Deployed to:" | cut -d " " -f 3) || {
                 echo "Failed to deploy the new SpecDataHolder implementation on $name"
                 exit 1
               }
