@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.6.4
+
+- Add Add `setBadgesToRafts` and `setSpecsToRafts`
+
 ## 2.6.3
 
 - Add `giveRequestedBadgeToMany` and tests
