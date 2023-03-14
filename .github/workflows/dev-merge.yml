@@ -52,7 +52,7 @@ jobs:
           last_tag_raft=$(cat src/Raft.sol)
           last_tag_sdh=$(cat src/SpecDataHolder.sol)
 
-          git switch main
+          git switch dev
 
           current_badges=$(cat src/Badges.sol)
           current_raft=$(cat src/Raft.sol)
