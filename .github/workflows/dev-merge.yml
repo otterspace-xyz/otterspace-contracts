@@ -13,6 +13,20 @@ jobs:
       OPTIMISTIC_ETHERSCAN_API_KEY: ${{ secrets.OPTIMISTIC_ETHERSCAN_API_KEY }}
       GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
       ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+      DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
+      DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
+      GOERLI_BADGES_ADDRESS: ${{ secrets.GOERLI_BADGES_ADDRESS }}
+      GOERLI_RAFT_ADDRESS: ${{ secrets.GOERLI_RAFT_ADDRESS }}
+      GOERLI_GNOSIS_SAFE: ${{ secrets.GOERLI_GNOSIS_SAFE }}
+      GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.GOERLI_SPECDATAHOLDER_ADDRESS }}
+      OPTIMISM_GOERLI_RPC_URL: ${{ secrets.OPTIMISM_GOERLI_RPC_URL }}
+      OPTIMISM_GOERLI_BADGES_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_BADGES_ADDRESS }}
+      OPTIMISM_GOERLI_RAFT_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_RAFT_ADDRESS }}
+      OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS }}
+      OPTIMISM_BADGES_ADDRESS: ${{ secrets.OPTIMISM_BADGES_ADDRESS }}
+      OPTIMISM_RAFT_ADDRESS: ${{ secrets.OPTIMISM_RAFT_ADDRESS }}
+      OPTIMISM_SPECDATAHOLDER_ADDRESS: ${{ secrets.OPTIMISM_SPECDATAHOLDER_ADDRESS }}
+      OPTIMISM_GNOSIS_SAFE: ${{ secrets.OPTIMISM_GNOSIS_SAFE }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -39,11 +53,11 @@ jobs:
       - name: Run forge install
         run: forge install
 
-      - run: |
+      - name: Deploy
+        run: |
           set -e
-
+          ### force the deploy since its so old
           last_tag=$(git describe --tags --abbrev=0)
-
           git branch last_tag_branch $last_tag
           git switch last_tag_branch
 
@@ -57,50 +71,47 @@ jobs:
           current_raft=$(cat src/Raft.sol)
           current_sdh=$(cat src/SpecDataHolder.sol)
 
-          networks=(
-            { name: "optimism-goerli", rpc_url: $OPTIMISM_GOERLI_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY },
-            { name: "goerli", rpc_url: $GOERLI_RPC_URL, etherscan_api_key: $GOERLI_ETHERSCAN_API_KEY },
-            { name: "optimism", rpc_url: $OPTIMISM_RPC_URL, etherscan_api_key: $OPTIMISTIC_ETHERSCAN_API_KEY },
-
+          declare -A networks=(
+              ["goerli"]="$GOERLI_RPC_URL $ETHERSCAN_API_KEY"
+              ["optimism-goerli"]="$OPTIMISM_GOERLI_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
+              ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
           )
 
-          for network in "${networks[@]}"; do
-            last_tag_badges=$(cat src/Badges.sol)
-            last_tag_raft=$(cat src/Raft.sol)
-            last_tag_sdh=$(cat src/SpecDataHolder.sol)
+          for name in "${!networks[@]}"; do
+              read rpc_url etherscan_api_key <<<"${networks[$name]}"
+              if [ "$last_tag_badges" != "$current_badges" ]; then
+                  badgesImplementation=$(forge create src/Badges.sol:Badges --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 2000000 | grep "Deployed to:" | cut -d " " -f 3) || {
+                      echo "Failed to deploy the new Badges implementation on $name"
+                      exit 1
+                  }
 
-            if [ "$last_tag_badges" != "$current_badges" ]; then
-              badgesImplementation=$(forge create src/Badges.sol:Badges --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
-                echo "Failed to deploy the new Badges implementation on ${network.name}"
-                exit 1
-              }
-              node scripts/createProposal.js $badgesImplementation 'badges' ${network.name} || {
-                echo "Failed to create a proposal for the new Badges implementation on ${network.name}"
-                exit 1
-              }
-            fi
+                  node scripts/createProposal.js "$badgesImplementation" 'badges' "$name" || {
+                      echo "Failed to create a proposal for the new Badges implementation on $name"
+                      exit 1
+                  }
+              fi
 
-            if [ "$last_tag_raft" != "$current_raft" ]; then
-              raftImplementation=$(forge create src/Raft.sol:Raft --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
-                echo "Failed to deploy the new Raft implementation on ${network.name}"
-                exit 1
-              }
-              node scripts/createProposal.js $raftImplementation 'raft' ${network.name} || {
-                echo "Failed to create a proposal for the new Raft implementation on ${network.name}"
-                exit 1
-              }
-            fi
+              if [ "$last_tag_raft" != "$current_raft" ]; then
+                  raftImplementation=$(forge create src/Raft.sol:Raft --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 2000000 | grep "Deployed to:" | cut -d " " -f 3) || {
+                      echo "Failed to deploy the new Raft implementation on $name"
+                      exit 1
+                  }
+                  node scripts/createProposal.js "$raftImplementation" 'raft' "$name" || {
+                      echo "Failed to create a proposal for the new Raft implementation on $name"
+                      exit 1
+                  }
+              fi
 
-            if [ "$last_tag_sdh" != "$current_sdh" ]; then
-              sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key $DEPLOYER_PRIVATE_KEY --verify --rpc-url ${network.rpc_url} --etherscan-api-key ${network.etherscan_api_key} | grep "Deployed to:" | cut -d " " -f 3) || {
-                echo "Failed to deploy the new SpecDataHolder implementation on ${network.name}"
-                exit 1
-              }
-              node scripts/createProposal.js $sdhImplementation 'specDataHolder' ${network.name} || {
-                echo "Failed to create a proposal for the new SpecDataHolder implementation on ${network.name}"
-                exit 1
-              }
-            fi
+              if [ "$last_tag_sdh" != "$current_sdh" ]; then
+                  sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 2000000 | grep "Deployed to:" | cut -d " " -f 3) || {
+                      echo "Failed to deploy the new SpecDataHolder implementation on $name"
+                      exit 1
+                  }
+                  node scripts/createProposal.js "$sdhImplementation" 'specDataHolder' "$name" || {
+                      echo "Failed to create a proposal for the new SpecDataHolder implementation on $name"
+                      exit 1
+                  }
+              fi
 
-            echo "All implementations deployed successfully on ${network.name}"
+              echo "All implementations deployed successfully on $name"
           done
