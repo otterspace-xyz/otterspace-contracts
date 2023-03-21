@@ -107,46 +107,46 @@ contract Raft is
   }
 
   /**
-   * @dev Sets the admin status for a given tokenId and admin address.
-   * @param tokenId The ID of the token to set admin status for.
-   * @param admin The address of the admin whose status to set.
-   * @param isActive Whether the admin is active or not.
-   */
-  function setAdmin(
-    uint256 tokenId,
-    address admin,
-    bool isActive
-  ) public virtual {
-    require(_exists(tokenId), "setAdmin: tokenId does not exist");
-    require(ownerOf(tokenId) == msg.sender, "setAdmin: unauthorized");
-
-    _admins[tokenId][admin] = isActive;
-
-    emit AdminUpdate(tokenId, admin, isActive);
-  }
-
-  /**
    * @dev Sets multiple admins for a given tokenId.
    * @param tokenId The token ID for which the admins are being set.
    * @param admins An array of addresses representing the admins.
    * @param isActive An array of booleans representing the admin status (active or not).
    */
 
-  function setMultipleAdmins(
+  function addAdmins(
     uint256 tokenId,
     address[] memory admins,
     bool[] memory isActive
   ) public virtual {
-    require(_exists(tokenId), "setMultipleAdmins: tokenId does not exist");
-    require(ownerOf(tokenId) == msg.sender, "setMultipleAdmins: unauthorized");
+    require(_exists(tokenId), "addAdmins: tokenId does not exist");
+    require(ownerOf(tokenId) == msg.sender, "addAdmins: unauthorized");
     require(
       admins.length == isActive.length,
-      "setMultipleAdmins: admins and isActive arrays must have the same length"
+      "addAdmins: admins and isActive arrays must have the same length"
     );
 
     for (uint256 i = 0; i < admins.length; i++) {
       _admins[tokenId][admins[i]] = isActive[i];
       emit AdminUpdate(tokenId, admins[i], isActive[i]);
+    }
+  }
+
+  /**
+   * @dev Removes multiple admins for a given tokenId.
+   * @param tokenId The token ID for which the admins are being removed.
+   * @param admins An array of addresses representing the admins to be removed.
+   */
+
+  function removeAdmins(
+    uint256 tokenId,
+    address[] memory admins
+  ) public virtual {
+    require(_exists(tokenId), "removeAdmins: tokenId does not exist");
+    require(ownerOf(tokenId) == msg.sender, "removeAdmins: unauthorized");
+
+    for (uint256 i = 0; i < admins.length; i++) {
+      delete _admins[tokenId][admins[i]];
+      emit AdminUpdate(tokenId, admins[i], false);
     }
   }
 

@@ -12,9 +12,10 @@ import { Merkle } from "murky/src/Merkle.sol";
 import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract UUPSProxy is ERC1967Proxy {
-  constructor(address _implementation, bytes memory _data)
-    ERC1967Proxy(_implementation, _data)
-  {}
+  constructor(
+    address _implementation,
+    bytes memory _data
+  ) ERC1967Proxy(_implementation, _data) {}
 }
 
 contract BadgesTest is Test {
@@ -145,10 +146,10 @@ contract BadgesTest is Test {
   }
 
   // // helper function
-  function getSignature(address active, uint256 passive)
-    internal
-    returns (bytes memory)
-  {
+  function getSignature(
+    address active,
+    uint256 passive
+  ) internal returns (bytes memory) {
     bytes32 hash = badgesWrappedProxyV1.getAgreementHash(
       active,
       vm.addr(passive),
@@ -248,7 +249,13 @@ contract BadgesTest is Test {
     address raftOwner = address(this);
     address admin = address(123);
     uint256 raftTokenId = raftWrappedProxyV1.mint(raftOwner, specUri);
-    raftWrappedProxyV1.setAdmin(raftTokenId, admin, true);
+
+    address[] memory admins = new address[](1);
+    admins[0] = admin;
+    bool[] memory isAdmin = new bool[](1);
+    isAdmin[0] = true;
+
+    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
 
     vm.prank(admin);
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
@@ -258,7 +265,13 @@ contract BadgesTest is Test {
     address raftOwner = address(this);
     address admin = address(123);
     uint256 raftTokenId = raftWrappedProxyV1.mint(raftOwner, specUri);
-    raftWrappedProxyV1.setAdmin(raftTokenId, admin, false);
+
+    address[] memory admins = new address[](1);
+    admins[0] = admin;
+    bool[] memory isAdmin = new bool[](1);
+    isAdmin[0] = false;
+
+    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
 
     vm.prank(admin);
     vm.expectRevert(bytes(errCreateSpecUnauthorized));
@@ -365,9 +378,14 @@ contract BadgesTest is Test {
       raftTokenId
     );
 
+    address[] memory admins = new address[](1);
+    admins[0] = raftHolderAddress;
+    bool[] memory isAdmin = new bool[](1);
+    isAdmin[0] = true;
+
     // mark the old holder as admin
     vm.prank(newRaftHolder);
-    raftWrappedProxyV1.setAdmin(raftTokenId, raftHolderAddress, true);
+    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
 
     vm.prank(claimantAddress);
     uint256 tokenId = badgesWrappedProxyV1.take(
