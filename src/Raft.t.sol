@@ -9,9 +9,10 @@ import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract UUPSProxy is ERC1967Proxy {
-  constructor(address _implementation, bytes memory _data)
-    ERC1967Proxy(_implementation, _data)
-  {}
+  constructor(
+    address _implementation,
+    bytes memory _data
+  ) ERC1967Proxy(_implementation, _data) {}
 }
 
 contract RaftTest is Test {
@@ -192,12 +193,63 @@ contract RaftTest is Test {
     assertEq(actual, isActive);
 
     // expect error if a tokenid does not exist
-    vm.expectRevert(bytes("addAdmin: tokenId does not exist"));
+    vm.expectRevert(bytes("setAdmin: tokenId does not exist"));
     vm.prank(tokenOwner);
     wrappedProxyV1.setAdmin(123, admin, isActive);
 
     // expect error if the called is not the owner of the raftTokenid
-    vm.expectRevert(bytes("addAdmin: unauthorized"));
+    vm.expectRevert(bytes("setAdmin: unauthorized"));
     wrappedProxyV1.setAdmin(tokenId, address(123), isActive);
+  }
+
+  function testSetMultipleAdmins() public {
+    address tokenOwner = address(1);
+    uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");
+
+    address admin1 = address(2);
+    address admin2 = address(3);
+    address admin3 = address(4);
+
+    bool isActive = false;
+    bool actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
+    assertEq(actual, isActive);
+
+    isActive = true;
+
+    address[] memory admins = new address[](3);
+    admins[0] = admin1;
+    admins[1] = admin2;
+    admins[2] = admin3;
+
+    bool[] memory adminActiveStatus = new bool[](3);
+    adminActiveStatus[0] = isActive;
+    adminActiveStatus[1] = isActive;
+    adminActiveStatus[2] = isActive;
+
+    // Check if the length of admins and adminActiveStatus arrays are the same
+    assertEq(admins.length, adminActiveStatus.length);
+
+    vm.expectEmit(true, true, false, true);
+    vm.expectEmit(true, true, false, true);
+    vm.expectEmit(true, true, false, true);
+    vm.prank(tokenOwner);
+    wrappedProxyV1.setMultipleAdmins(tokenId, admins, adminActiveStatus);
+    emit AdminUpdate(tokenId, admin1, isActive);
+    emit AdminUpdate(tokenId, admin2, isActive);
+    emit AdminUpdate(tokenId, admin3, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
+    assertEq(actual, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin2);
+    assertEq(actual, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
+    assertEq(actual, isActive);
+
+    // expect error if a tokenid does not exist
+    vm.expectRevert(bytes("setMultipleAdmins: tokenId does not exist"));
+    vm.prank(tokenOwner);
+    wrappedProxyV1.setMultipleAdmins(123, admins, adminActiveStatus);
   }
 }

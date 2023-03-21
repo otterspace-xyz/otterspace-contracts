@@ -38,6 +38,12 @@ contract Raft is
     _disableInitializers();
   }
 
+  /**
+   * @dev Initializes the contract by setting up the initial owner, name and symbol of the ERC721 token and pausing the contract.
+   * @param nextOwner The address of the initial owner of the contract.
+   * @param name_ The name of the ERC721 token.
+   * @param symbol_ The symbol of the ERC721 token.
+   */
   function initialize(
     address nextOwner,
     string memory name_,
@@ -53,11 +59,16 @@ contract Raft is
     _pause();
   }
 
-  function mint(address recipient, string memory uri)
-    public
-    virtual
-    returns (uint256)
-  {
+  /**
+   * @dev Mint a new token and assign it to the recipient, with the given URI.
+   * @param recipient The address to which the newly minted token will be assigned.
+   * @param uri The URI of the newly minted token.
+   * @return The ID of the newly minted token.
+   */
+  function mint(
+    address recipient,
+    string memory uri
+  ) public virtual returns (uint256) {
     // owners can always mint tokens
     // non-owners can only mint when the contract is unpaused
     require(msg.sender == owner() || !paused(), "mint: unauthorized to mint");
@@ -78,47 +89,86 @@ contract Raft is
     _unpause();
   }
 
-  // we are basically implementing the functionality of ERC721URIStorage ourselves here
-  function setTokenURI(uint256 tokenId, string memory uri)
-    public
-    virtual
-    onlyOwner
-  {
+  /**
+   * @dev Sets the URI of the token with the given ID.
+   *      Reverts if the token does not exist.
+   * @param tokenId uint256 ID of the token to set its URI.
+   * @param uri string URI to assign to the token.
+   * @notice Only the owner of the contract can call this function.
+   */
+  function setTokenURI(
+    uint256 tokenId,
+    string memory uri
+  ) public virtual onlyOwner {
     require(_exists(tokenId), "setTokenURI: URI set of nonexistent token");
     _tokenURIs[tokenId] = uri;
 
     emit MetadataUpdate(tokenId);
   }
 
+  /**
+   * @dev Sets the admin status for a given tokenId and admin address.
+   * @param tokenId The ID of the token to set admin status for.
+   * @param admin The address of the admin whose status to set.
+   * @param isActive Whether the admin is active or not.
+   */
   function setAdmin(
     uint256 tokenId,
     address admin,
     bool isActive
   ) public virtual {
-    require(_exists(tokenId), "addAdmin: tokenId does not exist");
-    require(ownerOf(tokenId) == msg.sender, "addAdmin: unauthorized");
+    require(_exists(tokenId), "setAdmin: tokenId does not exist");
+    require(ownerOf(tokenId) == msg.sender, "setAdmin: unauthorized");
 
     _admins[tokenId][admin] = isActive;
 
     emit AdminUpdate(tokenId, admin, isActive);
   }
 
-  function isAdminActive(uint256 tokenId, address admin)
-    public
-    view
-    virtual
-    returns (bool)
-  {
+  /**
+   * @dev Sets multiple admins for a given tokenId.
+   * @param tokenId The token ID for which the admins are being set.
+   * @param admins An array of addresses representing the admins.
+   * @param isActive An array of booleans representing the admin status (active or not).
+   */
+
+  function setMultipleAdmins(
+    uint256 tokenId,
+    address[] memory admins,
+    bool[] memory isActive
+  ) public virtual {
+    require(_exists(tokenId), "setMultipleAdmins: tokenId does not exist");
+    require(ownerOf(tokenId) == msg.sender, "setMultipleAdmins: unauthorized");
+    require(
+      admins.length == isActive.length,
+      "setMultipleAdmins: admins and isActive arrays must have the same length"
+    );
+
+    for (uint256 i = 0; i < admins.length; i++) {
+      _admins[tokenId][admins[i]] = isActive[i];
+      emit AdminUpdate(tokenId, admins[i], isActive[i]);
+    }
+  }
+
+  /** @dev Returns a boolean value indicating whether the specified admin address is active for the given token ID.
+   * @param tokenId The ID of the token.
+   * @param admin The address of the admin to check.
+   * @return A boolean value indicating whether the specified admin address is active for the given token ID.
+   */
+  function isAdminActive(
+    uint256 tokenId,
+    address admin
+  ) public view virtual returns (bool) {
     return _admins[tokenId][admin];
   }
 
-  function tokenURI(uint256 tokenId)
-    public
-    view
-    virtual
-    override
-    returns (string memory)
-  {
+  /** @dev Returns the URI of a given token.
+   * @param tokenId The ID of the token to retrieve the URI for.
+   * @return The URI of the specified token.
+   */
+  function tokenURI(
+    uint256 tokenId
+  ) public view virtual override returns (string memory) {
     return _tokenURIs[tokenId];
   }
 
