@@ -27,6 +27,11 @@ jobs:
       OPTIMISM_RAFT_ADDRESS: ${{ secrets.OPTIMISM_RAFT_ADDRESS }}
       OPTIMISM_SPECDATAHOLDER_ADDRESS: ${{ secrets.OPTIMISM_SPECDATAHOLDER_ADDRESS }}
       OPTIMISM_GNOSIS_SAFE: ${{ secrets.OPTIMISM_GNOSIS_SAFE }}
+      MAINNET_GNOSIS_SAFE: ${{ secrets.MAINNET_GNOSIS_SAFE }}
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+      MAINNET_BADGES_ADDRESS: ${{ secrets.MAINNET_BADGES_ADDRESS }}
+      MAINNET_RAFT_ADDRESS: ${{ secrets.MAINNET_RAFT_ADDRESS }}
+      MAINNET_SPECDATAHOLDER_ADDRESS: ${{ secrets.MAINNET_SPECDATAHOLDER_ADDRESS }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -75,6 +80,7 @@ jobs:
               ["goerli"]="$GOERLI_RPC_URL $ETHERSCAN_API_KEY"
               ["optimism-goerli"]="$OPTIMISM_GOERLI_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
               ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
+              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"              
           )
 
           for name in "${!networks[@]}"; do
