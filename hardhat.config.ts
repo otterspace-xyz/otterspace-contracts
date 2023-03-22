@@ -65,7 +65,13 @@ const config: HardhatUserConfig = {
       accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
       chainId: 1,
       timeout: 20000,
-    },    
+    },
+    sepolia: {
+      url: `${process.env.SEPOLIA_RPC_URL}`,
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
+      chainId: 11155111,
+      timeout: 20000,
+    },        
   },
   paths: {
     sources: './src', // Use ./src rather than ./contracts as Hardhat expects
@@ -87,6 +93,7 @@ const config: HardhatUserConfig = {
       optimisticEthereum: OPTIMISTIC_ETHERSCAN_API_KEY!,
       goerli: ETHERSCAN_API_KEY!,
       mainnet: ETHERSCAN_API_KEY!,
+      sepolia: ETHERSCAN_API_KEY!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

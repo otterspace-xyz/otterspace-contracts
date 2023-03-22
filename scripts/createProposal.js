@@ -19,6 +19,9 @@ const {
   MAINNET_BADGES_ADDRESS,
   MAINNET_RAFT_ADDRESS,
   MAINNET_SPECDATAHOLDER_ADDRESS,
+  SEPOLIA_BADGES_ADDRESS,
+  SEPOLIA_RAFT_ADDRESS,
+  SEPOLIA_SPECDATAHOLDER_ADDRESS,
 } = process.env
 
 async function createProposal() {
@@ -51,6 +54,9 @@ async function createProposal() {
         } else if (network === 'mainnet') {
           contract.address = MAINNET_BADGES_ADDRESS
           contract.network = 'mainnet'
+        } else if (network === 'sepolia') {
+          contract.address = SEPOLIA_BADGES_ADDRESS
+          contract.network = 'sepolia'
         }
         break
       case 'raft':
@@ -66,6 +72,9 @@ async function createProposal() {
         } else if (network === 'mainnet') {
           contract.address = MAINNET_RAFT_ADDRESS
           contract.network = 'mainnet'
+        } else if (network === 'sepolia') {
+          contract.address = SEPOLIA_RAFT_ADDRESS
+          contract.network = 'sepolia'
         }
         break
       case 'specDataHolder':
@@ -81,6 +90,9 @@ async function createProposal() {
         } else if (network === 'mainnet') {
           contract.address = MAINNET_SPECDATAHOLDER_ADDRESS
           contract.network = 'mainnet'
+        } else if (network === 'sepolia') {
+          contract.address = SEPOLIA_SPECDATAHOLDER_ADDRESS
+          contract.network = 'sepolia'
         }
         break
       default:
@@ -96,7 +108,7 @@ async function createProposal() {
         break
       case 'optimism-goerli':
         // use env var
-        // gnosis safe doesnt support optimism-goerli, so we need an address here
+        // gnosis safe doesnt support optimism-goerli, so we need an EOA here
         via = '0x76D84163bc0BbF58d6d3F2332f8A9c5B339dF983'
         viaType = 'EOA'
         break
@@ -107,6 +119,12 @@ async function createProposal() {
       case 'mainnet':
         via = MAINNET_GNOSIS_SAFE
         viaType = 'Gnosis Safe'
+        break
+      case 'sepolia':
+        // use env var
+        // gnosis safe doesnt support sepolia, so we need an EOA here
+        via = '0x76D84163bc0BbF58d6d3F2332f8A9c5B339dF983'
+        viaType = 'EOA'
         break
       default:
         throw new Error('Invalid network')

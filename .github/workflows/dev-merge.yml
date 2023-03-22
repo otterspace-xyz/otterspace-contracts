@@ -32,6 +32,10 @@ jobs:
       MAINNET_BADGES_ADDRESS: ${{ secrets.MAINNET_BADGES_ADDRESS }}
       MAINNET_RAFT_ADDRESS: ${{ secrets.MAINNET_RAFT_ADDRESS }}
       MAINNET_SPECDATAHOLDER_ADDRESS: ${{ secrets.MAINNET_SPECDATAHOLDER_ADDRESS }}
+      SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+      SEPOLIA_BADGES_ADDRESS: ${{ secrets.SEPOLIA_BADGES_ADDRESS }}
+      SEPOLIA_RAFT_ADDRESS: ${{ secrets.SEPOLIA_RAFT_ADDRESS }}
+      SEPOLIA_SPECDATAHOLDER_ADDRESS: ${{ secrets.SEPOLIA_SPECDATAHOLDER_ADDRESS }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -78,9 +82,10 @@ jobs:
 
           declare -A networks=(
               ["goerli"]="$GOERLI_RPC_URL $ETHERSCAN_API_KEY"
+              ["sepolia"]="$SEPOLIA_RPC_URL $ETHERSCAN_API_KEY"
               ["optimism-goerli"]="$OPTIMISM_GOERLI_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
               ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
-              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"              
+              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"
           )
 
           for name in "${!networks[@]}"; do
