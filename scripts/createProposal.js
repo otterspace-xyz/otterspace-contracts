@@ -1,7 +1,6 @@
 const { AdminClient } = require('defender-admin-client')
 require('dotenv').config()
 
-// add vars for optimism-goerli
 const {
   GOERLI_BADGES_ADDRESS,
   GOERLI_RAFT_ADDRESS,
@@ -16,6 +15,10 @@ const {
   DEFENDER_TEAM_API_SECRET_KEY,
   GOERLI_GNOSIS_SAFE,
   OPTIMISM_GNOSIS_SAFE,
+  MAINNET_GNOSIS_SAFE,
+  MAINNET_BADGES_ADDRESS,
+  MAINNET_RAFT_ADDRESS,
+  MAINNET_SPECDATAHOLDER_ADDRESS,
 } = process.env
 
 async function createProposal() {
@@ -39,15 +42,15 @@ async function createProposal() {
         if (network === 'goerli') {
           contract.address = GOERLI_BADGES_ADDRESS
           contract.network = 'goerli'
-          console.log('contract.address = ', contract.address)
         } else if (network === 'optimism') {
           contract.address = OPTIMISM_BADGES_ADDRESS
           contract.network = 'optimism'
-          console.log('contract.address = ', contract.address)
         } else if (network === 'optimism-goerli') {
           contract.address = OPTIMISM_GOERLI_BADGES_ADDRESS
           contract.network = 'optimism-goerli'
-          console.log('contract.address = ', contract.address)
+        } else if (network === 'mainnet') {
+          contract.address = MAINNET_BADGES_ADDRESS
+          contract.network = 'mainnet'
         }
         break
       case 'raft':
@@ -60,6 +63,9 @@ async function createProposal() {
         } else if (network === 'optimism-goerli') {
           contract.address = OPTIMISM_GOERLI_RAFT_ADDRESS
           contract.network = 'optimism-goerli'
+        } else if (network === 'mainnet') {
+          contract.address = MAINNET_RAFT_ADDRESS
+          contract.network = 'mainnet'
         }
         break
       case 'specDataHolder':
@@ -72,6 +78,9 @@ async function createProposal() {
         } else if (network === 'optimism-goerli') {
           contract.address = OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS
           contract.network = 'optimism-goerli'
+        } else if (network === 'mainnet') {
+          contract.address = MAINNET_SPECDATAHOLDER_ADDRESS
+          contract.network = 'mainnet'
         }
         break
       default:
@@ -93,6 +102,10 @@ async function createProposal() {
         break
       case 'optimism':
         via = OPTIMISM_GNOSIS_SAFE
+        viaType = 'Gnosis Safe'
+        break
+      case 'mainnet':
+        via = MAINNET_GNOSIS_SAFE
         viaType = 'Gnosis Safe'
         break
       default:
