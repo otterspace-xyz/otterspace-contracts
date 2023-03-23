@@ -9,9 +9,10 @@ import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 contract UUPSProxy is ERC1967Proxy {
-  constructor(address _implementation, bytes memory _data)
-    ERC1967Proxy(_implementation, _data)
-  {}
+  constructor(
+    address _implementation,
+    bytes memory _data
+  ) ERC1967Proxy(_implementation, _data) {}
 }
 
 contract RaftTest is Test {
@@ -170,34 +171,128 @@ contract RaftTest is Test {
     wrappedProxyV1.mint(to, "some uri");
   }
 
-  function testSetAdmin() public {
+  function addAdminsToToken(
+    uint256 tokenId,
+    address[] memory admins,
+    bool[] memory isActive,
+    bool isAddingAdmin
+  ) internal {
+    address tokenOwner = address(1);
+    if (!isAddingAdmin) {
+      vm.prank(tokenOwner);
+    }
+
+    wrappedProxyV1.addAdmins(tokenId, admins, isActive);
+
+    for (uint256 i = 0; i < admins.length; i++) {
+      emit AdminUpdate(tokenId, admins[i], isActive[i]);
+    }
+  }
+
+  function testAddAdmins() public {
     address tokenOwner = address(1);
     uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");
 
-    address admin = address(2);
+    address admin1 = address(2);
+    address admin2 = address(3);
+    address admin3 = address(4);
 
-    // checking for an address in a raft that was never an admin
     bool isActive = false;
-    bool actual = wrappedProxyV1.isAdminActive(tokenId, admin);
+    bool actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
     assertEq(actual, isActive);
 
-    // checking for a new address being added as an admin
     isActive = true;
+
+    address[] memory admins = new address[](3);
+    admins[0] = admin1;
+    admins[1] = admin2;
+    admins[2] = admin3;
+
+    bool[] memory adminActiveStatus = new bool[](3);
+    adminActiveStatus[0] = isActive;
+    adminActiveStatus[1] = isActive;
+    adminActiveStatus[2] = isActive;
+
+    // Check if the length of admins and adminActiveStatus arrays are the same
+    assertEq(admins.length, adminActiveStatus.length);
+
+    vm.expectEmit(true, true, false, true);
+    vm.expectEmit(true, true, false, true);
     vm.expectEmit(true, true, false, true);
     vm.prank(tokenOwner);
-    wrappedProxyV1.setAdmin(tokenId, admin, isActive);
-    emit AdminUpdate(tokenId, admin, isActive);
+    addAdminsToToken(tokenId, admins, adminActiveStatus, true);
 
-    actual = wrappedProxyV1.isAdminActive(tokenId, admin);
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
+    assertEq(actual, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin2);
+    assertEq(actual, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
     assertEq(actual, isActive);
 
     // expect error if a tokenid does not exist
-    vm.expectRevert(bytes("addAdmin: tokenId does not exist"));
+    vm.expectRevert(bytes("addAdmins: tokenId does not exist"));
     vm.prank(tokenOwner);
-    wrappedProxyV1.setAdmin(123, admin, isActive);
+    wrappedProxyV1.addAdmins(123, admins, adminActiveStatus);
+  }
 
-    // expect error if the called is not the owner of the raftTokenid
-    vm.expectRevert(bytes("addAdmin: unauthorized"));
-    wrappedProxyV1.setAdmin(tokenId, address(123), isActive);
+  function testRemoveAdmins() public {
+    address tokenOwner = address(1);
+    uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");
+
+    address admin1 = address(2);
+    address admin2 = address(3);
+    address admin3 = address(4);
+
+    bool isActive = true;
+
+    address[] memory admins = new address[](3);
+    admins[0] = admin1;
+    admins[1] = admin2;
+    admins[2] = admin3;
+
+    bool[] memory adminActiveStatus = new bool[](3);
+    adminActiveStatus[0] = isActive;
+    adminActiveStatus[1] = isActive;
+    adminActiveStatus[2] = isActive;
+
+    // Add the admins to the token
+    addAdminsToToken(tokenId, admins, adminActiveStatus, false);
+
+    // Verify that the admins have been added
+    bool actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
+    assertEq(actual, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin2);
+    assertEq(actual, isActive);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
+    assertEq(actual, isActive);
+
+    // Remove the admins from the token
+    vm.expectEmit(true, true, false, true);
+    vm.expectEmit(true, true, false, true);
+    vm.expectEmit(true, true, false, true);
+    vm.prank(tokenOwner);
+    wrappedProxyV1.removeAdmins(tokenId, admins);
+    emit AdminUpdate(tokenId, admin1, false);
+    emit AdminUpdate(tokenId, admin2, false);
+    emit AdminUpdate(tokenId, admin3, false);
+
+    // Verify that the admins have been removed
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
+    assertEq(actual, false);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin2);
+    assertEq(actual, false);
+
+    actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
+    assertEq(actual, false);
+
+    // Expect error if tokenId does not exist
+    vm.expectRevert(bytes("removeAdmins: tokenId does not exist"));
+    vm.prank(tokenOwner);
+    wrappedProxyV1.removeAdmins(123, admins);
   }
 }

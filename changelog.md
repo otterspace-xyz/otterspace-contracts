@@ -2,6 +2,14 @@
 
 We're using https://semver.org/
 
+## 2.6.5
+
+- Add `addAdmins` and `removeAdmins` to Raft contract
+
+## 2.6.4
+
+- Add `setBadgesToRafts` and `setSpecsToRafts`
+
 ## 2.6.3
 
 - Add `giveRequestedBadgeToMany` and tests

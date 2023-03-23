@@ -60,6 +60,12 @@ const config: HardhatUserConfig = {
       chainId: 10,
       timeout: 20000,
     },
+    mainnet: {
+      url: `${process.env.MAINNET_RPC_URL}`,
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
+      chainId: 1,
+      timeout: 20000,
+    },    
   },
   paths: {
     sources: './src', // Use ./src rather than ./contracts as Hardhat expects
@@ -80,6 +86,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       optimisticEthereum: OPTIMISTIC_ETHERSCAN_API_KEY!,
       goerli: ETHERSCAN_API_KEY!,
+      mainnet: ETHERSCAN_API_KEY!,
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

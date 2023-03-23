@@ -22,19 +22,31 @@ npx hardhat typechain
 npx hardhat test
 ```
 
+### Live contracts on Ethereum Mainnet:
+
+- [Badges.sol](https://etherscan.io/address/0x4537e34d5044626d72b3da203e7ffe997245947c)
+- [Raft.sol](https://etherscan.io/address/0x7465dA7E01A5FF3b2b1699EDa9E617A1329C14b8)
+- [SpecDataHolder.sol](https://etherscan.io/address/0x39DfCa12FCf403aa027aa64C04bCfB5eFF95d402)
+
 ### Live contracts on Optimism:
 
 - [Badges.sol](https://optimistic.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
 - [Raft.sol](https://optimistic.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
-- [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0xEE0c743A3E50133B63eDFcc0006aA331Adf1e4BC)
+- [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0x5c0B0B9c94f297f208375212AA70e5F86df6cb1B)
 
 ---
 
-Live contracts on Goerli:
+### Live contracts on Goerli:
 
 - [Badges.sol](https://goerli.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
 - [Raft.sol](https://goerli.etherscan.io/address/0xBb8997048e5F0bFe6C9D6BEe63Ede53BD0236Bb2)
 - [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+
+### Live contracts on Optimism-Goerli:
+
+- [Badges.sol](https://goerli-optimism.etherscan.io/address/0x940f3b56fd53028f5d76a9ca335b1a9a6135528a)
+- [Raft.sol](https://goerli-optimism.etherscan.io/address/0xcd31CFCd7b784C5F4f51D4EaC45376bA30F9C3Eb)
+- [SpecDataHolder.sol](https://goerli-optimism.etherscan.io/address/0xbdBF9157BCF6a3f7cE9F7BdcFCa3067727F515F2)
 
 ### Use ABIs with JavaScript
 
