@@ -145,7 +145,10 @@ contract Raft is
     uint256 tokenId,
     address[] memory admins
   ) public virtual {
-    require(admins.length > 0, "addAdmins: you must pass at least one admin");
+    require(
+      admins.length > 0,
+      "removeAdmins: you must pass at least one admin"
+    );
     require(_exists(tokenId), "removeAdmins: tokenId does not exist");
     require(ownerOf(tokenId) == msg.sender, "removeAdmins: unauthorized");
 
