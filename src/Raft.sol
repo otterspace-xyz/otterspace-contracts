@@ -118,6 +118,10 @@ contract Raft is
     address[] memory admins,
     bool[] memory isActive
   ) public virtual {
+    require(
+      admins.length > 0 && isActive.length > 0,
+      "addAdmins: you must pass at least one admin and one isActive element"
+    );
     require(_exists(tokenId), "addAdmins: tokenId does not exist");
     require(ownerOf(tokenId) == msg.sender, "addAdmins: unauthorized");
     require(
@@ -141,6 +145,7 @@ contract Raft is
     uint256 tokenId,
     address[] memory admins
   ) public virtual {
+    require(admins.length > 0, "addAdmins: you must pass at least one admin");
     require(_exists(tokenId), "removeAdmins: tokenId does not exist");
     require(ownerOf(tokenId) == msg.sender, "removeAdmins: unauthorized");
 

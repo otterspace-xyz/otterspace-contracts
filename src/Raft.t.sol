@@ -215,6 +215,7 @@ contract RaftTest is Test {
 
     // Check if the length of admins and adminActiveStatus arrays are the same
     assertEq(admins.length, adminActiveStatus.length);
+    assert(admins.length > 0);
 
     vm.expectEmit(true, true, false, true);
     vm.expectEmit(true, true, false, true);
@@ -269,6 +270,8 @@ contract RaftTest is Test {
 
     actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
     assertEq(actual, isActive);
+
+    assert(admins.length > 0);
 
     // Remove the admins from the token
     vm.expectEmit(true, true, false, true);
