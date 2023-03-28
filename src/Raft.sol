@@ -107,39 +107,30 @@ contract Raft is
   }
 
   /**
-   * @dev Sets multiple admins for a given tokenId.
-   * @param tokenId The token ID for which the admins are being set.
-   * @param admins An array of addresses representing the admins.
+   * @notice Sets the admins for a given Raft token ID.
+   * @param tokenId The ID of the token for which to set the admins.
+   * @param admins An array of addresses to set as admins.
+   * @param isActive An array of boolean values indicating whether each corresponding admin address should be set as active or inactive.
    */
-
-  function addAdmins(uint256 tokenId, address[] memory admins) public virtual {
-    require(admins.length > 0, "addAdmins: invalid input");
-    require(_exists(tokenId), "addAdmins: tokenId does not exist");
-    require(ownerOf(tokenId) == msg.sender, "addAdmins: unauthorized");
-
-    for (uint256 i = 0; i < admins.length; i++) {
-      _admins[tokenId][admins[i]] = true;
-      emit AdminUpdate(tokenId, admins[i], true);
-    }
-  }
-
-  /**
-   * @dev Removes multiple admins for a given tokenId.
-   * @param tokenId The token ID for which the admins are being removed.
-   * @param admins An array of addresses representing the admins to be removed.
-   */
-
-  function removeAdmins(
+  function setAdmins(
     uint256 tokenId,
-    address[] memory admins
+    address[] memory admins,
+    bool[] memory isActive
   ) public virtual {
-    require(admins.length > 0, "removeAdmins: invalid input");
-    require(_exists(tokenId), "removeAdmins: tokenId does not exist");
-    require(ownerOf(tokenId) == msg.sender, "removeAdmins: unauthorized");
+    require(
+      admins.length > 0 && isActive.length > 0,
+      "setAdmins: invalid input"
+    );
+    require(
+      admins.length == isActive.length,
+      "setAdmins: admins and isActive must be the same length"
+    );
+    require(_exists(tokenId), "setAdmins: tokenId does not exist");
+    require(ownerOf(tokenId) == msg.sender, "setAdmins: unauthorized");
 
     for (uint256 i = 0; i < admins.length; i++) {
-      delete _admins[tokenId][admins[i]];
-      emit AdminUpdate(tokenId, admins[i], false);
+      _admins[tokenId][admins[i]] = isActive[i];
+      emit AdminUpdate(tokenId, admins[i], isActive[i]);
     }
   }
 
