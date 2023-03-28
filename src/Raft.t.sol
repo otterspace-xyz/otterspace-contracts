@@ -174,7 +174,6 @@ contract RaftTest is Test {
   function addAdminsToToken(
     uint256 tokenId,
     address[] memory admins,
-    bool[] memory isActive,
     bool isAddingAdmin
   ) internal {
     address tokenOwner = address(1);
@@ -182,10 +181,10 @@ contract RaftTest is Test {
       vm.prank(tokenOwner);
     }
 
-    wrappedProxyV1.addAdmins(tokenId, admins, isActive);
+    wrappedProxyV1.addAdmins(tokenId, admins);
 
     for (uint256 i = 0; i < admins.length; i++) {
-      emit AdminUpdate(tokenId, admins[i], isActive[i]);
+      emit AdminUpdate(tokenId, admins[i], true);
     }
   }
 
@@ -208,20 +207,13 @@ contract RaftTest is Test {
     admins[1] = admin2;
     admins[2] = admin3;
 
-    bool[] memory adminActiveStatus = new bool[](3);
-    adminActiveStatus[0] = isActive;
-    adminActiveStatus[1] = isActive;
-    adminActiveStatus[2] = isActive;
-
-    // Check if the length of admins and adminActiveStatus arrays are the same
-    assertEq(admins.length, adminActiveStatus.length);
     assert(admins.length > 0);
 
     vm.expectEmit(true, true, false, true);
     vm.expectEmit(true, true, false, true);
     vm.expectEmit(true, true, false, true);
     vm.prank(tokenOwner);
-    addAdminsToToken(tokenId, admins, adminActiveStatus, true);
+    addAdminsToToken(tokenId, admins, true);
 
     actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
     assertEq(actual, isActive);
@@ -235,7 +227,7 @@ contract RaftTest is Test {
     // expect error if a tokenid does not exist
     vm.expectRevert(bytes("addAdmins: tokenId does not exist"));
     vm.prank(tokenOwner);
-    wrappedProxyV1.addAdmins(123, admins, adminActiveStatus);
+    wrappedProxyV1.addAdmins(123, admins);
   }
 
   function testRemoveAdmins() public {
@@ -253,13 +245,8 @@ contract RaftTest is Test {
     admins[1] = admin2;
     admins[2] = admin3;
 
-    bool[] memory adminActiveStatus = new bool[](3);
-    adminActiveStatus[0] = isActive;
-    adminActiveStatus[1] = isActive;
-    adminActiveStatus[2] = isActive;
-
     // Add the admins to the token
-    addAdminsToToken(tokenId, admins, adminActiveStatus, false);
+    addAdminsToToken(tokenId, admins, false);
 
     // Verify that the admins have been added
     bool actual = wrappedProxyV1.isAdminActive(tokenId, admin1);

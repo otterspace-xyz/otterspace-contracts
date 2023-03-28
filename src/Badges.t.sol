@@ -252,10 +252,8 @@ contract BadgesTest is Test {
 
     address[] memory admins = new address[](1);
     admins[0] = admin;
-    bool[] memory isAdmin = new bool[](1);
-    isAdmin[0] = true;
 
-    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
+    raftWrappedProxyV1.addAdmins(raftTokenId, admins);
 
     vm.prank(admin);
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
@@ -264,15 +262,25 @@ contract BadgesTest is Test {
   function testCreateSpecAsDeactivatedAdmin() public {
     address raftOwner = address(this);
     address admin = address(123);
+    // mint a raft token to the raft owner
     uint256 raftTokenId = raftWrappedProxyV1.mint(raftOwner, specUri);
 
     address[] memory admins = new address[](1);
     admins[0] = admin;
-    bool[] memory isAdmin = new bool[](1);
-    isAdmin[0] = false;
 
-    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
+    // add an address as an admin
+    raftWrappedProxyV1.addAdmins(raftTokenId, admins);
 
+    // check if admin is active
+    assertEq(raftWrappedProxyV1.isAdminActive(raftTokenId, admin), true);
+
+    // remove admin
+    raftWrappedProxyV1.removeAdmins(raftTokenId, admins);
+
+    // check if admin is active
+    assertEq(raftWrappedProxyV1.isAdminActive(raftTokenId, admin), false);
+
+    // deactivated admin is gonna try to create a spec, and should fail
     vm.prank(admin);
     vm.expectRevert(bytes(errCreateSpecUnauthorized));
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
@@ -380,12 +388,10 @@ contract BadgesTest is Test {
 
     address[] memory admins = new address[](1);
     admins[0] = raftHolderAddress;
-    bool[] memory isAdmin = new bool[](1);
-    isAdmin[0] = true;
 
     // mark the old holder as admin
     vm.prank(newRaftHolder);
-    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
+    raftWrappedProxyV1.addAdmins(raftTokenId, admins);
 
     vm.prank(claimantAddress);
     uint256 tokenId = badgesWrappedProxyV1.take(

@@ -110,28 +110,16 @@ contract Raft is
    * @dev Sets multiple admins for a given tokenId.
    * @param tokenId The token ID for which the admins are being set.
    * @param admins An array of addresses representing the admins.
-   * @param isActive An array of booleans representing the admin status (active or not).
    */
 
-  function addAdmins(
-    uint256 tokenId,
-    address[] memory admins,
-    bool[] memory isActive
-  ) public virtual {
-    require(
-      admins.length > 0 && isActive.length > 0,
-      "addAdmins: you must pass at least one admin and one isActive element"
-    );
+  function addAdmins(uint256 tokenId, address[] memory admins) public virtual {
+    require(admins.length > 0, "addAdmins: invalid input");
     require(_exists(tokenId), "addAdmins: tokenId does not exist");
     require(ownerOf(tokenId) == msg.sender, "addAdmins: unauthorized");
-    require(
-      admins.length == isActive.length,
-      "addAdmins: admins and isActive arrays must have the same length"
-    );
 
     for (uint256 i = 0; i < admins.length; i++) {
-      _admins[tokenId][admins[i]] = isActive[i];
-      emit AdminUpdate(tokenId, admins[i], isActive[i]);
+      _admins[tokenId][admins[i]] = true;
+      emit AdminUpdate(tokenId, admins[i], true);
     }
   }
 
@@ -145,10 +133,7 @@ contract Raft is
     uint256 tokenId,
     address[] memory admins
   ) public virtual {
-    require(
-      admins.length > 0,
-      "removeAdmins: you must pass at least one admin"
-    );
+    require(admins.length > 0, "removeAdmins: invalid input");
     require(_exists(tokenId), "removeAdmins: tokenId does not exist");
     require(ownerOf(tokenId) == msg.sender, "removeAdmins: unauthorized");
 
