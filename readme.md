@@ -40,7 +40,7 @@ npx hardhat test
 
 - [Badges.sol](https://goerli.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
 - [Raft.sol](https://goerli.etherscan.io/address/0xBb8997048e5F0bFe6C9D6BEe63Ede53BD0236Bb2)
-- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0xA3716e7794F756e7a22145516FcB87C962576ce4)
 
 ### Live contracts on Optimism-Goerli:
 

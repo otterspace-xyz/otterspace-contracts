@@ -3,24 +3,26 @@ on:
     types:
       - closed
     branches:
-      - dev
+      - main
 
 jobs:
   if_merged:
     env:
       DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
-      GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
+      OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+      OPTIMISTIC_ETHERSCAN_API_KEY: ${{ secrets.OPTIMISTIC_ETHERSCAN_API_KEY }}
       ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
       DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
       DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
-      GOERLI_BADGES_ADDRESS: ${{ secrets.GOERLI_BADGES_ADDRESS }}
-      GOERLI_RAFT_ADDRESS: ${{ secrets.GOERLI_RAFT_ADDRESS }}
-      GOERLI_GNOSIS_SAFE: ${{ secrets.GOERLI_GNOSIS_SAFE }}
-      GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.GOERLI_SPECDATAHOLDER_ADDRESS }}
-      OPTIMISM_GOERLI_RPC_URL: ${{ secrets.OPTIMISM_GOERLI_RPC_URL }}
-      OPTIMISM_GOERLI_BADGES_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_BADGES_ADDRESS }}
-      OPTIMISM_GOERLI_RAFT_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_RAFT_ADDRESS }}
-      OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS }}
+      OPTIMISM_BADGES_ADDRESS: ${{ secrets.OPTIMISM_BADGES_ADDRESS }}
+      OPTIMISM_RAFT_ADDRESS: ${{ secrets.OPTIMISM_RAFT_ADDRESS }}
+      OPTIMISM_SPECDATAHOLDER_ADDRESS: ${{ secrets.OPTIMISM_SPECDATAHOLDER_ADDRESS }}
+      OPTIMISM_GNOSIS_SAFE: ${{ secrets.OPTIMISM_GNOSIS_SAFE }}
+      MAINNET_GNOSIS_SAFE: ${{ secrets.MAINNET_GNOSIS_SAFE }}
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
+      MAINNET_BADGES_ADDRESS: ${{ secrets.MAINNET_BADGES_ADDRESS }}
+      MAINNET_RAFT_ADDRESS: ${{ secrets.MAINNET_RAFT_ADDRESS }}
+      MAINNET_SPECDATAHOLDER_ADDRESS: ${{ secrets.MAINNET_SPECDATAHOLDER_ADDRESS }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -58,15 +60,15 @@ jobs:
           last_tag_raft=$(cat src/Raft.sol)
           last_tag_sdh=$(cat src/SpecDataHolder.sol)
 
-          git switch dev
+          git switch main
 
           current_badges=$(cat src/Badges.sol)
           current_raft=$(cat src/Raft.sol)
           current_sdh=$(cat src/SpecDataHolder.sol)
 
           declare -A networks=(
-              ["goerli"]="$GOERLI_RPC_URL $ETHERSCAN_API_KEY"
-              ["optimism-goerli"]="$OPTIMISM_GOERLI_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"         
+              ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
+              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"              
           )
 
           for name in "${!networks[@]}"; do
