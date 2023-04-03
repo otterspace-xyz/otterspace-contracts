@@ -255,7 +255,7 @@ contract BadgesTest is Test {
     bool[] memory isAdmin = new bool[](1);
     isAdmin[0] = true;
 
-    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
+    raftWrappedProxyV1.setAdmins(raftTokenId, admins, isAdmin);
 
     vm.prank(admin);
     badgesWrappedProxyV1.createSpec(specUri, raftTokenId);
@@ -271,7 +271,7 @@ contract BadgesTest is Test {
     bool[] memory isAdmin = new bool[](1);
     isAdmin[0] = false;
 
-    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
+    raftWrappedProxyV1.setAdmins(raftTokenId, admins, isAdmin);
 
     vm.prank(admin);
     vm.expectRevert(bytes(errCreateSpecUnauthorized));
@@ -383,9 +383,8 @@ contract BadgesTest is Test {
     bool[] memory isAdmin = new bool[](1);
     isAdmin[0] = true;
 
-    // mark the old holder as admin
     vm.prank(newRaftHolder);
-    raftWrappedProxyV1.addAdmins(raftTokenId, admins, isAdmin);
+    raftWrappedProxyV1.setAdmins(raftTokenId, admins, isAdmin);
 
     vm.prank(claimantAddress);
     uint256 tokenId = badgesWrappedProxyV1.take(
