@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.6.6
+
+- Change `addAdmins` and `removeAdmins` on Raft contract to `setAdmins`
+
 ## 2.6.5
 
 - Add `addAdmins` and `removeAdmins` to Raft contract
