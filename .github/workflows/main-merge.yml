@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  if_merged:
+  deploy_to_mainnets_on_merge:
     env:
       DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
       OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
@@ -24,15 +24,15 @@ jobs:
       MAINNET_RAFT_ADDRESS: ${{ secrets.MAINNET_RAFT_ADDRESS }}
       MAINNET_SPECDATAHOLDER_ADDRESS: ${{ secrets.MAINNET_SPECDATAHOLDER_ADDRESS }}
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           submodules: recursive
-          node-version: ${{ matrix.node }}
+          node-version: 16
           cache: yarn
 
       - name: Install Foundry
@@ -52,19 +52,38 @@ jobs:
       - name: Deploy
         run: |
           set -e
+
+          function get_code_at_ref() {
+            git show "$1":src/Badges.sol
+            git show "$1":src/Raft.sol
+            git show "$1":src/SpecDataHolder.sol
+          }
+
+          function switch_branch() {
+            local branch_name="$1"
+            local ref="$2"
+            git switch -c "$branch_name" "$ref" || git switch "$branch_name"
+          }
+
+          function create_proposal() {
+            local implementation="$1"
+            local name="$2"
+
+            node scripts/createProposal.js "$implementation" 'badges' "$name" || {
+              echo "Failed to create a proposal for the new Badges implementation on $name"
+              exit 1
+            }
+          }
+
           last_tag=$(git describe --tags --abbrev=0)
-          git branch last_tag_branch $last_tag
-          git switch last_tag_branch
+          git_branch=$last_tag
+          switch_branch "$git_branch" "$last_tag"
 
-          last_tag_badges=$(cat src/Badges.sol)
-          last_tag_raft=$(cat src/Raft.sol)
-          last_tag_sdh=$(cat src/SpecDataHolder.sol)
+          # Get the code at the last tag and the current HEAD
+          IFS=$'\n' read -r -d '' badges_code_at_last_tag raft_code_at_last_tag sdh_code_at_last_tag < <(get_code_at_ref "$last_tag" && printf '\0')
+          IFS=$'\n' read -r -d '' badges_code_at_current raft_code_at_current sdh_code_at_current < <(get_code_at_ref "HEAD" && printf '\0')
 
-          git switch main
-
-          current_badges=$(cat src/Badges.sol)
-          current_raft=$(cat src/Raft.sol)
-          current_sdh=$(cat src/SpecDataHolder.sol)
+          git switch dev
 
           declare -A networks=(
               ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
@@ -73,38 +92,29 @@ jobs:
 
           for name in "${!networks[@]}"; do
               read rpc_url etherscan_api_key <<<"${networks[$name]}"
-              if [ "$last_tag_badges" != "$current_badges" ]; then
+              if [ "$badges_code_at_last_tag" != "$badges_code_at_current" ]; then
                   badgesImplementation=$(forge create src/Badges.sol:Badges --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 2000000 | grep "Deployed to:" | cut -d " " -f 3) || {
                       echo "Failed to deploy the new Badges implementation on $name"
                       exit 1
                   }
 
-                  node scripts/createProposal.js "$badgesImplementation" 'badges' "$name" || {
-                      echo "Failed to create a proposal for the new Badges implementation on $name"
-                      exit 1
-                  }
+                  create_proposal "$badgesImplementation" "$name"
               fi
 
-              if [ "$last_tag_raft" != "$current_raft" ]; then
+              if [ "$raft_code_at_last_tag" != "$raft_code_at_current" ]; then
                   raftImplementation=$(forge create src/Raft.sol:Raft --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 2000000 | grep "Deployed to:" | cut -d " " -f 3) || {
                       echo "Failed to deploy the new Raft implementation on $name"
                       exit 1
                   }
-                  node scripts/createProposal.js "$raftImplementation" 'raft' "$name" || {
-                      echo "Failed to create a proposal for the new Raft implementation on $name"
-                      exit 1
-                  }
+                  create_proposal "$raftImplementation" "$name"
               fi
 
-              if [ "$last_tag_sdh" != "$current_sdh" ]; then
+              if [ "$sdh_code_at_last_tag" != "$sdh_code_at_current" ]; then
                   sdhImplementation=$(forge create src/SpecDataHolder.sol:SpecDataHolder --private-key "$DEPLOYER_PRIVATE_KEY" --verify --rpc-url "$rpc_url" --etherscan-api-key "$etherscan_api_key" --gas-limit 2000000 | grep "Deployed to:" | cut -d " " -f 3) || {
                       echo "Failed to deploy the new SpecDataHolder implementation on $name"
                       exit 1
                   }
-                  node scripts/createProposal.js "$sdhImplementation" 'specDataHolder' "$name" || {
-                      echo "Failed to create a proposal for the new SpecDataHolder implementation on $name"
-                      exit 1
-                  }
+                  create_proposal "$sdhImplementation" "$name"
               fi
 
               echo "All implementations deployed successfully on $name"
