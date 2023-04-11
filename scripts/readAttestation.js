@@ -26,7 +26,7 @@ const readAttestation = async (creatorAddr, subjectAddr, key) => {
   // Example parameters
   const creatorAddr = '0x76D84163bc0BbF58d6d3F2332f8A9c5B339dF983'
   const subjectAddr = '0x76D84163bc0BbF58d6d3F2332f8A9c5B339dF983'
-  const key = ethers.utils.formatBytes32String('otterspace')
+  const key = ethers.utils.formatBytes32String('otterspace.score')
 
   const hexValue = await readAttestation(creatorAddr, subjectAddr, key)
   const attestationValue = hexValue.toString()
