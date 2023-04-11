@@ -35,7 +35,7 @@ const createAttestations = async csvData => {
     const scoreAsBigNumber = ethers.BigNumber.from(score.toFixed(0)) // Convert score to BigNumber
     return {
       about: row.address,
-      key: ethers.utils.formatBytes32String('reputation.score'),
+      key: ethers.utils.formatBytes32String('otterspace'),
       val: ethers.utils.defaultAbiCoder.encode(['uint256'], [scoreAsBigNumber]),
     }
   })
