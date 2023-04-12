@@ -5,7 +5,7 @@ const hardhat = require('hardhat')
 const attestationStationAbi = require('./abi/AttestationStationABI.json')
 const attestationStationAddress = '0xEE36eaaD94d1Cc1d0eccaDb55C38bFfB6Be06C77'
 
-const csvFilePath = './scripts/data/attestations.csv'
+const csvFilePath = './scripts/data/latest-scores.csv'
 
 const parseCsv = async filePath => {
   const results = []
@@ -31,8 +31,9 @@ const createAttestations = async csvData => {
     signer
   )
   const attestations = csvData.map(row => {
-    const score = parseFloat(row['score']) * 100 // Convert score to float and multiply by 100
-    const scoreAsBigNumber = ethers.BigNumber.from(score.toFixed(0)) // Convert score to BigNumber
+    const score = parseFloat(row['Score Log'])
+    const scoreAsBigNumber = ethers.BigNumber.from(score.toFixed(0))
+    console.log('🚀 ~ attestations ~ scoreAsBigNumber:', scoreAsBigNumber)
     return {
       about: row.address,
       key: ethers.utils.formatBytes32String('otterspace.score'),
@@ -40,15 +41,12 @@ const createAttestations = async csvData => {
     }
   })
 
-  console.log('🚀 ~ attestations ~ attestations:', attestations)
-
   const functionSignature = 'attest((address,bytes32,bytes)[])'
   await attestationStationContract[functionSignature](attestations)
 }
 
 ;(async () => {
   const csvData = await parseCsv(csvFilePath)
-  console.log('🚀 ~ ; ~ csvData:', csvData)
   const res = await createAttestations(csvData)
   console.log('Attestations successfully published!')
 })()
