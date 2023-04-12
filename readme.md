@@ -150,6 +150,12 @@ On [Hardhat's website](https://hardhat.org) you will find:
 - watch the console for confirmation of deployment and verification, copy the implementation's address
 - go into Defender and propose and execute the upgrade
 
+## Publishing attestations
+
+`npx hardhat run publishAttestations.js --network optimisticEthereum`
+
+more details about in `./scripts/update_scores.py`
+
 ## Foundry setup for VS Code Users
 
 Add a `.vscode` file under the root
