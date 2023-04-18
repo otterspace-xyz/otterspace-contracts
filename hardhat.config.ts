@@ -21,6 +21,7 @@ require('dotenv').config()
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 const OPTIMISTIC_ETHERSCAN_API_KEY = process.env.OPTIMISTIC_ETHERSCAN_API_KEY
+const POLYGON_ETHERSCAN_API_KEY = process.env.POLYGON_ETHERSCAN_API_KEY
 
 function getRemappings() {
   return fs
@@ -65,7 +66,13 @@ const config: HardhatUserConfig = {
       accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
       chainId: 1,
       timeout: 20000,
-    },    
+    },   
+    polygon: {
+      url: `${process.env.POLYGON_RPC_URL}`,
+      accounts: [`0x${DEPLOYER_PRIVATE_KEY}`],
+      chainId: 137,
+      timeout: 20000,
+    },        
   },
   paths: {
     sources: './src', // Use ./src rather than ./contracts as Hardhat expects
@@ -87,6 +94,8 @@ const config: HardhatUserConfig = {
       optimisticEthereum: OPTIMISTIC_ETHERSCAN_API_KEY!,
       goerli: ETHERSCAN_API_KEY!,
       mainnet: ETHERSCAN_API_KEY!,
+      polygon: POLYGON_ETHERSCAN_API_KEY!,
+
     },
   },
   // This fully resolves paths for imports in the ./lib directory for Hardhat

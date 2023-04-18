@@ -34,6 +34,12 @@ npx hardhat test
 - [Raft.sol](https://optimistic.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
 - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0x5c0B0B9c94f297f208375212AA70e5F86df6cb1B)
 
+### Live contracts on Polygon:
+
+- [Badges.sol](https://polygonscan.com/address/0x147e0dF40fdD1340C604726c670329c08176F208)
+- [Raft.sol](https://polygonscan.com/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
+- [SpecDataHolder.sol](https://polygonscan.com/address/0xdb8346eaf8c4a7ef82b17ce7843df8a9d00dc524)
+
 ---
 
 ### Live contracts on Goerli:

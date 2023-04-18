@@ -23,6 +23,11 @@ jobs:
       MAINNET_BADGES_ADDRESS: ${{ secrets.MAINNET_BADGES_ADDRESS }}
       MAINNET_RAFT_ADDRESS: ${{ secrets.MAINNET_RAFT_ADDRESS }}
       MAINNET_SPECDATAHOLDER_ADDRESS: ${{ secrets.MAINNET_SPECDATAHOLDER_ADDRESS }}
+      POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}
+      POLYGON_BADGES_ADDRESS: ${{ secrets.POLYGON_BADGES_ADDRESS }}
+      POLYGON_RAFT_ADDRESS: ${{ secrets.POLYGON_RAFT_ADDRESS }}
+      POLYGON_SPECDATAHOLDER_ADDRESS: ${{ secrets.POLYGON_SPECDATAHOLDER_ADDRESS }}
+      POLYGON_ETHERSCAN_API_KEY: ${{ secrets.POLYGON_ETHERSCAN_API_KEY }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -91,7 +96,8 @@ jobs:
 
           declare -A networks=(
               ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
-              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"              
+              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"
+              ["polygon"]="$POLYGON_RPC_URL $POLYGON_ETHERSCAN_API_KEY"              
           )
 
           for networkName in "${!networks[@]}"; do
