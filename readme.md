@@ -149,7 +149,7 @@ On [Hardhat's website](https://hardhat.org) you will find:
 
 ## Running upgrades (steps)
 
-- make sure your `.env.implemntation` file has the correct values
+- make sure your `.env.implementation` file has the correct values
 - run `./scripts deploy_and_verify_implementation.sh .env.implementation ${contractName} ${networkName}`
 - to deploy Badges on Optimism it would be
 - - `./scripts deploy_and_verify_implementation.sh .env.implementation Badges optimism`
