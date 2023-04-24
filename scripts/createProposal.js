@@ -51,6 +51,9 @@ async function createProposal() {
         } else if (network === 'mainnet') {
           contract.address = MAINNET_BADGES_ADDRESS
           contract.network = 'mainnet'
+        } else if (network === 'polygon') {
+          contract.address = POLYGON_BADGES_ADDRESS
+          contract.network = 'polygon'
         }
         break
       case 'raft':
@@ -66,6 +69,9 @@ async function createProposal() {
         } else if (network === 'mainnet') {
           contract.address = MAINNET_RAFT_ADDRESS
           contract.network = 'mainnet'
+        } else if (network === 'polygon') {
+          contract.address = POLYGON_RAFT_ADDRESS
+          contract.network = 'polygon'
         }
         break
       case 'specDataHolder':
@@ -81,6 +87,9 @@ async function createProposal() {
         } else if (network === 'mainnet') {
           contract.address = MAINNET_SPECDATAHOLDER_ADDRESS
           contract.network = 'mainnet'
+        } else if (network === 'polygon') {
+          contract.address = POLYGON_SPECDATAHOLDER_ADDRESS
+          contract.network = 'polygon'
         }
         break
       default:
