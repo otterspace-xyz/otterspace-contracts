@@ -60,6 +60,9 @@ contract Badges is
   bytes32 constant REQUEST_HASH =
     keccak256("Request(address requester,string tokenURI)");
 
+  bytes32 constant AIRDROP_CONSENT_HASH =
+    keccak256("AirdropConsent(address issuer,address recipient,string uri)");
+
   modifier tokenExists(uint256 _badgeId) {
     require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
     _;
@@ -152,10 +155,10 @@ contract Badges is
    * @param _recipients array the addresses who will receive a badge
    * @param _uri the uri of the badge spec
    */
-  function airdrop(address[] calldata _recipients, string calldata _uri)
-    external
-    virtual
-  {
+  function airdrop(
+    address[] calldata _recipients,
+    string calldata _uri
+  ) external virtual {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
       specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
@@ -270,6 +273,28 @@ contract Badges is
     return mint(msg.sender, _uri, raftTokenId);
   }
 
+  function airdropWithConsent(
+    address _recipient,
+    string calldata _uri,
+    bytes calldata _issuerSignature,
+    bytes calldata _recipientSignature
+  ) external virtual {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "airdropWithConsent: unauthorized"
+    );
+
+    safeCheckAirdropAgreement(
+      msg.sender,
+      _recipient,
+      _uri,
+      _issuerSignature,
+      _recipientSignature
+    );
+    mint(_recipient, _uri, raftTokenId);
+  }
+
   function merkleTake(
     address _from,
     string calldata _uri,
@@ -298,10 +323,10 @@ contract Badges is
    * @param _specUri the uri of the badge spec
    * @param _raftTokenId the id of the raft token
    */
-  function createSpec(string calldata _specUri, uint256 _raftTokenId)
-    external
-    virtual
-  {
+  function createSpec(
+    string calldata _specUri,
+    uint256 _raftTokenId
+  ) external virtual {
     require(
       specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
       "createSpec: unauthorized"
@@ -330,13 +355,9 @@ contract Badges is
     return symbol_;
   }
 
-  function tokenURI(uint256 _tokenId)
-    external
-    view
-    virtual
-    override
-    returns (string memory)
-  {
+  function tokenURI(
+    uint256 _tokenId
+  ) external view virtual override returns (string memory) {
     require(exists(_tokenId), "tokenURI: token doesn't exist");
     return tokenURIs[_tokenId];
   }
@@ -345,35 +366,23 @@ contract Badges is
    * @notice Allows a user to disassociate themselves from a badge
    * @param _tokenId the id of the badge
    */
-  function unequip(uint256 _tokenId)
-    external
-    virtual
-    override
-    tokenExists(_tokenId)
-  {
+  function unequip(
+    uint256 _tokenId
+  ) external virtual override tokenExists(_tokenId) {
     require(msg.sender == owners[_tokenId], "unequip: sender must be owner");
     burn(_tokenId);
   }
 
-  function balanceOf(address _owner)
-    external
-    view
-    virtual
-    override
-    returns (uint256)
-  {
+  function balanceOf(
+    address _owner
+  ) external view virtual override returns (uint256) {
     require(_owner != address(0), "balanceOf: address(0) is not a valid owner");
     return balances[_owner];
   }
 
-  function ownerOf(uint256 _tokenId)
-    external
-    view
-    virtual
-    override
-    tokenExists(_tokenId)
-    returns (address)
-  {
+  function ownerOf(
+    uint256 _tokenId
+  ) external view virtual override tokenExists(_tokenId) returns (address) {
     return owners[_tokenId];
   }
 
@@ -413,10 +422,10 @@ contract Badges is
    * @param _raftTokenId The raft token id
    * @param _badgeId tokenId of the badge to be revoked
    */
-  function reinstateBadge(uint256 _raftTokenId, uint256 _badgeId)
-    external
-    tokenExists(_badgeId)
-  {
+  function reinstateBadge(
+    uint256 _raftTokenId,
+    uint256 _badgeId
+  ) external tokenExists(_badgeId) {
     require(
       specDataHolder.isAuthorizedAdmin(_raftTokenId, msg.sender),
       "reinstateBadge: unauthorized"
@@ -429,23 +438,16 @@ contract Badges is
     emit BadgeReinstated(_badgeId, msg.sender);
   }
 
-  function isBadgeValid(uint256 _badgeId)
-    external
-    view
-    tokenExists(_badgeId)
-    returns (bool)
-  {
+  function isBadgeValid(
+    uint256 _badgeId
+  ) external view tokenExists(_badgeId) returns (bool) {
     bool isNotRevoked = !revokedBadgesHashes.get(_badgeId);
     return isNotRevoked;
   }
 
-  function supportsInterface(bytes4 _interfaceId)
-    public
-    view
-    virtual
-    override
-    returns (bool)
-  {
+  function supportsInterface(
+    bytes4 _interfaceId
+  ) public view virtual override returns (bool) {
     return
       _interfaceId == type(IERC721Metadata).interfaceId ||
       _interfaceId == type(IERC4973).interfaceId ||
@@ -461,6 +463,56 @@ contract Badges is
       _hashTypedDataV4(
         keccak256(
           abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri)))
+        )
+      );
+  }
+
+  function safeCheckAirdropAgreement(
+    address issuer,
+    address recipient,
+    string memory uri,
+    bytes memory issuerSignature,
+    bytes memory recipientSignature
+  ) internal view {
+    bytes32 airdropAgreementHash = getAirdropAgreementHash(
+      issuer,
+      recipient,
+      uri
+    );
+
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        issuer,
+        airdropAgreementHash,
+        issuerSignature
+      ),
+      "safeCheckAirdropAgreement: invalid issuer signature"
+    );
+
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        recipient,
+        airdropAgreementHash,
+        recipientSignature
+      ),
+      "safeCheckAirdropAgreement: invalid recipient signature"
+    );
+  }
+
+  function getAirdropAgreementHash(
+    address issuer,
+    address recipient,
+    string memory uri
+  ) public view returns (bytes32) {
+    return
+      _hashTypedDataV4(
+        keccak256(
+          abi.encode(
+            AIRDROP_CONSENT_HASH,
+            issuer,
+            recipient,
+            keccak256(bytes(uri))
+          )
         )
       );
   }
@@ -483,24 +535,20 @@ contract Badges is
       );
   }
 
-  function getRequestHash(address _requester, string calldata _uri)
-    public
-    view
-    virtual
-    returns (bytes32)
-  {
+  function getRequestHash(
+    address _requester,
+    string calldata _uri
+  ) public view virtual returns (bytes32) {
     return
       _hashTypedDataV4(
         keccak256(abi.encode(REQUEST_HASH, _requester, keccak256(bytes(_uri))))
       );
   }
 
-  function getBadgeIdHash(address _to, string calldata _uri)
-    public
-    view
-    virtual
-    returns (bytes32)
-  {
+  function getBadgeIdHash(
+    address _to,
+    string calldata _uri
+  ) public view virtual returns (bytes32) {
     return keccak256(abi.encode(_to, _uri));
   }
 
@@ -556,8 +604,6 @@ contract Badges is
     string calldata _uri,
     bytes calldata _signature
   ) internal view virtual {
-    // active is always msg.sender
-    // passive changes depending on whether it's give/take
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _passive,
