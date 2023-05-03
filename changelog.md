@@ -4,7 +4,7 @@ We're using https://semver.org/
 
 ## 2.6.7
 
-- Add `airdropWithConsent()`
+- Add `mintWithConsent()`
 
 ## 2.6.6
 
