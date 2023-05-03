@@ -271,13 +271,13 @@ contract Badges is
 
   /**
    * @notice Allows minting of a badge when the caller provides valid issuer and recipient signatures
-   * @dev airdropWithConsent is called by an issuer who wants to mint a badge for a recipient with the recipient's consent.
+   * @dev mintWithConsent is called by an issuer who wants to mint a badge for a recipient with the recipient's consent.
    * @param _recipient The address of the recipient who will receive the minted badge
    * @param _uri The URI of the badge spec
    * @param _issuerSignature The issuer's signature, used to verify that they approve the badge for the recipient
    * @param _recipientSignature The recipient's signature, used to verify that they consent to receiving the badge
    */
-  function airdropWithConsent(
+  function mintWithConsent(
     address _recipient,
     string calldata _uri,
     bytes calldata _issuerSignature,
@@ -293,7 +293,7 @@ contract Badges is
         agreementHash,
         _issuerSignature
       ),
-      "airdropWithConsent: invalid issuer signature"
+      "mintWithConsent: invalid issuer signature"
     );
 
     // Check claimant's consent
@@ -304,7 +304,7 @@ contract Badges is
         requestHash,
         _recipientSignature
       ),
-      "airdropWithConsent: invalid recipient signature"
+      "mintWithConsent: invalid recipient signature"
     );
 
     mint(_recipient, _uri, raftTokenId);

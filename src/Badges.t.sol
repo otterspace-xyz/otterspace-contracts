@@ -394,7 +394,7 @@ contract BadgesTest is Test {
     badgesProxy.take(passiveAddress, specUri, signature);
   }
 
-  function testAirdropWithConsent() public {
+  function testMintWithConsent() public {
     address issuer = raftOwner;
     address recipient = claimantAddress;
     testCreateSpecAsRaftOwner();
@@ -416,7 +416,7 @@ contract BadgesTest is Test {
     );
 
     vm.prank(raftOwner);
-    badgesProxy.airdropWithConsent(
+    badgesProxy.mintWithConsent(
       recipient,
       specUri,
       issuerSignature,
@@ -426,7 +426,7 @@ contract BadgesTest is Test {
     assertEq(badgesProxy.balanceOf(recipient), 1);
   }
 
-  function testAirdropWithConsentInvalidIssuerSignature() public {
+  function testMintWithConsentInvalidIssuerSignature() public {
     address issuer = raftOwner;
     address recipient = claimantAddress;
     testCreateSpecAsRaftOwner();
@@ -448,8 +448,8 @@ contract BadgesTest is Test {
     );
 
     vm.prank(raftOwner);
-    vm.expectRevert("airdropWithConsent: invalid issuer signature");
-    badgesProxy.airdropWithConsent(
+    vm.expectRevert("mintWithConsent: invalid issuer signature");
+    badgesProxy.mintWithConsent(
       recipient,
       specUri,
       issuerSignature,
@@ -459,7 +459,7 @@ contract BadgesTest is Test {
     assertEq(badgesProxy.balanceOf(recipient), 0);
   }
 
-  function testAirdropWithConsentInvalidRecipientSignature() public {
+  function testMintWithConsentInvalidRecipientSignature() public {
     address issuer = raftOwner;
     address recipient = claimantAddress;
     testCreateSpecAsRaftOwner();
@@ -481,8 +481,8 @@ contract BadgesTest is Test {
     ); // Invalid recipient signature
 
     vm.prank(raftOwner);
-    vm.expectRevert("airdropWithConsent: invalid recipient signature");
-    badgesProxy.airdropWithConsent(
+    vm.expectRevert("mintWithConsent: invalid recipient signature");
+    badgesProxy.mintWithConsent(
       recipient,
       specUri,
       issuerSignature,
