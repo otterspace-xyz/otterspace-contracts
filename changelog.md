@@ -4,7 +4,7 @@ We're using https://semver.org/
 
 ## 2.6.7
 
-- Add `airdropWithConsent()`, `safeCheckAirdropAgreement`, and `airdropAgreementHash`and `AIRDROP_CONSENT_HASH`
+- Add `airdropWithConsent()`
 
 ## 2.6.6
 
