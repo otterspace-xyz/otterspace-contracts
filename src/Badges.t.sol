@@ -399,17 +399,19 @@ contract BadgesTest is Test {
     address recipient = claimantAddress;
     testCreateSpecAsRaftOwner();
 
-    bytes32 airdropAgreementHash = badgesProxy.getAirdropAgreementHash(
+    bytes32 agreementHash = badgesProxy.getAgreementHash(
       issuer,
       recipient,
       specUri
     );
+    bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
+
     bytes memory issuerSignature = getSignature(
-      airdropAgreementHash,
+      agreementHash,
       raftHolderPrivateKey
     );
     bytes memory recipientSignature = getSignature(
-      airdropAgreementHash,
+      requestHash,
       claimantPrivateKey
     );
 
@@ -429,22 +431,24 @@ contract BadgesTest is Test {
     address recipient = claimantAddress;
     testCreateSpecAsRaftOwner();
 
-    bytes32 airdropAgreementHash = badgesProxy.getAirdropAgreementHash(
+    bytes32 agreementHash = badgesProxy.getAgreementHash(
       issuer,
       recipient,
       specUri
     );
+    bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
+
     bytes memory issuerSignature = getSignature(
-      airdropAgreementHash,
+      agreementHash,
       claimantPrivateKey
     ); // Invalid issuer signature
     bytes memory recipientSignature = getSignature(
-      airdropAgreementHash,
+      requestHash,
       claimantPrivateKey
     );
 
     vm.prank(raftOwner);
-    vm.expectRevert("safeCheckAirdropAgreement: invalid issuer signature");
+    vm.expectRevert("airdropWithConsent: invalid issuer signature");
     badgesProxy.airdropWithConsent(
       recipient,
       specUri,
@@ -460,22 +464,24 @@ contract BadgesTest is Test {
     address recipient = claimantAddress;
     testCreateSpecAsRaftOwner();
 
-    bytes32 airdropAgreementHash = badgesProxy.getAirdropAgreementHash(
+    bytes32 agreementHash = badgesProxy.getAgreementHash(
       issuer,
       recipient,
       specUri
     );
+    bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
+
     bytes memory issuerSignature = getSignature(
-      airdropAgreementHash,
+      agreementHash,
       raftHolderPrivateKey
     );
     bytes memory recipientSignature = getSignature(
-      airdropAgreementHash,
+      requestHash,
       raftHolderPrivateKey
     ); // Invalid recipient signature
 
     vm.prank(raftOwner);
-    vm.expectRevert("safeCheckAirdropAgreement: invalid recipient signature");
+    vm.expectRevert("airdropWithConsent: invalid recipient signature");
     badgesProxy.airdropWithConsent(
       recipient,
       specUri,
@@ -483,41 +489,6 @@ contract BadgesTest is Test {
       recipientSignature
     );
 
-    assertEq(badgesProxy.balanceOf(recipient), 0);
-  }
-
-  function testAirdropWithConsentUnauthorized() public {
-    address issuer = raftOwner;
-    address unauthorizedIssuer = claimantAddress; // Not authorized to issue tokens
-    address recipient = claimantAddress;
-    testCreateSpecAsRaftOwner();
-
-    bytes32 airdropAgreementHash = badgesProxy.getAirdropAgreementHash(
-      issuer,
-      recipient,
-      specUri
-    );
-    bytes memory issuerSignature = getSignature(
-      airdropAgreementHash,
-      raftHolderPrivateKey
-    );
-    bytes memory recipientSignature = getSignature(
-      airdropAgreementHash,
-      claimantPrivateKey
-    );
-
-    // Attempt the airdrop with an unauthorized issuer
-    vm.prank(unauthorizedIssuer);
-    // Expect the transaction to revert due to the unauthorized issuer
-    vm.expectRevert("airdropWithConsent: unauthorized");
-    badgesProxy.airdropWithConsent(
-      recipient,
-      specUri,
-      issuerSignature,
-      recipientSignature
-    );
-
-    // The recipient's balance should still be 0 since the airdrop should have failed
     assertEq(badgesProxy.balanceOf(recipient), 0);
   }
 }

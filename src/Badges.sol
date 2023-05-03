@@ -60,9 +60,6 @@ contract Badges is
   bytes32 constant REQUEST_HASH =
     keccak256("Request(address requester,string tokenURI)");
 
-  bytes32 constant AIRDROP_CONSENT_HASH =
-    keccak256("AirdropConsent(address issuer,address recipient,string uri)");
-
   modifier tokenExists(uint256 _badgeId) {
     require(owners[_badgeId] != address(0), "tokenExists: token doesn't exist");
     _;
@@ -249,7 +246,6 @@ contract Badges is
     }
   }
 
-  // todo - can we sole stale voucher problem here with isAdmin() even if they're 'inactive'?
   /**
    * @notice Allows a user to mint a badge from a voucher
    * @dev Take is called by somebody who has already been added to an allow list.
@@ -273,6 +269,14 @@ contract Badges is
     return mint(msg.sender, _uri, raftTokenId);
   }
 
+  /**
+   * @notice Allows minting of a badge when the caller provides valid issuer and recipient signatures
+   * @dev airdropWithConsent is called by an issuer who wants to mint a badge for a recipient with the recipient's consent.
+   * @param _recipient The address of the recipient who will receive the minted badge
+   * @param _uri The URI of the badge spec
+   * @param _issuerSignature The issuer's signature, used to verify that they approve the badge for the recipient
+   * @param _recipientSignature The recipient's signature, used to verify that they consent to receiving the badge
+   */
   function airdropWithConsent(
     address _recipient,
     string calldata _uri,
@@ -280,18 +284,29 @@ contract Badges is
     bytes calldata _recipientSignature
   ) external virtual {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+
+    // Check issuer's approval
+    bytes32 agreementHash = getAgreementHash(msg.sender, _recipient, _uri);
     require(
-      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
-      "airdropWithConsent: unauthorized"
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        msg.sender,
+        agreementHash,
+        _issuerSignature
+      ),
+      "airdropWithConsent: invalid issuer signature"
     );
 
-    safeCheckAirdropAgreement(
-      msg.sender,
-      _recipient,
-      _uri,
-      _issuerSignature,
-      _recipientSignature
+    // Check claimant's consent
+    bytes32 requestHash = getRequestHash(_recipient, _uri);
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        _recipient,
+        requestHash,
+        _recipientSignature
+      ),
+      "airdropWithConsent: invalid recipient signature"
     );
+
     mint(_recipient, _uri, raftTokenId);
   }
 
@@ -463,56 +478,6 @@ contract Badges is
       _hashTypedDataV4(
         keccak256(
           abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri)))
-        )
-      );
-  }
-
-  function safeCheckAirdropAgreement(
-    address issuer,
-    address recipient,
-    string memory uri,
-    bytes memory issuerSignature,
-    bytes memory recipientSignature
-  ) internal view {
-    bytes32 airdropAgreementHash = getAirdropAgreementHash(
-      issuer,
-      recipient,
-      uri
-    );
-
-    require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(
-        issuer,
-        airdropAgreementHash,
-        issuerSignature
-      ),
-      "safeCheckAirdropAgreement: invalid issuer signature"
-    );
-
-    require(
-      SignatureCheckerUpgradeable.isValidSignatureNow(
-        recipient,
-        airdropAgreementHash,
-        recipientSignature
-      ),
-      "safeCheckAirdropAgreement: invalid recipient signature"
-    );
-  }
-
-  function getAirdropAgreementHash(
-    address issuer,
-    address recipient,
-    string memory uri
-  ) public view returns (bytes32) {
-    return
-      _hashTypedDataV4(
-        keccak256(
-          abi.encode(
-            AIRDROP_CONSENT_HASH,
-            issuer,
-            recipient,
-            keccak256(bytes(uri))
-          )
         )
       );
   }
