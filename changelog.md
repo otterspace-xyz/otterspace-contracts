@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.6.7
+
+- Add `mintWithConsent()`
+
 ## 2.6.6
 
 - Change `addAdmins` and `removeAdmins` on Raft contract to `setAdmins`

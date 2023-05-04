@@ -139,16 +139,10 @@ contract BadgesTest is Test {
   }
 
   function getSignature(
-    address active,
-    uint256 passive
+    bytes32 hash,
+    uint256 privateKey
   ) internal returns (bytes memory) {
-    bytes32 hash = badgesProxy.getAgreementHash(
-      active,
-      vm.addr(passive),
-      specUri
-    );
-    // passive is always the one signing away permission for the active party to do something
-    (uint8 v, bytes32 r, bytes32 s) = vm.sign(passive, hash);
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, hash);
     bytes memory signature = abi.encodePacked(r, s, v);
     return signature;
   }
@@ -288,8 +282,8 @@ contract BadgesTest is Test {
   function testTake() public returns (uint256, uint256) {
     address active = claimantAddress;
     address passive = raftOwner;
-    bytes memory signature = getSignature(active, raftHolderPrivateKey);
-
+    bytes32 hash = badgesProxy.getAgreementHash(active, passive, specUri);
+    bytes memory signature = getSignature(hash, raftHolderPrivateKey);
     vm.prank(active);
     uint256 tokenId = badgesProxy.take(passive, specUri, signature);
 
@@ -304,10 +298,10 @@ contract BadgesTest is Test {
     public
     returns (uint256, uint256)
   {
-    bytes memory signature = getSignature(
-      claimantAddress,
-      raftHolderPrivateKey
-    );
+    address active = claimantAddress;
+    address passive = raftOwner;
+    bytes32 hash = badgesProxy.getAgreementHash(active, passive, specUri);
+    bytes memory signature = getSignature(hash, raftHolderPrivateKey);
     address newRaftHolder = address(123);
 
     // transfer raft to new holder
@@ -327,10 +321,10 @@ contract BadgesTest is Test {
     public
     returns (uint256, uint256)
   {
-    bytes memory signature = getSignature(
-      claimantAddress,
-      raftHolderPrivateKey
-    );
+    address active = claimantAddress;
+    address passive = raftOwner;
+    bytes32 hash = badgesProxy.getAgreementHash(active, passive, specUri);
+    bytes memory signature = getSignature(hash, raftHolderPrivateKey);
     address newRaftHolder = address(123);
 
     // transfer raft to new holder
@@ -360,7 +354,8 @@ contract BadgesTest is Test {
     address passive = raftOwner;
     uint256 badActorPrivateKey = 123;
 
-    bytes memory signature = getSignature(active, badActorPrivateKey);
+    bytes32 hash = badgesProxy.getAgreementHash(active, passive, specUri);
+    bytes memory signature = getSignature(hash, badActorPrivateKey);
 
     vm.prank(active);
     vm.expectRevert(bytes(errInvalidSig));
@@ -371,10 +366,10 @@ contract BadgesTest is Test {
   }
 
   function testTakeWithUnregisteredSpec() public {
-    bytes memory signature = getSignature(
-      claimantAddress,
-      raftHolderPrivateKey
-    );
+    address active = claimantAddress;
+    address passive = raftOwner;
+    bytes32 hash = badgesProxy.getAgreementHash(active, passive, specUri);
+    bytes memory signature = getSignature(hash, raftHolderPrivateKey);
 
     vm.expectRevert(bytes(errInvalidSig));
     vm.prank(claimantAddress);
@@ -397,5 +392,103 @@ contract BadgesTest is Test {
     // errors with this because we check for a valid spec URI before validating the signature
     vm.expectRevert(bytes(errInvalidSig));
     badgesProxy.take(passiveAddress, specUri, signature);
+  }
+
+  function testMintWithConsent() public {
+    address issuer = raftOwner;
+    address recipient = claimantAddress;
+    testCreateSpecAsRaftOwner();
+
+    bytes32 agreementHash = badgesProxy.getAgreementHash(
+      issuer,
+      recipient,
+      specUri
+    );
+    bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
+
+    bytes memory issuerSignature = getSignature(
+      agreementHash,
+      raftHolderPrivateKey
+    );
+    bytes memory recipientSignature = getSignature(
+      requestHash,
+      claimantPrivateKey
+    );
+
+    vm.prank(raftOwner);
+    badgesProxy.mintWithConsent(
+      recipient,
+      specUri,
+      issuerSignature,
+      recipientSignature
+    );
+
+    assertEq(badgesProxy.balanceOf(recipient), 1);
+  }
+
+  function testMintWithConsentInvalidIssuerSignature() public {
+    address issuer = raftOwner;
+    address recipient = claimantAddress;
+    testCreateSpecAsRaftOwner();
+
+    bytes32 agreementHash = badgesProxy.getAgreementHash(
+      issuer,
+      recipient,
+      specUri
+    );
+    bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
+
+    bytes memory issuerSignature = getSignature(
+      agreementHash,
+      claimantPrivateKey
+    ); // Invalid issuer signature
+    bytes memory recipientSignature = getSignature(
+      requestHash,
+      claimantPrivateKey
+    );
+
+    vm.prank(raftOwner);
+    vm.expectRevert("mintWithConsent: invalid issuer signature");
+    badgesProxy.mintWithConsent(
+      recipient,
+      specUri,
+      issuerSignature,
+      recipientSignature
+    );
+
+    assertEq(badgesProxy.balanceOf(recipient), 0);
+  }
+
+  function testMintWithConsentInvalidRecipientSignature() public {
+    address issuer = raftOwner;
+    address recipient = claimantAddress;
+    testCreateSpecAsRaftOwner();
+
+    bytes32 agreementHash = badgesProxy.getAgreementHash(
+      issuer,
+      recipient,
+      specUri
+    );
+    bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
+
+    bytes memory issuerSignature = getSignature(
+      agreementHash,
+      raftHolderPrivateKey
+    );
+    bytes memory recipientSignature = getSignature(
+      requestHash,
+      raftHolderPrivateKey
+    ); // Invalid recipient signature
+
+    vm.prank(raftOwner);
+    vm.expectRevert("mintWithConsent: invalid recipient signature");
+    badgesProxy.mintWithConsent(
+      recipient,
+      specUri,
+      issuerSignature,
+      recipientSignature
+    );
+
+    assertEq(badgesProxy.balanceOf(recipient), 0);
   }
 }
