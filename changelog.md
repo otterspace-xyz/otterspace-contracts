@@ -2,6 +2,10 @@
 
 We're using https://semver.org/
 
+## 2.7.0
+
+- update `mintWithConsent()` to not use msg.sender
+
 ## 2.6.7
 
 - Add `mintWithConsent()`
