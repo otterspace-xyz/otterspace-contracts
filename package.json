@@ -1,6 +1,6 @@
 {
   "name": "@otterspace-xyz/contracts",
-  "version": "2.6.7",
+  "version": "2.6.8",
   "description": "Otterspace’s EIP-4973-compliant non-transferable badge protocol helps DAOs create better incentive systems, automate permissions and enable non-financialized governance",
   "files": [
     "/src/Badges.sol",

@@ -418,6 +418,7 @@ contract BadgesTest is Test {
     vm.prank(raftOwner);
     badgesProxy.mintWithConsent(
       recipient,
+      issuer,
       specUri,
       issuerSignature,
       recipientSignature
@@ -451,6 +452,7 @@ contract BadgesTest is Test {
     vm.expectRevert("mintWithConsent: invalid issuer signature");
     badgesProxy.mintWithConsent(
       recipient,
+      issuer,
       specUri,
       issuerSignature,
       recipientSignature
@@ -484,6 +486,7 @@ contract BadgesTest is Test {
     vm.expectRevert("mintWithConsent: invalid recipient signature");
     badgesProxy.mintWithConsent(
       recipient,
+      issuer,
       specUri,
       issuerSignature,
       recipientSignature
