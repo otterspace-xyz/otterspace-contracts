@@ -287,7 +287,7 @@ contract Badges is
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
 
     // Check issuer's approval
-    bytes32 agreementHash = getAgreementHash(_issuer, _recipient, _uri);
+    bytes32 agreementHash = getAgreementHash(_recipient, _issuer, _uri);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _issuer,
