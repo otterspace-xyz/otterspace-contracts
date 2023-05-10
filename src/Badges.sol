@@ -283,7 +283,7 @@ contract Badges is
     string calldata _uri,
     bytes calldata _issuerSignature,
     bytes calldata _recipientSignature
-  ) external virtual {
+  ) external virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
 
     // Check issuer's approval
@@ -308,7 +308,44 @@ contract Badges is
       "mintWithConsent: invalid recipient signature"
     );
 
-    mint(_recipient, _uri, raftTokenId);
+    return mint(_recipient, _uri, raftTokenId);
+  }
+
+  function merkleMintWithConsent(
+    address _recipient,
+    address _issuer,
+    string calldata _uri,
+    bytes calldata _issuerSignature,
+    bytes calldata _recipientSignature,
+    bytes32 root,
+    bytes32[] calldata proof
+  ) external virtual returns (uint256) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      "mintWithConsent: unauthorized"
+    );
+
+    safeCheckMerkleAgreement(
+      _issuer,
+      _recipient,
+      _uri,
+      _issuerSignature,
+      root,
+      proof
+    );
+
+    bytes32 requestHash = getRequestHash(_recipient, _uri);
+    require(
+      SignatureCheckerUpgradeable.isValidSignatureNow(
+        _recipient,
+        requestHash,
+        _recipientSignature
+      ),
+      "merkleMintWithConsent: invalid recipient signature"
+    );
+
+    return mint(_recipient, _uri, raftTokenId);
   }
 
   function merkleTake(
@@ -538,6 +575,16 @@ contract Badges is
     return tokenId;
   }
 
+  /**
+   * @notice Verifies that the provided Merkle proof and signature are valid for the given `_from`, `_to`, and `_uri`.
+   * @dev This function checks that the `_from` address has signed the Merkle agreement hash and verifies the Merkle proof for the `_to` address.
+   * @param _from The address that signed the Merkle agreement hash.
+   * @param _to The recipient address that should be included in the Merkle proof.
+   * @param _uri The URI of the badge spec.
+   * @param _signature The signature provided by the `_from` address.
+   * @param _root The root of the Merkle tree.
+   * @param _proof The Merkle proof for the `_to` address.
+   */
   function safeCheckMerkleAgreement(
     address _from,
     address _to,
@@ -546,7 +593,6 @@ contract Badges is
     bytes32 _root,
     bytes32[] calldata _proof
   ) internal view virtual {
-    // this authenticates the signature coming from the issuer
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _from,
@@ -556,13 +602,21 @@ contract Badges is
       "safeCheckMerkleAgreement: invalid signature"
     );
 
-    // this authenticates that the claimant (leaf) is indeed part of the tree whose root was signed
     bytes32 leaf = keccak256(abi.encodePacked(_to));
     require(
       MerkleProof.verify(_proof, _root, leaf),
       "safeCheckMerkleAgreement: invalid leaf"
     );
   }
+
+  /**
+   * @notice Verifies that the provided signature is valid for the given `_active`, `_passive`, and `_uri`.
+   * @dev This function checks that the `_passive` address has signed the agreement hash with the `_active` address and the provided `_uri`.
+   * @param _active The address that initiates the agreement.
+   * @param _passive The address that signed the agreement hash.
+   * @param _uri The URI of the badge spec.
+   * @param _signature The signature provided by the `_passive` address.
+   */
 
   function safeCheckAgreement(
     address _active,
