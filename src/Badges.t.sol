@@ -400,8 +400,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -433,16 +433,18 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
 
+    // Setup invalid issuer signature
     bytes memory issuerSignature = getSignature(
       agreementHash,
       claimantPrivateKey
-    ); // Invalid issuer signature
+    );
+
     bytes memory recipientSignature = getSignature(
       requestHash,
       claimantPrivateKey
@@ -467,8 +469,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -477,10 +479,12 @@ contract BadgesTest is Test {
       agreementHash,
       raftHolderPrivateKey
     );
+
+    // Invalid recipient signature
     bytes memory recipientSignature = getSignature(
       requestHash,
       raftHolderPrivateKey
-    ); // Invalid recipient signature
+    );
 
     vm.prank(raftOwner);
     vm.expectRevert("mintWithConsent: invalid recipient signature");
