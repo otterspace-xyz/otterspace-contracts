@@ -272,6 +272,7 @@ contract Badges is
   /**
    * @notice Allows minting of a badge when the caller provides valid issuer and recipient signatures
    * @dev mintWithConsent is called by an issuer who wants to mint a badge for a recipient with the recipient's consent.
+   * @param _issuer The address of the person who permitted the recipient to mint
    * @param _recipient The address of the recipient who will receive the minted badge
    * @param _uri The URI of the badge spec
    * @param _issuerSignature The issuer's signature, used to verify that they approve the badge for the recipient
