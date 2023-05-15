@@ -278,8 +278,8 @@ contract Badges is
    * @param _recipientSignature The recipient's signature, used to verify that they consent to receiving the badge
    */
   function mintWithConsent(
-    address _recipient,
     address _issuer,
+    address _recipient,
     string calldata _uri,
     bytes calldata _issuerSignature,
     bytes calldata _recipientSignature
@@ -315,8 +315,8 @@ contract Badges is
   }
 
   function merkleMintWithConsent(
-    address _recipient,
     address _issuer,
+    address _recipient,
     string calldata _uri,
     bytes calldata _issuerSignature,
     bytes calldata _recipientSignature,
