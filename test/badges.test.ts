@@ -15,12 +15,9 @@ import keccak256 from 'keccak256'
 const name = 'Otter'
 const symbol = 'OTTR'
 const version = '1'
-// ideally chainId would be dynamic depending upon if you're running tests locally or on a
-//live network and automaticall set the chainId to the correct value.
 const chainId = 31337
 const specUri = 'some spec uri'
 const specUri2 = 'another spec uri'
-// ** CONTRACT ERRORS **
 const errNotOwner = 'Ownable: caller is not the owner'
 const errTokenExists = 'mint: tokenID exists'
 const errSafeCheckMerkleInvalidSig =
@@ -28,7 +25,6 @@ const errSafeCheckMerkleInvalidSig =
 
 let deployed: any
 
-// fix ts badgesProxy: any
 async function createSpec(
   badgesProxy: any,
   specUri: string,
@@ -88,17 +84,6 @@ async function getParsedLogs(txnHash: string, badgesProxy: any) {
   })
 
   return parsedLogs
-}
-
-async function getTransferEventLogData(txnHash: string, badgesProxy: any) {
-  const parsedLogs = await getParsedLogs(txnHash, badgesProxy)
-  const transferLog = parsedLogs.find(l => l.name == EventType.ERC4973_Transfer)
-
-  const from = transferLog?.args['from']
-  const to = transferLog?.args['to']
-  const tokenId = transferLog?.args['tokenId'] as BigNumberish
-
-  return { from, to, tokenId }
 }
 
 async function getSpecCreatedEventLogData(
@@ -236,6 +221,16 @@ const deployContractFixture = async () => {
   }
 }
 
+function buildMerkleTree(claimantAddress: string) {
+  const whitelistAddresses = [claimantAddress, '0x1', '0x2', '0x3']
+  const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+  const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+  const merkleRoot = merkleTree.getRoot()
+  const merkleProof = merkleTree.getHexProof(leafNodes[0])
+
+  return { merkleRoot, merkleProof }
+}
+
 describe('Merkle minting', () => {
   it('Should allow minting when an address is allowlisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
@@ -248,13 +243,7 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
-
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
-
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-
-    const merkleRoot = merkleTree.getRoot()
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
     merkleTypedData.value.root = merkleRoot
 
@@ -265,7 +254,6 @@ describe('Merkle minting', () => {
       issuer
     )
 
-    const merkleProof = merkleTree.getHexProof(leafNodes[0])
     await expect(
       badgesProxy
         .connect(claimant)
@@ -275,7 +263,7 @@ describe('Merkle minting', () => {
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
   })
 
-  it.only('Should allow minting when an address is allowlisted on a merkle tree and both issuer and recipient provide signatures', async () => {
+  it('Should allow minting when an address is allowlisted on a merkle tree and both issuer and recipient provide signatures', async () => {
     const {
       badgesProxy,
       raftProxy,
@@ -294,10 +282,7 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-    const merkleRoot = merkleTree.getRoot()
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
     merkleTypedData.value.root = merkleRoot
     const { compact: issuerSignature } = await getSignature(
@@ -313,8 +298,6 @@ describe('Merkle minting', () => {
       requestTypedData.value,
       claimant
     )
-
-    const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
     await expect(
       badgesProxy
@@ -344,13 +327,8 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
-
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-
-    const merkleRoot = merkleTree.getRoot()
     merkleTypedData.value.root = merkleRoot
 
     const { compact } = await getSignature(
@@ -359,8 +337,6 @@ describe('Merkle minting', () => {
       merkleTypedData.value,
       issuer
     )
-
-    const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
     await badgesProxy
       .connect(claimant)
@@ -387,14 +363,13 @@ describe('Merkle minting', () => {
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
     const whitelist1 = [claimant.address, '0x1', '0x2', '0x3']
-
     const leafNodes1 = whitelist1.map(addr => keccak256(addr))
-
     const merkleTree1 = new MerkleTree(leafNodes1, keccak256, {
       sortPairs: true,
     })
-
     const merkleRoot1 = merkleTree1.getRoot()
+    const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
+
     merkleTypedData.value.root = merkleRoot1
 
     const { compact: compact1 } = await getSignature(
@@ -403,8 +378,6 @@ describe('Merkle minting', () => {
       merkleTypedData.value,
       issuer
     )
-
-    const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
 
     await badgesProxy
       .connect(claimant)
@@ -462,13 +435,7 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
-
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
-
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-
-    const merkleRoot = merkleTree.getRoot()
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
     const { compact } = await getSignature(
       typedData.domain,
@@ -476,8 +443,6 @@ describe('Merkle minting', () => {
       typedData.value,
       issuer
     )
-    const invalidLeafNode = keccak256(randomSigner.address)
-    const merkleProof = merkleTree.getHexProof(invalidLeafNode)
 
     // calling connect() with a random signer is a "bad actor" trying to mint
     await expect(

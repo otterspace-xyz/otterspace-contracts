@@ -285,8 +285,11 @@ contract Badges is
     bytes calldata _recipientSignature
   ) external virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
+    require(
+      specDataHolder.isAuthorizedAdmin(raftTokenId, _issuer),
+      "mintWithConsent: unauthorized"
+    );
 
-    // Check issuer's approval
     bytes32 agreementHash = getAgreementHash(_recipient, _issuer, _uri);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
@@ -322,7 +325,7 @@ contract Badges is
   ) external virtual returns (uint256) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
     require(
-      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
+      specDataHolder.isAuthorizedAdmin(raftTokenId, _issuer),
       "mintWithConsent: unauthorized"
     );
 
