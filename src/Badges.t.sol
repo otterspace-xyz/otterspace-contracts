@@ -8,8 +8,6 @@ import { Badges } from "./Badges.sol";
 import { SpecDataHolder } from "./SpecDataHolder.sol";
 import { Raft } from "./Raft.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
-import { Merkle } from "murky/src/Merkle.sol";
-import { MerkleProof } from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract UUPSProxy is ERC1967Proxy {
   constructor(
@@ -400,8 +398,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -418,6 +416,7 @@ contract BadgesTest is Test {
     vm.prank(raftOwner);
     badgesProxy.mintWithConsent(
       recipient,
+      issuer,
       specUri,
       issuerSignature,
       recipientSignature
@@ -432,16 +431,18 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
 
+    // Setup invalid issuer signature
     bytes memory issuerSignature = getSignature(
       agreementHash,
       claimantPrivateKey
-    ); // Invalid issuer signature
+    );
+
     bytes memory recipientSignature = getSignature(
       requestHash,
       claimantPrivateKey
@@ -451,6 +452,7 @@ contract BadgesTest is Test {
     vm.expectRevert("mintWithConsent: invalid issuer signature");
     badgesProxy.mintWithConsent(
       recipient,
+      issuer,
       specUri,
       issuerSignature,
       recipientSignature
@@ -465,8 +467,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -475,15 +477,18 @@ contract BadgesTest is Test {
       agreementHash,
       raftHolderPrivateKey
     );
+
+    // Invalid recipient signature
     bytes memory recipientSignature = getSignature(
       requestHash,
       raftHolderPrivateKey
-    ); // Invalid recipient signature
+    );
 
     vm.prank(raftOwner);
     vm.expectRevert("mintWithConsent: invalid recipient signature");
     badgesProxy.mintWithConsent(
       recipient,
+      issuer,
       specUri,
       issuerSignature,
       recipientSignature

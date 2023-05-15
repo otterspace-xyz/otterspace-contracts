@@ -2,6 +2,13 @@
 
 We're using https://semver.org/
 
+## 2.7.1
+- bug fix in agreementHash in `mintWithConsent()`
+
+## 2.7.0
+
+- update `mintWithConsent()` to not use msg.sender
+
 ## 2.6.7
 
 - Add `mintWithConsent()`

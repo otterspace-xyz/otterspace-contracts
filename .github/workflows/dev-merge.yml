@@ -74,7 +74,7 @@ jobs:
                       echo "Failed to deploy the new Badges implementation on $networkName"
                       exit 1
                   }
-
+                  echo "badgesImplementation = $badgesImplementation"
                   node scripts/createProposal.js "$badgesImplementation" 'badges' "$networkName" || {
                       echo "Failed to create a proposal for the new Badges implementation on $networkName"
                       exit 1
@@ -86,6 +86,7 @@ jobs:
                       echo "Failed to deploy the new Raft implementation on $networkName"
                       exit 1
                   }
+                  echo "raftImplementation = $raftImplementation"                  
                   node scripts/createProposal.js "$raftImplementation" 'raft' "$networkName" || {
                       echo "Failed to create a proposal for the new Raft implementation on $networkName"
                       exit 1
@@ -97,6 +98,7 @@ jobs:
                       echo "Failed to deploy the new SpecDataHolder implementation on $networkName"
                       exit 1
                   }
+                  echo "sdhImplementation = $sdhImplementation"                  
                   node scripts/createProposal.js "$sdhImplementation" 'specDataHolder' "$networkName" || {
                       echo "Failed to create a proposal for the new SpecDataHolder implementation on $networkName"
                       exit 1

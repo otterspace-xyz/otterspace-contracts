@@ -279,6 +279,7 @@ contract Badges is
    */
   function mintWithConsent(
     address _recipient,
+    address _issuer,
     string calldata _uri,
     bytes calldata _issuerSignature,
     bytes calldata _recipientSignature
@@ -286,10 +287,10 @@ contract Badges is
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_uri);
 
     // Check issuer's approval
-    bytes32 agreementHash = getAgreementHash(msg.sender, _recipient, _uri);
+    bytes32 agreementHash = getAgreementHash(_recipient, _issuer, _uri);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
-        msg.sender,
+        _issuer,
         agreementHash,
         _issuerSignature
       ),
