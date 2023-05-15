@@ -1896,69 +1896,27 @@
     "absolutePath": "src/Raft.sol",
     "id": 30508,
     "exportedSymbols": {
-      "AddressUpgradeable": [
-        24285
-      ],
-      "ContextUpgradeable": [
-        24327
-      ],
-      "Counters": [
-        26391
-      ],
-      "ERC165Upgradeable": [
-        25297
-      ],
-      "ERC1967UpgradeUpgradeable": [
-        22141
-      ],
-      "ERC721EnumerableUpgradeable": [
-        23943
-      ],
-      "ERC721Upgradeable": [
-        23451
-      ],
-      "IBeaconUpgradeable": [
-        22151
-      ],
-      "IERC165Upgradeable": [
-        25309
-      ],
-      "IERC1822ProxiableUpgradeable": [
-        21772
-      ],
-      "IERC721EnumerableUpgradeable": [
-        23974
-      ],
-      "IERC721MetadataUpgradeable": [
-        24001
-      ],
-      "IERC721ReceiverUpgradeable": [
-        23469
-      ],
-      "IERC721Upgradeable": [
-        23585
-      ],
-      "Initializable": [
-        22302
-      ],
-      "OwnableUpgradeable": [
-        21748
-      ],
-      "PausableUpgradeable": [
-        22565
-      ],
-      "Raft": [
-        30507
-      ],
-      "StorageSlotUpgradeable": [
-        24387
-      ],
-      "StringsUpgradeable": [
-        24613
-      ],
-      "UUPSUpgradeable": [
-        22438
-      ]
+      "AddressUpgradeable": [24822],
+      "ContextUpgradeable": [24864],
+      "Counters": [26928],
+      "ERC165Upgradeable": [25834],
+      "ERC1967UpgradeUpgradeable": [22678],
+      "ERC721EnumerableUpgradeable": [24480],
+      "ERC721Upgradeable": [23988],
+      "IBeaconUpgradeable": [22688],
+      "IERC165Upgradeable": [25846],
+      "IERC1822ProxiableUpgradeable": [22309],
+      "IERC721EnumerableUpgradeable": [24511],
+      "IERC721MetadataUpgradeable": [24538],
+      "IERC721ReceiverUpgradeable": [24006],
+      "IERC721Upgradeable": [24122],
+      "Initializable": [22839],
+      "OwnableUpgradeable": [22285],
+      "PausableUpgradeable": [23102],
+      "Raft": [30966],
+      "StorageSlotUpgradeable": [24924],
+      "StringsUpgradeable": [25150],
+      "UUPSUpgradeable": [22975]
     },
     "nodeType": "SourceUnit",
     "src": "46:5256:46",
@@ -1966,12 +1924,9 @@
       {
         "id": 30190,
         "nodeType": "PragmaDirective",
-        "src": "46:23:46",
-        "literals": [
-          "solidity",
-          "0.8",
-          ".16"
-        ]
+        "src": "46:23:48",
+        "nodes": [],
+        "literals": ["solidity", "0.8", ".16"]
       },
       {
         "id": 30191,
@@ -2046,9 +2001,7 @@
             "libraryName": {
               "id": 30205,
               "name": "Counters",
-              "nameLocations": [
-                "857:8:46"
-              ],
+              "nameLocations": ["857:8:48"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 26391,
               "src": "857:8:46"
@@ -2059,10 +2012,7 @@
               "pathNode": {
                 "id": 30206,
                 "name": "Counters.Counter",
-                "nameLocations": [
-                  "870:8:46",
-                  "879:7:46"
-                ],
+                "nameLocations": ["870:8:48", "879:7:48"],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 26323,
                 "src": "870:16:46"
@@ -2096,10 +2046,7 @@
               "pathNode": {
                 "id": 30209,
                 "name": "Counters.Counter",
-                "nameLocations": [
-                  "890:8:46",
-                  "899:7:46"
-                ],
+                "nameLocations": ["890:8:48", "899:7:48"],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 26323,
                 "src": "890:16:46"
@@ -2739,9 +2686,7 @@
                 "modifierName": {
                   "id": 30250,
                   "name": "initializer",
-                  "nameLocations": [
-                    "1714:11:46"
-                  ],
+                  "nameLocations": ["1714:11:48"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 22222,
                   "src": "1714:11:46"
@@ -3035,10 +2980,7 @@
                       "id": 30285,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "2509:7:46",
                       "typeDescriptions": {
@@ -3119,9 +3061,7 @@
                   "src": "2588:21:46"
                 },
                 {
-                  "assignments": [
-                    30304
-                  ],
+                  "assignments": [30763],
                   "declarations": [
                     {
                       "constant": false,
@@ -3327,10 +3267,7 @@
                       "id": 30309,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "2660:7:46",
                       "typeDescriptions": {
@@ -3686,9 +3623,7 @@
                 "modifierName": {
                   "id": 30335,
                   "name": "onlyOwner",
-                  "nameLocations": [
-                    "2845:9:46"
-                  ],
+                  "nameLocations": ["2845:9:48"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "2845:9:46"
@@ -3773,9 +3708,7 @@
                 "modifierName": {
                   "id": 30344,
                   "name": "onlyOwner",
-                  "nameLocations": [
-                    "2904:9:46"
-                  ],
+                  "nameLocations": ["2904:9:48"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "2904:9:46"
@@ -3895,10 +3828,7 @@
                       "id": 30361,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "3332:7:46",
                       "typeDescriptions": {
@@ -4066,9 +3996,7 @@
                 "modifierName": {
                   "id": 30358,
                   "name": "onlyOwner",
-                  "nameLocations": [
-                    "3316:9:46"
-                  ],
+                  "nameLocations": ["3316:9:48"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "3316:9:46"
@@ -4334,10 +4262,7 @@
                       "id": 30391,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "3932:7:46",
                       "typeDescriptions": {
@@ -4471,10 +4396,7 @@
                       "id": 30404,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "4033:7:46",
                       "typeDescriptions": {
@@ -4585,10 +4507,7 @@
                       "id": 30413,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "4156:7:46",
                       "typeDescriptions": {
@@ -4744,10 +4663,7 @@
                       "id": 30420,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        -18,
-                        -18
-                      ],
+                      "overloadedDeclarations": [-18, -18],
                       "referencedDeclaration": -18,
                       "src": "4224:7:46",
                       "typeDescriptions": {
@@ -5121,9 +5037,7 @@
                   },
                   "id": 30464,
                   "initializationExpression": {
-                    "assignments": [
-                      30431
-                    ],
+                    "assignments": [30890],
                     "declarations": [
                       {
                         "constant": false,
@@ -5586,9 +5500,7 @@
                 }
               ]
             },
-            "baseFunctions": [
-              22790
-            ],
+            "baseFunctions": [23327],
             "documentation": {
               "id": 30484,
               "nodeType": "StructuredDocumentation",
@@ -5690,9 +5602,7 @@
               "src": "5297:2:46",
               "statements": []
             },
-            "baseFunctions": [
-              22432
-            ],
+            "baseFunctions": [22969],
             "implemented": true,
             "kind": "function",
             "modifiers": [
@@ -5702,9 +5612,7 @@
                 "modifierName": {
                   "id": 30502,
                   "name": "onlyOwner",
-                  "nameLocations": [
-                    "5287:9:46"
-                  ],
+                  "nameLocations": ["5287:9:48"],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "5287:9:46"
@@ -5774,9 +5682,7 @@
             "baseName": {
               "id": 30197,
               "name": "ERC721EnumerableUpgradeable",
-              "nameLocations": [
-                "755:27:46"
-              ],
+              "nameLocations": ["755:27:48"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 23943,
               "src": "755:27:46"
@@ -5789,9 +5695,7 @@
             "baseName": {
               "id": 30199,
               "name": "UUPSUpgradeable",
-              "nameLocations": [
-                "786:15:46"
-              ],
+              "nameLocations": ["786:15:48"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 22438,
               "src": "786:15:46"
@@ -5804,9 +5708,7 @@
             "baseName": {
               "id": 30201,
               "name": "OwnableUpgradeable",
-              "nameLocations": [
-                "805:18:46"
-              ],
+              "nameLocations": ["805:18:48"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 21748,
               "src": "805:18:46"
@@ -5819,9 +5721,7 @@
             "baseName": {
               "id": 30203,
               "name": "PausableUpgradeable",
-              "nameLocations": [
-                "827:19:46"
-              ],
+              "nameLocations": ["827:19:48"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 22565,
               "src": "827:19:46"
@@ -5866,5 +5766,5 @@
     ],
     "license": "MIT OR Apache-2.0"
   },
-  "id": 46
+  "id": 48
 }

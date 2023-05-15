@@ -11,6 +11,7 @@ import {
 } from 'ethers/lib/utils'
 import { MerkleTree } from 'merkletreejs'
 import keccak256 from 'keccak256'
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers')
 
 const name = 'Otter'
 const symbol = 'OTTR'
@@ -23,8 +24,7 @@ const errTokenExists = 'mint: tokenID exists'
 const errSafeCheckMerkleInvalidSig =
   'safeCheckMerkleAgreement: invalid signature'
 
-let deployed: any
-
+// fix ts badgesProxy: any
 async function createSpec(
   badgesProxy: any,
   specUri: string,
@@ -102,12 +102,6 @@ async function getSpecCreatedEventLogData(
 
   return { to, specUri, raftTokenId, raftAddress }
 }
-
-const setup = async () => {
-  await deployContractFixture()
-}
-
-beforeEach(setup)
 
 const deployContractFixture = async () => {
   const [owner, issuer, claimant, randomSigner, merkleIssuer] =
@@ -207,7 +201,7 @@ const deployContractFixture = async () => {
     },
   }
 
-  deployed = {
+  return {
     badgesProxy,
     raftProxy,
     owner,
@@ -234,7 +228,7 @@ function buildMerkleTree(claimantAddress: string) {
 describe('Merkle minting', () => {
   it('Should allow minting when an address is allowlisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
-      deployed
+      await loadFixture(deployContractFixture)
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
       issuer.address,
@@ -272,7 +266,7 @@ describe('Merkle minting', () => {
       claimant,
       owner,
       requestTypedData,
-    } = deployed
+    } = await loadFixture(deployContractFixture)
 
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
@@ -318,7 +312,7 @@ describe('Merkle minting', () => {
 
   it('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
-      deployed
+      await loadFixture(deployContractFixture)
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
       issuer.address,
@@ -353,7 +347,8 @@ describe('Merkle minting', () => {
 
   it('Should allow someone who is part of two separate merkle trees to mint both badges', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
-      deployed
+      await loadFixture(deployContractFixture)
+    // SETUP (step 0)
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
       issuer.address,
@@ -424,7 +419,7 @@ describe('Merkle minting', () => {
       claimant,
       owner,
       randomSigner,
-    } = deployed
+    } = await loadFixture(deployContractFixture)
     const specUri = typedData.value.tokenURI
 
     const { raftTokenId } = await mintRaftToken(
@@ -455,7 +450,8 @@ describe('Merkle minting', () => {
 
 describe('Badges', async function () {
   it('should deploy the contract with the right params', async function () {
-    const { badgesProxy, raftProxy, owner, specDataHolderProxy } = deployed
+    const { badgesProxy, raftProxy, owner, specDataHolderProxy } =
+      await loadFixture(deployContractFixture)
     const deployedContractName = await badgesProxy.name()
     const deployedSymbolName = await badgesProxy.symbol()
     expect(deployedContractName).to.equal(name)
@@ -470,7 +466,9 @@ describe('Badges', async function () {
     expect(deployedToChainId).to.equal(chainId)
   })
   it('should successfully set new raft contract when called by owner', async () => {
-    const { owner, specDataHolderProxy } = deployed
+    const { owner, specDataHolderProxy } = await loadFixture(
+      deployContractFixture
+    )
     const raft = await ethers.getContractFactory('Raft')
     const newRaftProxy = await upgrades.deployProxy(
       raft,
@@ -487,7 +485,9 @@ describe('Badges', async function () {
   })
 
   it('should revert setting new raft address when called by non-owner', async () => {
-    const { owner, randomSigner, specDataHolderProxy } = deployed
+    const { owner, randomSigner, specDataHolderProxy } = await loadFixture(
+      deployContractFixture
+    )
     const raft = await ethers.getContractFactory('Raft')
     const newRaftProxy = await upgrades.deployProxy(
       raft,
@@ -505,7 +505,7 @@ describe('Badges', async function () {
   })
 
   it('should match off-chain hash to on-chain hash', async () => {
-    const { badgesProxy, typedData } = deployed
+    const { badgesProxy, typedData } = await loadFixture(deployContractFixture)
     const offChainHash = _TypedDataEncoder.hash(
       typedData.domain,
       typedData.types,
