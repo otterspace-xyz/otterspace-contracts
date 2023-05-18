@@ -8,21 +8,25 @@ on:
 jobs:
   deploy_to_testnets_on_merge:
     env:
-      DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
-      OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
-      OPTIMISTIC_ETHERSCAN_API_KEY: ${{ secrets.OPTIMISTIC_ETHERSCAN_API_KEY }}
-      GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
-      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
       DEFENDER_TEAM_API_KEY: ${{ secrets.DEFENDER_TEAM_API_KEY }}
       DEFENDER_TEAM_API_SECRET_KEY: ${{ secrets.DEFENDER_TEAM_API_SECRET_KEY }}
+      DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
       GOERLI_BADGES_ADDRESS: ${{ secrets.GOERLI_BADGES_ADDRESS }}
-      GOERLI_RAFT_ADDRESS: ${{ secrets.GOERLI_RAFT_ADDRESS }}
       GOERLI_GNOSIS_SAFE: ${{ secrets.GOERLI_GNOSIS_SAFE }}
+      GOERLI_RAFT_ADDRESS: ${{ secrets.GOERLI_RAFT_ADDRESS }}
+      GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
       GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.GOERLI_SPECDATAHOLDER_ADDRESS }}
-      OPTIMISM_GOERLI_RPC_URL: ${{ secrets.OPTIMISM_GOERLI_RPC_URL }}
       OPTIMISM_GOERLI_BADGES_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_BADGES_ADDRESS }}
       OPTIMISM_GOERLI_RAFT_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_RAFT_ADDRESS }}
+      OPTIMISM_GOERLI_RPC_URL: ${{ secrets.OPTIMISM_GOERLI_RPC_URL }}
       OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS: ${{ secrets.OPTIMISM_GOERLI_SPECDATAHOLDER_ADDRESS }}
+      OPTIMISM_RPC_URL: ${{ secrets.OPTIMISM_RPC_URL }}
+      OPTIMISTIC_ETHERSCAN_API_KEY: ${{ secrets.OPTIMISTIC_ETHERSCAN_API_KEY }}
+      SEPOLIA_BADGES_ADDRESS: ${{ secrets.SEPOLIA_BADGES_ADDRESS }}
+      SEPOLIA_RAFT_ADDRESS: ${{ secrets.SEPOLIA_RAFT_ADDRESS }}
+      SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+      SEPOLIA_SPECDATAHOLDER_ADDRESS: ${{ secrets.SEPOLIA_SPECDATAHOLDER_ADDRESS }}      
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
@@ -52,6 +56,10 @@ jobs:
         run: |
           set -e
 
+          last_tag=$(git describe --tags --abbrev=0)
+          git branch last_tag_branch $last_tag
+          git switch last_tag_branch
+
           badges_code_at_last_tag=$(cat src/Badges.sol)
           raft_code_at_last_tag=$(cat src/Raft.sol)
           sdh_code_at_last_tag=$(cat src/SpecDataHolder.sol)
@@ -64,7 +72,8 @@ jobs:
 
           declare -A networks=(
               ["goerli"]="$GOERLI_RPC_URL $ETHERSCAN_API_KEY"
-              ["optimism-goerli"]="$OPTIMISM_GOERLI_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"         
+              ["optimism-goerli"]="$OPTIMISM_GOERLI_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
+              ["sepolia"]="$SEPOLIA_RPC_URL $ETHERSCAN_API_KEY"                  
           )
 
           for networkName in "${!networks[@]}"; do

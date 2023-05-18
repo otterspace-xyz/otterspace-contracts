@@ -54,6 +54,12 @@ npx hardhat test
 - [Raft.sol](https://goerli-optimism.etherscan.io/address/0xcd31CFCd7b784C5F4f51D4EaC45376bA30F9C3Eb)
 - [SpecDataHolder.sol](https://goerli-optimism.etherscan.io/address/0xbdBF9157BCF6a3f7cE9F7BdcFCa3067727F515F2)
 
+### Live contracts on Sepolia:
+
+- [Badges.sol](https://sepolia.etherscan.io/address/0x147e0dF40fdD1340C604726c670329c08176F208)
+- [Raft.sol](https://sepolia.etherscan.io/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
+- [SpecDataHolder.sol](https://sepolia.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
+
 ### Use ABIs with JavaScript
 
 We're publishing this repository at [@otterspace-xyz/contracts](https://www.npmjs.com/package/@otterspace-xyz/contracts)
@@ -177,6 +183,9 @@ Add a `.vscode` file under the root
 ## Changelog
 
 See changelog.md file.
+
+## Supporting new chains
+- [Adding support for new chains](https://www.notion.so/otterspace-xyz/How-to-add-support-for-a-new-chain-7f40b88185304a248f8014a7fd0af6c4)
 
 ### Checklist for bumping version
 
