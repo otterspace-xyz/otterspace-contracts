@@ -11,22 +11,32 @@ async function main() {
     GNOSIS_MULTISIG: owner,
   } = process.env
 
-  console.log(`deploying raft contract with args - owner: ${owner}, raftName: ${raftName}, raftSymbol: ${raftSymbol}`)
+  console.log(
+    `deploying raft contract with args - owner: ${owner}, raftName: ${raftName}, raftSymbol: ${raftSymbol}`
+  )
   const raftAddress = await deployRaftContract(owner, raftName, raftSymbol)
   console.log('raft contract deployed to ', raftAddress)
 
   const sdhAddress = await deploySpecDataHolderContract(raftAddress, owner)
   console.log('specDataHolder deployed to address = ', sdhAddress)
 
-  const badgesAddress = await deployBadgesContract(badgesName, badgesSymbol, badgesVersion, owner, sdhAddress)
+  const badgesAddress = await deployBadgesContract(
+    badgesName,
+    badgesSymbol,
+    badgesVersion,
+    owner,
+    sdhAddress
+  )
   console.log('badges contract deployed to address = ', badgesAddress)
-  
+
   // when SpecDataHolder is originally deployed, it doesn't have the address of the Badges contract
-  // so after everything is deployed, we need to set the address so that Badges and SpecDataHolder 
+  // so after everything is deployed, we need to set the address so that Badges and SpecDataHolder
   // can talk to each other
-  await sdhAddress.setBadgesContractAddress(badgesAddress);
-  
-  console.log('For verification, run `npx hardhat verify --network ${networkName} ${contractAddress}`')
+  await sdhAddress.setBadgesContractAddress(badgesAddress)
+
+  console.log(
+    'For verification, run `npx hardhat verify --network ${networkName} ${contractAddress}`'
+  )
 }
 
 async function deployBadgesContract(
@@ -43,7 +53,13 @@ async function deployBadgesContract(
   const badges = await ethers.getContractFactory('Badges')
   const badgesContract = await upgrades.deployProxy(
     badges,
-    [badgesName, badgesSymbol, badgesVersion, owner, specDataHolderContractAddress],
+    [
+      badgesName,
+      badgesSymbol,
+      badgesVersion,
+      owner,
+      specDataHolderContractAddress,
+    ],
     {
       kind: 'uups',
     }
@@ -53,15 +69,22 @@ async function deployBadgesContract(
   return badgesContract.address
 }
 
-async function deploySpecDataHolderContract(raftContractAddress: any, owner: string | undefined) {
+async function deploySpecDataHolderContract(
+  raftContractAddress: any,
+  owner: string | undefined
+) {
   if (!owner) {
     console.error('deploySpecDataHolderContract: missing config values')
   }
 
   const specDataHolder = await ethers.getContractFactory('SpecDataHolder')
-  const specDataHolderContract = await upgrades.deployProxy(specDataHolder, [raftContractAddress, owner], {
-    kind: 'uups',
-  })
+  const specDataHolderContract = await upgrades.deployProxy(
+    specDataHolder,
+    [raftContractAddress, owner],
+    {
+      kind: 'uups',
+    }
+  )
   await specDataHolderContract.deployed()
 
   return specDataHolderContract.address
@@ -78,9 +101,13 @@ async function deployRaftContract(
   }
 
   const raft = await ethers.getContractFactory('Raft')
-  const raftContract = await upgrades.deployProxy(raft, [owner, raftName, raftSymbol], {
-    kind: 'uups',
-  })
+  const raftContract = await upgrades.deployProxy(
+    raft,
+    [owner, raftName, raftSymbol],
+    {
+      kind: 'uups',
+    }
+  )
   await raftContract.deployed()
 
   return raftContract.address
