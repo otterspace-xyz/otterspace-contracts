@@ -30,12 +30,11 @@ async function main() {
   console.log('badges contract deployed to address = ', badgesAddress)
 
   // when SpecDataHolder is originally deployed, it doesn't have the address of the Badges contract
-  // so after everything is deployed, we need to set the address so that Badges and SpecDataHolder
-  // can talk to each other
-  await sdhAddress.setBadgesContractAddress(badgesAddress)
+  // IMPORTANT: after everything is deployed, you need to go to etherscan and call setBadgesContractAddress
+  // on the SpecDataHolder contract so that the contracts can talk to each other
 
   console.log(
-    'For verification, run `npx hardhat verify --network ${networkName} ${contractAddress}`'
+    'To verify: run `npx hardhat verify --network ${networkName} ${contractAddress}`'
   )
 }
 
