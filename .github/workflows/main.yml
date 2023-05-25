@@ -35,6 +35,12 @@ jobs:
       - name: Run forge install
         run: forge install
 
+      - name: Run forge build
+        run: forge build
+
+      - name: Run forge tests
+        run: forge test
+
       - name: Compile hardhat
         env:
           CI: true
