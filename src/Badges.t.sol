@@ -397,8 +397,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -466,8 +466,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      issuer,
       recipient,
+      issuer,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
