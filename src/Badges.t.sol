@@ -124,9 +124,8 @@ contract BadgesTest is Test {
 
     vm.label(passiveAddress, "passive");
     vm.expectEmit(true, true, true, false);
-
+    emit Transfer(zeroAddress, raftOwner, 1);
     raftTokenId = raftProxy.mint(raftOwner, specUri);
-    emit Transfer(zeroAddress, raftOwner, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(raftProxy.balanceOf(raftOwner), 1);
