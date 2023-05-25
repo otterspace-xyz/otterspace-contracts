@@ -1896,27 +1896,69 @@
     "absolutePath": "src/Raft.sol",
     "id": 30508,
     "exportedSymbols": {
-      "AddressUpgradeable": [24822],
-      "ContextUpgradeable": [24864],
-      "Counters": [26928],
-      "ERC165Upgradeable": [25834],
-      "ERC1967UpgradeUpgradeable": [22678],
-      "ERC721EnumerableUpgradeable": [24480],
-      "ERC721Upgradeable": [23988],
-      "IBeaconUpgradeable": [22688],
-      "IERC165Upgradeable": [25846],
-      "IERC1822ProxiableUpgradeable": [22309],
-      "IERC721EnumerableUpgradeable": [24511],
-      "IERC721MetadataUpgradeable": [24538],
-      "IERC721ReceiverUpgradeable": [24006],
-      "IERC721Upgradeable": [24122],
-      "Initializable": [22839],
-      "OwnableUpgradeable": [22285],
-      "PausableUpgradeable": [23102],
-      "Raft": [30966],
-      "StorageSlotUpgradeable": [24924],
-      "StringsUpgradeable": [25150],
-      "UUPSUpgradeable": [22975]
+      "AddressUpgradeable": [
+        24285
+      ],
+      "ContextUpgradeable": [
+        24327
+      ],
+      "Counters": [
+        26391
+      ],
+      "ERC165Upgradeable": [
+        25297
+      ],
+      "ERC1967UpgradeUpgradeable": [
+        22141
+      ],
+      "ERC721EnumerableUpgradeable": [
+        23943
+      ],
+      "ERC721Upgradeable": [
+        23451
+      ],
+      "IBeaconUpgradeable": [
+        22151
+      ],
+      "IERC165Upgradeable": [
+        25309
+      ],
+      "IERC1822ProxiableUpgradeable": [
+        21772
+      ],
+      "IERC721EnumerableUpgradeable": [
+        23974
+      ],
+      "IERC721MetadataUpgradeable": [
+        24001
+      ],
+      "IERC721ReceiverUpgradeable": [
+        23469
+      ],
+      "IERC721Upgradeable": [
+        23585
+      ],
+      "Initializable": [
+        22302
+      ],
+      "OwnableUpgradeable": [
+        21748
+      ],
+      "PausableUpgradeable": [
+        22565
+      ],
+      "Raft": [
+        30507
+      ],
+      "StorageSlotUpgradeable": [
+        24387
+      ],
+      "StringsUpgradeable": [
+        24613
+      ],
+      "UUPSUpgradeable": [
+        22438
+      ]
     },
     "nodeType": "SourceUnit",
     "src": "46:5256:46",
@@ -1924,14 +1966,19 @@
       {
         "id": 30190,
         "nodeType": "PragmaDirective",
-        "src": "46:23:48",
+        "src": "46:23:46",
         "nodes": [],
-        "literals": ["solidity", "0.8", ".16"]
+        "literals": [
+          "solidity",
+          "0.8",
+          ".16"
+        ]
       },
       {
         "id": 30191,
         "nodeType": "ImportDirective",
         "src": "71:52:46",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts/contracts/utils/Counters.sol",
         "file": "@openzeppelin/contracts/utils/Counters.sol",
         "nameLocation": "-1:-1:-1",
@@ -1944,6 +1991,7 @@
         "id": 30192,
         "nodeType": "ImportDirective",
         "src": "124:67:46",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1956,6 +2004,7 @@
         "id": 30193,
         "nodeType": "ImportDirective",
         "src": "192:65:46",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1968,6 +2017,7 @@
         "id": 30194,
         "nodeType": "ImportDirective",
         "src": "258:68:46",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/security/PausableUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/security/PausableUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1980,6 +2030,7 @@
         "id": 30195,
         "nodeType": "ImportDirective",
         "src": "327:91:46",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1997,11 +2048,14 @@
             "id": 30208,
             "nodeType": "UsingForDirective",
             "src": "851:36:46",
+            "nodes": [],
             "global": false,
             "libraryName": {
               "id": 30205,
               "name": "Counters",
-              "nameLocations": ["857:8:48"],
+              "nameLocations": [
+                "857:8:46"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 26391,
               "src": "857:8:46"
@@ -2012,7 +2066,10 @@
               "pathNode": {
                 "id": 30206,
                 "name": "Counters.Counter",
-                "nameLocations": ["870:8:48", "879:7:48"],
+                "nameLocations": [
+                  "870:8:46",
+                  "879:7:46"
+                ],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 26323,
                 "src": "870:16:46"
@@ -2029,6 +2086,7 @@
             "id": 30211,
             "nodeType": "VariableDeclaration",
             "src": "890:34:46",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "_tokenIds",
@@ -2046,7 +2104,10 @@
               "pathNode": {
                 "id": 30209,
                 "name": "Counters.Counter",
-                "nameLocations": ["890:8:48", "899:7:48"],
+                "nameLocations": [
+                  "890:8:46",
+                  "899:7:46"
+                ],
                 "nodeType": "IdentifierPath",
                 "referencedDeclaration": 26323,
                 "src": "890:16:46"
@@ -2064,6 +2125,7 @@
             "id": 30215,
             "nodeType": "VariableDeclaration",
             "src": "929:45:46",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "_tokenURIs",
@@ -2110,6 +2172,7 @@
             "id": 30221,
             "nodeType": "VariableDeclaration",
             "src": "978:60:46",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "_admins",
@@ -2175,6 +2238,7 @@
             "id": 30225,
             "nodeType": "EventDefinition",
             "src": "1043:46:46",
+            "nodes": [],
             "anonymous": false,
             "eventSelector": "f8e1a15aba9398e019f0b49df1a4fde98ee17ae345cb5f6b5e2c27f5033e8ce7",
             "name": "MetadataUpdate",
@@ -2219,6 +2283,7 @@
             "id": 30233,
             "nodeType": "EventDefinition",
             "src": "1092:96:46",
+            "nodes": [],
             "anonymous": false,
             "eventSelector": "aa7637c88c63659176aa6f1b9bde1a03fd88751320e1d40898bdf1a8459071de",
             "name": "AdminUpdate",
@@ -2320,10 +2385,12 @@
             "id": 30241,
             "nodeType": "FunctionDefinition",
             "src": "1243:47:46",
+            "nodes": [],
             "body": {
               "id": 30240,
               "nodeType": "Block",
               "src": "1257:33:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2395,10 +2462,12 @@
             "id": 30275,
             "nodeType": "FunctionDefinition",
             "src": "1608:422:46",
+            "nodes": [],
             "body": {
               "id": 30274,
               "nodeType": "Block",
               "src": "1726:304:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2686,7 +2755,9 @@
                 "modifierName": {
                   "id": 30250,
                   "name": "initializer",
-                  "nameLocations": ["1714:11:48"],
+                  "nameLocations": [
+                    "1714:11:46"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 22222,
                   "src": "1714:11:46"
@@ -2801,10 +2872,12 @@
             "id": 30333,
             "nodeType": "FunctionDefinition",
             "src": "2307:510:46",
+            "nodes": [],
             "body": {
               "id": 30332,
               "nodeType": "Block",
               "src": "2404:413:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2980,7 +3053,10 @@
                       "id": 30285,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "2509:7:46",
                       "typeDescriptions": {
@@ -3061,7 +3137,9 @@
                   "src": "2588:21:46"
                 },
                 {
-                  "assignments": [30763],
+                  "assignments": [
+                    30304
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -3267,7 +3345,10 @@
                       "id": 30309,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "2660:7:46",
                       "typeDescriptions": {
@@ -3570,10 +3651,12 @@
             "id": 30342,
             "nodeType": "FunctionDefinition",
             "src": "2821:53:46",
+            "nodes": [],
             "body": {
               "id": 30341,
               "nodeType": "Block",
               "src": "2855:19:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3623,7 +3706,9 @@
                 "modifierName": {
                   "id": 30335,
                   "name": "onlyOwner",
-                  "nameLocations": ["2845:9:48"],
+                  "nameLocations": [
+                    "2845:9:46"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "2845:9:46"
@@ -3655,10 +3740,12 @@
             "id": 30351,
             "nodeType": "FunctionDefinition",
             "src": "2878:57:46",
+            "nodes": [],
             "body": {
               "id": 30350,
               "nodeType": "Block",
               "src": "2914:21:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3708,7 +3795,9 @@
                 "modifierName": {
                   "id": 30344,
                   "name": "onlyOwner",
-                  "nameLocations": ["2904:9:48"],
+                  "nameLocations": [
+                    "2904:9:46"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "2904:9:46"
@@ -3740,10 +3829,12 @@
             "id": 30379,
             "nodeType": "FunctionDefinition",
             "src": "3232:241:46",
+            "nodes": [],
             "body": {
               "id": 30378,
               "nodeType": "Block",
               "src": "3326:147:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3828,7 +3919,10 @@
                       "id": 30361,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "3332:7:46",
                       "typeDescriptions": {
@@ -3996,7 +4090,9 @@
                 "modifierName": {
                   "id": 30358,
                   "name": "onlyOwner",
-                  "nameLocations": ["3316:9:48"],
+                  "nameLocations": [
+                    "3316:9:46"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "3316:9:46"
@@ -4083,10 +4179,12 @@
             "id": 30466,
             "nodeType": "FunctionDefinition",
             "src": "3810:648:46",
+            "nodes": [],
             "body": {
               "id": 30465,
               "nodeType": "Block",
               "src": "3926:532:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -4262,7 +4360,10 @@
                       "id": 30391,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "3932:7:46",
                       "typeDescriptions": {
@@ -4396,7 +4497,10 @@
                       "id": 30404,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "4033:7:46",
                       "typeDescriptions": {
@@ -4507,7 +4611,10 @@
                       "id": 30413,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "4156:7:46",
                       "typeDescriptions": {
@@ -4663,7 +4770,10 @@
                       "id": 30420,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "4224:7:46",
                       "typeDescriptions": {
@@ -5037,7 +5147,9 @@
                   },
                   "id": 30464,
                   "initializationExpression": {
-                    "assignments": [30890],
+                    "assignments": [
+                      30431
+                    ],
                     "declarations": [
                       {
                         "constant": false,
@@ -5258,10 +5370,12 @@
             "id": 30483,
             "nodeType": "FunctionDefinition",
             "src": "4788:143:46",
+            "nodes": [],
             "body": {
               "id": 30482,
               "nodeType": "Block",
               "src": "4890:41:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -5450,10 +5564,12 @@
             "id": 30497,
             "nodeType": "FunctionDefinition",
             "src": "5096:133:46",
+            "nodes": [],
             "body": {
               "id": 30496,
               "nodeType": "Block",
               "src": "5192:37:46",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -5500,7 +5616,9 @@
                 }
               ]
             },
-            "baseFunctions": [23327],
+            "baseFunctions": [
+              22790
+            ],
             "documentation": {
               "id": 30484,
               "nodeType": "StructuredDocumentation",
@@ -5596,13 +5714,17 @@
             "id": 30506,
             "nodeType": "FunctionDefinition",
             "src": "5233:66:46",
+            "nodes": [],
             "body": {
               "id": 30505,
               "nodeType": "Block",
               "src": "5297:2:46",
+              "nodes": [],
               "statements": []
             },
-            "baseFunctions": [22969],
+            "baseFunctions": [
+              22432
+            ],
             "implemented": true,
             "kind": "function",
             "modifiers": [
@@ -5612,7 +5734,9 @@
                 "modifierName": {
                   "id": 30502,
                   "name": "onlyOwner",
-                  "nameLocations": ["5287:9:48"],
+                  "nameLocations": [
+                    "5287:9:46"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "5287:9:46"
@@ -5682,7 +5806,9 @@
             "baseName": {
               "id": 30197,
               "name": "ERC721EnumerableUpgradeable",
-              "nameLocations": ["755:27:48"],
+              "nameLocations": [
+                "755:27:46"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 23943,
               "src": "755:27:46"
@@ -5695,7 +5821,9 @@
             "baseName": {
               "id": 30199,
               "name": "UUPSUpgradeable",
-              "nameLocations": ["786:15:48"],
+              "nameLocations": [
+                "786:15:46"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 22438,
               "src": "786:15:46"
@@ -5708,7 +5836,9 @@
             "baseName": {
               "id": 30201,
               "name": "OwnableUpgradeable",
-              "nameLocations": ["805:18:48"],
+              "nameLocations": [
+                "805:18:46"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 21748,
               "src": "805:18:46"
@@ -5721,7 +5851,9 @@
             "baseName": {
               "id": 30203,
               "name": "PausableUpgradeable",
-              "nameLocations": ["827:19:48"],
+              "nameLocations": [
+                "827:19:46"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 22565,
               "src": "827:19:46"
@@ -5766,5 +5898,5 @@
     ],
     "license": "MIT OR Apache-2.0"
   },
-  "id": 48
+  "id": 46
 }

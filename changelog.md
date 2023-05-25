@@ -2,6 +2,9 @@
 
 We're using https://semver.org/
 
+## 2.7.3
+- Bug fix in `mintWithConsent()` and rebuilding faulty ABIs
+
 ## 2.7.2
 
 - add `merkleMintWithConsent()`

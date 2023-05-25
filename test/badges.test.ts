@@ -248,11 +248,9 @@ describe('Merkle minting', () => {
       issuer
     )
 
-    await expect(
-      badgesProxy
-        .connect(claimant)
-        .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
-    )
+    await badgesProxy
+      .connect(claimant)
+      .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
   })
@@ -293,19 +291,17 @@ describe('Merkle minting', () => {
       claimant
     )
 
-    await expect(
-      badgesProxy
-        .connect(issuer)
-        .merkleMintWithConsent(
-          claimant.address.toLowerCase(),
-          issuer.address.toLowerCase(),
-          specUri,
-          issuerSignature,
-          claimantSignature,
-          merkleRoot,
-          merkleProof
-        )
-    )
+    await badgesProxy
+      .connect(issuer)
+      .merkleMintWithConsent(
+        issuer.address.toLowerCase(),
+        claimant.address.toLowerCase(),
+        specUri,
+        issuerSignature,
+        claimantSignature,
+        merkleRoot,
+        merkleProof
+      )
 
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
   })

@@ -1098,22 +1098,54 @@
     "absolutePath": "src/SpecDataHolder.sol",
     "id": 32008,
     "exportedSymbols": {
-      "AddressUpgradeable": [24822],
-      "Context": [26854],
-      "ContextUpgradeable": [24864],
-      "ERC1967UpgradeUpgradeable": [22678],
-      "IBeaconUpgradeable": [22688],
-      "IERC165": [27502],
-      "IERC1822ProxiableUpgradeable": [22309],
-      "IERC721": [26502],
-      "ISpecDataHolder": [33296],
-      "Initializable": [22839],
-      "Ownable": [25959],
-      "OwnableUpgradeable": [22285],
-      "Raft": [30966],
-      "SpecDataHolder": [32466],
-      "StorageSlotUpgradeable": [24924],
-      "UUPSUpgradeable": [22975]
+      "AddressUpgradeable": [
+        24285
+      ],
+      "Context": [
+        26317
+      ],
+      "ContextUpgradeable": [
+        24327
+      ],
+      "ERC1967UpgradeUpgradeable": [
+        22141
+      ],
+      "IBeaconUpgradeable": [
+        22151
+      ],
+      "IERC165": [
+        26965
+      ],
+      "IERC1822ProxiableUpgradeable": [
+        21772
+      ],
+      "IERC721": [
+        25965
+      ],
+      "ISpecDataHolder": [
+        32837
+      ],
+      "Initializable": [
+        22302
+      ],
+      "Ownable": [
+        25422
+      ],
+      "OwnableUpgradeable": [
+        21748
+      ],
+      "Raft": [
+        30507
+      ],
+      "SpecDataHolder": [
+        32007
+      ],
+      "StorageSlotUpgradeable": [
+        24387
+      ],
+      "UUPSUpgradeable": [
+        22438
+      ]
     },
     "nodeType": "SourceUnit",
     "src": "41:3728:48",
@@ -1121,14 +1153,19 @@
       {
         "id": 31689,
         "nodeType": "PragmaDirective",
-        "src": "41:23:50",
+        "src": "41:23:48",
         "nodes": [],
-        "literals": ["solidity", "0.8", ".16"]
+        "literals": [
+          "solidity",
+          "0.8",
+          ".16"
+        ]
       },
       {
         "id": 31690,
         "nodeType": "ImportDirective",
         "src": "65:52:48",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
         "file": "@openzeppelin/contracts/access/Ownable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1141,6 +1178,7 @@
         "id": 31691,
         "nodeType": "ImportDirective",
         "src": "118:65:48",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol",
         "file": "@openzeppelin-upgradeable/proxy/utils/Initializable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1153,6 +1191,7 @@
         "id": 31692,
         "nodeType": "ImportDirective",
         "src": "184:65:48",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1165,6 +1204,7 @@
         "id": 31693,
         "nodeType": "ImportDirective",
         "src": "250:67:48",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -1177,6 +1217,7 @@
         "id": 31694,
         "nodeType": "ImportDirective",
         "src": "318:58:48",
+        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721.sol",
         "file": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "nameLocation": "-1:-1:-1",
@@ -1189,6 +1230,7 @@
         "id": 31695,
         "nodeType": "ImportDirective",
         "src": "377:42:48",
+        "nodes": [],
         "absolutePath": "src/interfaces/ISpecDataHolder.sol",
         "file": "./interfaces/ISpecDataHolder.sol",
         "nameLocation": "-1:-1:-1",
@@ -1201,6 +1243,7 @@
         "id": 31697,
         "nodeType": "ImportDirective",
         "src": "420:34:48",
+        "nodes": [],
         "absolutePath": "src/Raft.sol",
         "file": "./Raft.sol",
         "nameLocation": "-1:-1:-1",
@@ -1231,6 +1274,7 @@
             "id": 31707,
             "nodeType": "VariableDeclaration",
             "src": "546:46:48",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "_specToRaft",
@@ -1277,6 +1321,7 @@
             "id": 31711,
             "nodeType": "VariableDeclaration",
             "src": "596:48:48",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "_badgeToRaft",
@@ -1323,6 +1368,7 @@
             "id": 31713,
             "nodeType": "VariableDeclaration",
             "src": "649:29:48",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "badgesAddress",
@@ -1351,6 +1397,7 @@
             "id": 31715,
             "nodeType": "VariableDeclaration",
             "src": "682:27:48",
+            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "raftAddress",
@@ -1379,10 +1426,12 @@
             "id": 31733,
             "nodeType": "ModifierDefinition",
             "src": "714:155:48",
+            "nodes": [],
             "body": {
               "id": 31732,
               "nodeType": "Block",
               "src": "740:129:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -1569,7 +1618,10 @@
                       "id": 31717,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "746:7:48",
                       "typeDescriptions": {
@@ -1619,10 +1671,12 @@
             "id": 31741,
             "nodeType": "FunctionDefinition",
             "src": "924:47:48",
+            "nodes": [],
             "body": {
               "id": 31740,
               "nodeType": "Block",
               "src": "938:33:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -1694,10 +1748,12 @@
             "id": 31765,
             "nodeType": "FunctionDefinition",
             "src": "975:215:48",
+            "nodes": [],
             "body": {
               "id": 31764,
               "nodeType": "Block",
               "src": "1066:124:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -1880,7 +1936,9 @@
                 "modifierName": {
                   "id": 31747,
                   "name": "initializer",
-                  "nameLocations": ["1052:11:50"],
+                  "nameLocations": [
+                    "1052:11:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 22222,
                   "src": "1052:11:48"
@@ -1969,10 +2027,12 @@
             "id": 31773,
             "nodeType": "FunctionDefinition",
             "src": "1194:91:48",
+            "nodes": [],
             "body": {
               "id": 31772,
               "nodeType": "Block",
               "src": "1254:31:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2050,10 +2110,12 @@
             "id": 31785,
             "nodeType": "FunctionDefinition",
             "src": "1289:118:48",
+            "nodes": [],
             "body": {
               "id": 31784,
               "nodeType": "Block",
               "src": "1366:41:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2110,7 +2172,9 @@
                 "modifierName": {
                   "id": 31777,
                   "name": "onlyOwner",
-                  "nameLocations": ["1356:9:50"],
+                  "nameLocations": [
+                    "1356:9:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "1356:9:48"
@@ -2171,10 +2235,12 @@
             "id": 31793,
             "nodeType": "FunctionDefinition",
             "src": "1411:87:48",
+            "nodes": [],
             "body": {
               "id": 31792,
               "nodeType": "Block",
               "src": "1469:29:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2196,7 +2262,9 @@
                 }
               ]
             },
-            "baseFunctions": [33272],
+            "baseFunctions": [
+              32813
+            ],
             "functionSelector": "34f87662",
             "implemented": true,
             "kind": "function",
@@ -2253,10 +2321,12 @@
             "id": 31805,
             "nodeType": "FunctionDefinition",
             "src": "1502:110:48",
+            "nodes": [],
             "body": {
               "id": 31804,
               "nodeType": "Block",
               "src": "1575:37:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2313,7 +2383,9 @@
                 "modifierName": {
                   "id": 31797,
                   "name": "onlyOwner",
-                  "nameLocations": ["1565:9:50"],
+                  "nameLocations": [
+                    "1565:9:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "1565:9:48"
@@ -2374,10 +2446,12 @@
             "id": 31817,
             "nodeType": "FunctionDefinition",
             "src": "1616:152:48",
+            "nodes": [],
             "body": {
               "id": 31816,
               "nodeType": "Block",
               "src": "1723:45:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2507,10 +2581,12 @@
             "id": 31833,
             "nodeType": "FunctionDefinition",
             "src": "1772:168:48",
+            "nodes": [],
             "body": {
               "id": 31832,
               "nodeType": "Block",
               "src": "1887:53:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2582,7 +2658,9 @@
                 }
               ]
             },
-            "baseFunctions": [33286],
+            "baseFunctions": [
+              32827
+            ],
             "functionSelector": "fb749261",
             "implemented": true,
             "kind": "function",
@@ -2593,7 +2671,9 @@
                 "modifierName": {
                   "id": 31823,
                   "name": "onlyAuthorized",
-                  "nameLocations": ["1870:14:50"],
+                  "nameLocations": [
+                    "1870:14:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 31733,
                   "src": "1870:14:48"
@@ -2680,10 +2760,12 @@
             "id": 31877,
             "nodeType": "FunctionDefinition",
             "src": "1944:389:48",
+            "nodes": [],
             "body": {
               "id": 31876,
               "nodeType": "Block",
               "src": "2081:252:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -2791,7 +2873,10 @@
                       "id": 31844,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "2087:7:48",
                       "typeDescriptions": {
@@ -3004,7 +3089,9 @@
                   },
                   "id": 31875,
                   "initializationExpression": {
-                    "assignments": [32313],
+                    "assignments": [
+                      31854
+                    ],
                     "declarations": [
                       {
                         "constant": false,
@@ -3101,7 +3188,9 @@
                 "modifierName": {
                   "id": 31841,
                   "name": "onlyAuthorized",
-                  "nameLocations": ["2066:14:50"],
+                  "nameLocations": [
+                    "2066:14:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 31733,
                   "src": "2066:14:48"
@@ -3206,10 +3295,12 @@
             "id": 31893,
             "nodeType": "FunctionDefinition",
             "src": "2337:164:48",
+            "nodes": [],
             "body": {
               "id": 31892,
               "nodeType": "Block",
               "src": "2454:47:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3281,7 +3372,9 @@
                 }
               ]
             },
-            "baseFunctions": [33267],
+            "baseFunctions": [
+              32808
+            ],
             "functionSelector": "addd1907",
             "implemented": true,
             "kind": "function",
@@ -3292,7 +3385,9 @@
                 "modifierName": {
                   "id": 31883,
                   "name": "onlyAuthorized",
-                  "nameLocations": ["2437:14:50"],
+                  "nameLocations": [
+                    "2437:14:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 31733,
                   "src": "2437:14:48"
@@ -3379,10 +3474,12 @@
             "id": 31937,
             "nodeType": "FunctionDefinition",
             "src": "2505:365:48",
+            "nodes": [],
             "body": {
               "id": 31936,
               "nodeType": "Block",
               "src": "2635:235:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3490,7 +3587,10 @@
                       "id": 31904,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [-18, -18],
+                      "overloadedDeclarations": [
+                        -18,
+                        -18
+                      ],
                       "referencedDeclaration": -18,
                       "src": "2641:7:48",
                       "typeDescriptions": {
@@ -3703,7 +3803,9 @@
                   },
                   "id": 31935,
                   "initializationExpression": {
-                    "assignments": [32373],
+                    "assignments": [
+                      31914
+                    ],
                     "declarations": [
                       {
                         "constant": false,
@@ -3800,7 +3902,9 @@
                 "modifierName": {
                   "id": 31901,
                   "name": "onlyAuthorized",
-                  "nameLocations": ["2620:14:50"],
+                  "nameLocations": [
+                    "2620:14:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 31733,
                   "src": "2620:14:48"
@@ -3905,10 +4009,12 @@
             "id": 31949,
             "nodeType": "FunctionDefinition",
             "src": "2874:135:48",
+            "nodes": [],
             "body": {
               "id": 31948,
               "nodeType": "Block",
               "src": "2970:39:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3955,7 +4061,9 @@
                 }
               ]
             },
-            "baseFunctions": [33279],
+            "baseFunctions": [
+              32820
+            ],
             "functionSelector": "3664a8e9",
             "implemented": true,
             "kind": "function",
@@ -4039,10 +4147,12 @@
             "id": 31963,
             "nodeType": "FunctionDefinition",
             "src": "3013:139:48",
+            "nodes": [],
             "body": {
               "id": 31962,
               "nodeType": "Block",
               "src": "3108:44:48",
+              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -4123,7 +4233,9 @@
                 }
               ]
             },
-            "baseFunctions": [33260],
+            "baseFunctions": [
+              32801
+            ],
             "functionSelector": "fc0e204e",
             "implemented": true,
             "kind": "function",
@@ -4207,13 +4319,17 @@
             "id": 31997,
             "nodeType": "FunctionDefinition",
             "src": "3156:277:48",
+            "nodes": [],
             "body": {
               "id": 31996,
               "nodeType": "Block",
               "src": "3264:169:48",
+              "nodes": [],
               "statements": [
                 {
-                  "assignments": [32433],
+                  "assignments": [
+                    31974
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -4236,7 +4352,9 @@
                         "pathNode": {
                           "id": 31972,
                           "name": "Raft",
-                          "nameLocations": ["3270:4:50"],
+                          "nameLocations": [
+                            "3270:4:48"
+                          ],
                           "nodeType": "IdentifierPath",
                           "referencedDeclaration": 30507,
                           "src": "3270:4:48"
@@ -4305,7 +4423,9 @@
                   "src": "3270:29:48"
                 },
                 {
-                  "assignments": [32439],
+                  "assignments": [
+                    31980
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -4554,7 +4674,9 @@
                 }
               ]
             },
-            "baseFunctions": [33295],
+            "baseFunctions": [
+              32836
+            ],
             "functionSelector": "e3ee9c4d",
             "implemented": true,
             "kind": "function",
@@ -4666,13 +4788,17 @@
             "id": 32006,
             "nodeType": "FunctionDefinition",
             "src": "3700:66:48",
+            "nodes": [],
             "body": {
               "id": 32005,
               "nodeType": "Block",
               "src": "3764:2:48",
+              "nodes": [],
               "statements": []
             },
-            "baseFunctions": [22969],
+            "baseFunctions": [
+              22432
+            ],
             "implemented": true,
             "kind": "function",
             "modifiers": [
@@ -4682,7 +4808,9 @@
                 "modifierName": {
                   "id": 32002,
                   "name": "onlyOwner",
-                  "nameLocations": ["3754:9:50"],
+                  "nameLocations": [
+                    "3754:9:48"
+                  ],
                   "nodeType": "IdentifierPath",
                   "referencedDeclaration": 21662,
                   "src": "3754:9:48"
@@ -4752,7 +4880,9 @@
             "baseName": {
               "id": 31698,
               "name": "UUPSUpgradeable",
-              "nameLocations": ["485:15:50"],
+              "nameLocations": [
+                "485:15:48"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 22438,
               "src": "485:15:48"
@@ -4765,7 +4895,9 @@
             "baseName": {
               "id": 31700,
               "name": "OwnableUpgradeable",
-              "nameLocations": ["504:18:50"],
+              "nameLocations": [
+                "504:18:48"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 21748,
               "src": "504:18:48"
@@ -4778,7 +4910,9 @@
             "baseName": {
               "id": 31702,
               "name": "ISpecDataHolder",
-              "nameLocations": ["526:15:50"],
+              "nameLocations": [
+                "526:15:48"
+              ],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 32837,
               "src": "526:15:48"
@@ -4810,5 +4944,5 @@
     ],
     "license": "GPL-3.0-only"
   },
-  "id": 50
+  "id": 48
 }
