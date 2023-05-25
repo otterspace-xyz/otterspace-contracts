@@ -291,7 +291,7 @@ contract Badges is
       "mintWithConsent: unauthorized"
     );
 
-    bytes32 agreementHash = getAgreementHash(_issuer, _recipient, _uri);
+    bytes32 agreementHash = getAgreementHash(_recipient, _issuer, _uri);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _issuer,
@@ -512,14 +512,14 @@ contract Badges is
   }
 
   function getAgreementHash(
-    address _from,
-    address _to,
+    address _active,
+    address _passive,
     string calldata _uri
   ) public view virtual returns (bytes32) {
     return
       _hashTypedDataV4(
         keccak256(
-          abi.encode(AGREEMENT_HASH, _from, _to, keccak256(bytes(_uri)))
+          abi.encode(AGREEMENT_HASH, _active, _passive, keccak256(bytes(_uri)))
         )
       );
   }
