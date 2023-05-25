@@ -291,7 +291,7 @@ contract Badges is
       "mintWithConsent: unauthorized"
     );
 
-    bytes32 agreementHash = getAgreementHash(_recipient, _issuer, _uri);
+    bytes32 agreementHash = getAgreementHash(_issuer, _recipient, _uri);
     require(
       SignatureCheckerUpgradeable.isValidSignatureNow(
         _issuer,

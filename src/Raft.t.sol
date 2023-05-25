@@ -66,9 +66,9 @@ contract RaftTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -103,9 +103,9 @@ contract RaftTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -121,9 +121,9 @@ contract RaftTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -136,9 +136,9 @@ contract RaftTest is Test {
     address from = address(0);
     address attacker = vm.addr(randomPrivateKey);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -213,8 +213,11 @@ contract RaftTest is Test {
     assertEq(admins.length, adminActiveStatus.length);
 
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[0], adminActiveStatus[0]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[1], adminActiveStatus[1]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[2], adminActiveStatus[2]);
     vm.prank(tokenOwner);
     callSetAdmins(tokenId, admins, adminActiveStatus);
 
@@ -253,8 +256,11 @@ contract RaftTest is Test {
     adminActiveStatus[2] = true;
 
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[0], adminActiveStatus[0]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[1], adminActiveStatus[1]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[2], adminActiveStatus[2]);
     vm.prank(tokenOwner);
     callSetAdmins(tokenId, admins, adminActiveStatus);
 
@@ -264,8 +270,11 @@ contract RaftTest is Test {
     adminActiveStatus[2] = false;
 
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[0], adminActiveStatus[0]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[1], adminActiveStatus[1]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[2], adminActiveStatus[2]);
     vm.prank(tokenOwner);
     callSetAdmins(tokenId, admins, adminActiveStatus);
 

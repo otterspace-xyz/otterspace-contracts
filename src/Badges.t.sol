@@ -124,9 +124,8 @@ contract BadgesTest is Test {
 
     vm.label(passiveAddress, "passive");
     vm.expectEmit(true, true, true, false);
-
+    emit Transfer(zeroAddress, raftOwner, 1);
     raftTokenId = raftProxy.mint(raftOwner, specUri);
-    emit Transfer(zeroAddress, raftOwner, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(raftProxy.balanceOf(raftOwner), 1);
@@ -398,8 +397,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      recipient,
       issuer,
+      recipient,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -415,8 +414,8 @@ contract BadgesTest is Test {
 
     vm.prank(raftOwner);
     badgesProxy.mintWithConsent(
-      recipient,
       issuer,
+      recipient,
       specUri,
       issuerSignature,
       recipientSignature
@@ -431,8 +430,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      recipient,
       issuer,
+      recipient,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -451,8 +450,8 @@ contract BadgesTest is Test {
     vm.prank(raftOwner);
     vm.expectRevert("mintWithConsent: invalid issuer signature");
     badgesProxy.mintWithConsent(
-      recipient,
       issuer,
+      recipient,
       specUri,
       issuerSignature,
       recipientSignature
@@ -467,8 +466,8 @@ contract BadgesTest is Test {
     testCreateSpecAsRaftOwner();
 
     bytes32 agreementHash = badgesProxy.getAgreementHash(
-      recipient,
       issuer,
+      recipient,
       specUri
     );
     bytes32 requestHash = badgesProxy.getRequestHash(recipient, specUri);
@@ -487,8 +486,8 @@ contract BadgesTest is Test {
     vm.prank(raftOwner);
     vm.expectRevert("mintWithConsent: invalid recipient signature");
     badgesProxy.mintWithConsent(
-      recipient,
       issuer,
+      recipient,
       specUri,
       issuerSignature,
       recipientSignature
