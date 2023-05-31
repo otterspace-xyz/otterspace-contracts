@@ -74,9 +74,9 @@ contract SpecDataHolderTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = raftWrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(raftWrappedProxyV1.balanceOf(to), 1);

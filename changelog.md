@@ -2,6 +2,29 @@
 
 We're using https://semver.org/
 
+## 2.7.3
+- Bug fix in `mintWithConsent()` and rebuilding faulty ABIs
+
+## 2.7.2
+
+- add `merkleMintWithConsent()`
+
+## 2.7.1
+
+- bug fix in agreementHash in `mintWithConsent()`
+
+## 2.7.0
+
+- update `mintWithConsent()` to not use msg.sender
+
+## 2.6.7
+
+- Add `mintWithConsent()`
+
+## 2.6.6
+
+- Change `addAdmins` and `removeAdmins` on Raft contract to `setAdmins`
+
 ## 2.6.5
 
 - Add `addAdmins` and `removeAdmins` to Raft contract

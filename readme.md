@@ -34,19 +34,31 @@ npx hardhat test
 - [Raft.sol](https://optimistic.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
 - [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0x5c0B0B9c94f297f208375212AA70e5F86df6cb1B)
 
+### Live contracts on Polygon:
+
+- [Badges.sol](https://polygonscan.com/address/0x147e0dF40fdD1340C604726c670329c08176F208)
+- [Raft.sol](https://polygonscan.com/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
+- [SpecDataHolder.sol](https://polygonscan.com/address/0xdb8346eaf8c4a7ef82b17ce7843df8a9d00dc524)
+
 ---
 
 ### Live contracts on Goerli:
 
 - [Badges.sol](https://goerli.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
 - [Raft.sol](https://goerli.etherscan.io/address/0xBb8997048e5F0bFe6C9D6BEe63Ede53BD0236Bb2)
-- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
+- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0xA3716e7794F756e7a22145516FcB87C962576ce4)
 
 ### Live contracts on Optimism-Goerli:
 
 - [Badges.sol](https://goerli-optimism.etherscan.io/address/0x940f3b56fd53028f5d76a9ca335b1a9a6135528a)
 - [Raft.sol](https://goerli-optimism.etherscan.io/address/0xcd31CFCd7b784C5F4f51D4EaC45376bA30F9C3Eb)
 - [SpecDataHolder.sol](https://goerli-optimism.etherscan.io/address/0xbdBF9157BCF6a3f7cE9F7BdcFCa3067727F515F2)
+
+### Live contracts on Sepolia:
+
+- [Badges.sol](https://sepolia.etherscan.io/address/0x147e0dF40fdD1340C604726c670329c08176F208)
+- [Raft.sol](https://sepolia.etherscan.io/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
+- [SpecDataHolder.sol](https://sepolia.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
 
 ### Use ABIs with JavaScript
 
@@ -143,12 +155,18 @@ On [Hardhat's website](https://hardhat.org) you will find:
 
 ## Running upgrades (steps)
 
-- make sure your `.env.implemntation` file has the correct values
+- make sure your `.env.implementation` file has the correct values
 - run `./scripts deploy_and_verify_implementation.sh .env.implementation ${contractName} ${networkName}`
 - to deploy Badges on Optimism it would be
 - - `./scripts deploy_and_verify_implementation.sh .env.implementation Badges optimism`
 - watch the console for confirmation of deployment and verification, copy the implementation's address
 - go into Defender and propose and execute the upgrade
+
+## Publishing attestations
+
+`npx hardhat run publishAttestations.js --network optimisticEthereum`
+
+more details about in `./scripts/update_scores.py`
 
 ## Foundry setup for VS Code Users
 
@@ -165,6 +183,9 @@ Add a `.vscode` file under the root
 ## Changelog
 
 See changelog.md file.
+
+## Supporting new chains
+- [Adding support for new chains](https://www.notion.so/otterspace-xyz/How-to-add-support-for-a-new-chain-7f40b88185304a248f8014a7fd0af6c4)
 
 ### Checklist for bumping version
 

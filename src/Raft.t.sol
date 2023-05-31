@@ -66,9 +66,9 @@ contract RaftTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -103,9 +103,9 @@ contract RaftTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -121,9 +121,9 @@ contract RaftTest is Test {
     address to = address(this);
     address from = address(0);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -136,9 +136,9 @@ contract RaftTest is Test {
     address from = address(0);
     address attacker = vm.addr(randomPrivateKey);
 
-    vm.expectEmit(true, true, true, false);
+    vm.expectEmit(true, true, false, true);
+    emit Transfer(from, to, 1);
     uint256 raftTokenId = wrappedProxyV1.mint(to, "some uri");
-    emit Transfer(from, to, raftTokenId);
 
     assertEq(raftTokenId, 1);
     assertEq(wrappedProxyV1.balanceOf(to), 1);
@@ -171,18 +171,14 @@ contract RaftTest is Test {
     wrappedProxyV1.mint(to, "some uri");
   }
 
-  function addAdminsToToken(
+  function callSetAdmins(
     uint256 tokenId,
     address[] memory admins,
-    bool[] memory isActive,
-    bool isAddingAdmin
+    bool[] memory isActive
   ) internal {
     address tokenOwner = address(1);
-    if (!isAddingAdmin) {
-      vm.prank(tokenOwner);
-    }
 
-    wrappedProxyV1.addAdmins(tokenId, admins, isActive);
+    wrappedProxyV1.setAdmins(tokenId, admins, isActive);
 
     for (uint256 i = 0; i < admins.length; i++) {
       emit AdminUpdate(tokenId, admins[i], isActive[i]);
@@ -217,10 +213,13 @@ contract RaftTest is Test {
     assertEq(admins.length, adminActiveStatus.length);
 
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[0], adminActiveStatus[0]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[1], adminActiveStatus[1]);
     vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[2], adminActiveStatus[2]);
     vm.prank(tokenOwner);
-    addAdminsToToken(tokenId, admins, adminActiveStatus, true);
+    callSetAdmins(tokenId, admins, adminActiveStatus);
 
     actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
     assertEq(actual, isActive);
@@ -232,9 +231,9 @@ contract RaftTest is Test {
     assertEq(actual, isActive);
 
     // expect error if a tokenid does not exist
-    vm.expectRevert(bytes("addAdmins: tokenId does not exist"));
+    vm.expectRevert(bytes("setAdmins: tokenId does not exist"));
     vm.prank(tokenOwner);
-    wrappedProxyV1.addAdmins(123, admins, adminActiveStatus);
+    wrappedProxyV1.setAdmins(123, admins, adminActiveStatus);
   }
 
   function testRemoveAdmins() public {
@@ -245,43 +244,41 @@ contract RaftTest is Test {
     address admin2 = address(3);
     address admin3 = address(4);
 
-    bool isActive = true;
-
+    // Add admins first
     address[] memory admins = new address[](3);
     admins[0] = admin1;
     admins[1] = admin2;
     admins[2] = admin3;
 
     bool[] memory adminActiveStatus = new bool[](3);
-    adminActiveStatus[0] = isActive;
-    adminActiveStatus[1] = isActive;
-    adminActiveStatus[2] = isActive;
+    adminActiveStatus[0] = true;
+    adminActiveStatus[1] = true;
+    adminActiveStatus[2] = true;
 
-    // Add the admins to the token
-    addAdminsToToken(tokenId, admins, adminActiveStatus, false);
+    vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[0], adminActiveStatus[0]);
+    vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[1], adminActiveStatus[1]);
+    vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[2], adminActiveStatus[2]);
+    vm.prank(tokenOwner);
+    callSetAdmins(tokenId, admins, adminActiveStatus);
 
-    // Verify that the admins have been added
+    // Remove admins
+    adminActiveStatus[0] = false;
+    adminActiveStatus[1] = false;
+    adminActiveStatus[2] = false;
+
+    vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[0], adminActiveStatus[0]);
+    vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[1], adminActiveStatus[1]);
+    vm.expectEmit(true, true, false, true);
+    emit AdminUpdate(tokenId, admins[2], adminActiveStatus[2]);
+    vm.prank(tokenOwner);
+    callSetAdmins(tokenId, admins, adminActiveStatus);
+
     bool actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
-    assertEq(actual, isActive);
-
-    actual = wrappedProxyV1.isAdminActive(tokenId, admin2);
-    assertEq(actual, isActive);
-
-    actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
-    assertEq(actual, isActive);
-
-    // Remove the admins from the token
-    vm.expectEmit(true, true, false, true);
-    vm.expectEmit(true, true, false, true);
-    vm.expectEmit(true, true, false, true);
-    vm.prank(tokenOwner);
-    wrappedProxyV1.removeAdmins(tokenId, admins);
-    emit AdminUpdate(tokenId, admin1, false);
-    emit AdminUpdate(tokenId, admin2, false);
-    emit AdminUpdate(tokenId, admin3, false);
-
-    // Verify that the admins have been removed
-    actual = wrappedProxyV1.isAdminActive(tokenId, admin1);
     assertEq(actual, false);
 
     actual = wrappedProxyV1.isAdminActive(tokenId, admin2);
@@ -290,9 +287,9 @@ contract RaftTest is Test {
     actual = wrappedProxyV1.isAdminActive(tokenId, admin3);
     assertEq(actual, false);
 
-    // Expect error if tokenId does not exist
-    vm.expectRevert(bytes("removeAdmins: tokenId does not exist"));
+    // expect error if a tokenid does not exist
+    vm.expectRevert(bytes("setAdmins: tokenId does not exist"));
     vm.prank(tokenOwner);
-    wrappedProxyV1.removeAdmins(123, admins);
+    wrappedProxyV1.setAdmins(123, admins, adminActiveStatus);
   }
 }

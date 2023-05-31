@@ -11,22 +11,18 @@ import {
 } from 'ethers/lib/utils'
 import { MerkleTree } from 'merkletreejs'
 import keccak256 from 'keccak256'
+const { loadFixture } = require('@nomicfoundation/hardhat-network-helpers')
 
 const name = 'Otter'
 const symbol = 'OTTR'
 const version = '1'
-// ideally chainId would be dynamic depending upon if you're running tests locally or on a
-//live network and automaticall set the chainId to the correct value.
 const chainId = 31337
 const specUri = 'some spec uri'
 const specUri2 = 'another spec uri'
-// ** CONTRACT ERRORS **
 const errNotOwner = 'Ownable: caller is not the owner'
 const errTokenExists = 'mint: tokenID exists'
 const errSafeCheckMerkleInvalidSig =
   'safeCheckMerkleAgreement: invalid signature'
-
-let deployed: any
 
 // fix ts badgesProxy: any
 async function createSpec(
@@ -90,17 +86,6 @@ async function getParsedLogs(txnHash: string, badgesProxy: any) {
   return parsedLogs
 }
 
-async function getTransferEventLogData(txnHash: string, badgesProxy: any) {
-  const parsedLogs = await getParsedLogs(txnHash, badgesProxy)
-  const transferLog = parsedLogs.find(l => l.name == EventType.ERC4973_Transfer)
-
-  const from = transferLog?.args['from']
-  const to = transferLog?.args['to']
-  const tokenId = transferLog?.args['tokenId'] as BigNumberish
-
-  return { from, to, tokenId }
-}
-
 async function getSpecCreatedEventLogData(
   txnHash: string,
   badgesProxy: Badges
@@ -117,12 +102,6 @@ async function getSpecCreatedEventLogData(
 
   return { to, specUri, raftTokenId, raftAddress }
 }
-
-const setup = async () => {
-  await deployContractFixture()
-}
-
-beforeEach(setup)
 
 const deployContractFixture = async () => {
   const [owner, issuer, claimant, randomSigner, merkleIssuer] =
@@ -203,7 +182,26 @@ const deployContractFixture = async () => {
     },
   }
 
-  deployed = {
+  const requestTypedData = {
+    domain: {
+      name: name,
+      version: version,
+      chainId,
+      verifyingContract: badgesProxy.address,
+    },
+    types: {
+      Request: [
+        { name: 'requester', type: 'address' },
+        { name: 'tokenURI', type: 'string' },
+      ],
+    },
+    value: {
+      requester: claimant.address,
+      tokenURI: specUri,
+    },
+  }
+
+  return {
     badgesProxy,
     raftProxy,
     owner,
@@ -213,13 +211,24 @@ const deployContractFixture = async () => {
     typedData,
     specDataHolderProxy,
     merkleTypedData,
+    requestTypedData,
   }
+}
+
+function buildMerkleTree(claimantAddress: string) {
+  const whitelistAddresses = [claimantAddress, '0x1', '0x2', '0x3']
+  const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+  const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+  const merkleRoot = merkleTree.getRoot()
+  const merkleProof = merkleTree.getHexProof(leafNodes[0])
+
+  return { merkleRoot, merkleProof }
 }
 
 describe('Merkle minting', () => {
   it('Should allow minting when an address is allowlisted on a merkle tree', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
-      deployed
+      await loadFixture(deployContractFixture)
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
       issuer.address,
@@ -228,51 +237,35 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    // ===== part 1: the issuer whitelists a bunch of addresses and saves signature + array of addresses to the database
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
-    // map over addresses to get leaf nodes
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
-
-    // derive merkle tree
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-
-    // derive merkle root
-    const merkleRoot = merkleTree.getRoot()
-
-    // embed merkle root into signature
     merkleTypedData.value.root = merkleRoot
 
-    // create signature
     const { compact } = await getSignature(
       merkleTypedData.domain,
       merkleTypedData.types,
       merkleTypedData.value,
       issuer
     )
-    // here we would store signature and `whitelistAddresses` in the db
 
-    // ===== part 2: simulate the claimant minting a badge
-    // claimant loads the webpage database returns signature and whitelistAddresses
+    await badgesProxy
+      .connect(claimant)
+      .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
 
-    // given the claimant's address, derive a merkleProof
-    const merkleProof = merkleTree.getHexProof(leafNodes[0])
-    await expect(
-      badgesProxy
-        .connect(claimant)
-        .merkleTake(issuer.address, specUri, compact, merkleRoot, merkleProof)
-    )
-    // pass merkleRoot and merkleProof to the badges contract
-    // badges contract will check to see if the proof is valid
-
-    // ===== part 3: check that the claimant has the badge
     expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
   })
 
-  // todo: reject when someone who has already claimed tries to claim again
-  it('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
-    const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
-      deployed
+  it('Should allow minting when an address is allowlisted on a merkle tree and both issuer and recipient provide signatures', async () => {
+    const {
+      badgesProxy,
+      raftProxy,
+      merkleTypedData,
+      issuer,
+      claimant,
+      owner,
+      requestTypedData,
+    } = await loadFixture(deployContractFixture)
+
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
       issuer.address,
@@ -281,13 +274,51 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
+    merkleTypedData.value.root = merkleRoot
+    const { compact: issuerSignature } = await getSignature(
+      merkleTypedData.domain,
+      merkleTypedData.types,
+      merkleTypedData.value,
+      issuer
+    )
 
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+    const { compact: claimantSignature } = await getSignature(
+      requestTypedData.domain,
+      requestTypedData.types,
+      requestTypedData.value,
+      claimant
+    )
 
-    const merkleRoot = merkleTree.getRoot()
+    await badgesProxy
+      .connect(issuer)
+      .merkleMintWithConsent(
+        issuer.address.toLowerCase(),
+        claimant.address.toLowerCase(),
+        specUri,
+        issuerSignature,
+        claimantSignature,
+        merkleRoot,
+        merkleProof
+      )
+
+    expect(await badgesProxy.balanceOf(claimant.address)).equal(1)
+  })
+
+  it('Should prevent someone who was whitelisted on a Merkle tree from minting a second time', async () => {
+    const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
+      await loadFixture(deployContractFixture)
+    const { raftTokenId } = await mintRaftToken(
+      raftProxy,
+      issuer.address,
+      specUri,
+      owner
+    )
+    await createSpec(badgesProxy, specUri, raftTokenId, issuer)
+
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
+
     merkleTypedData.value.root = merkleRoot
 
     const { compact } = await getSignature(
@@ -296,8 +327,6 @@ describe('Merkle minting', () => {
       merkleTypedData.value,
       issuer
     )
-
-    const merkleProof = merkleTree.getHexProof(leafNodes[0])
 
     await badgesProxy
       .connect(claimant)
@@ -314,7 +343,7 @@ describe('Merkle minting', () => {
 
   it('Should allow someone who is part of two separate merkle trees to mint both badges', async () => {
     const { badgesProxy, raftProxy, merkleTypedData, issuer, claimant, owner } =
-      deployed
+      await loadFixture(deployContractFixture)
     // SETUP (step 0)
     const { raftTokenId } = await mintRaftToken(
       raftProxy,
@@ -324,16 +353,14 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    // ===== step 1: the issuer whitelists a bunch of addresses
     const whitelist1 = [claimant.address, '0x1', '0x2', '0x3']
-
     const leafNodes1 = whitelist1.map(addr => keccak256(addr))
-
     const merkleTree1 = new MerkleTree(leafNodes1, keccak256, {
       sortPairs: true,
     })
-
     const merkleRoot1 = merkleTree1.getRoot()
+    const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
+
     merkleTypedData.value.root = merkleRoot1
 
     const { compact: compact1 } = await getSignature(
@@ -342,8 +369,6 @@ describe('Merkle minting', () => {
       merkleTypedData.value,
       issuer
     )
-
-    const merkleProof1 = merkleTree1.getHexProof(leafNodes1[0])
 
     await badgesProxy
       .connect(claimant)
@@ -374,12 +399,10 @@ describe('Merkle minting', () => {
 
     const merkleProof2 = merkleTree2.getHexProof(leafNodes2[0])
 
-    // attempt to mint a badge on the newly created spec
     await badgesProxy
       .connect(claimant)
       .merkleTake(issuer.address, specUri2, compact2, merkleRoot2, merkleProof2)
 
-    // expect the user to now have 2 bagdes, one from each whitelist
     expect(await badgesProxy.balanceOf(claimant.address)).equal(2)
   })
 
@@ -392,7 +415,7 @@ describe('Merkle minting', () => {
       claimant,
       owner,
       randomSigner,
-    } = deployed
+    } = await loadFixture(deployContractFixture)
     const specUri = typedData.value.tokenURI
 
     const { raftTokenId } = await mintRaftToken(
@@ -403,13 +426,7 @@ describe('Merkle minting', () => {
     )
     await createSpec(badgesProxy, specUri, raftTokenId, issuer)
 
-    const whitelistAddresses = [claimant.address, '0x1', '0x2', '0x3']
-
-    const leafNodes = whitelistAddresses.map(addr => keccak256(addr))
-
-    const merkleTree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
-
-    const merkleRoot = merkleTree.getRoot()
+    const { merkleRoot, merkleProof } = buildMerkleTree(claimant.address)
 
     const { compact } = await getSignature(
       typedData.domain,
@@ -417,8 +434,6 @@ describe('Merkle minting', () => {
       typedData.value,
       issuer
     )
-    const invalidLeafNode = keccak256(randomSigner.address)
-    const merkleProof = merkleTree.getHexProof(invalidLeafNode)
 
     // calling connect() with a random signer is a "bad actor" trying to mint
     await expect(
@@ -431,7 +446,8 @@ describe('Merkle minting', () => {
 
 describe('Badges', async function () {
   it('should deploy the contract with the right params', async function () {
-    const { badgesProxy, raftProxy, owner, specDataHolderProxy } = deployed
+    const { badgesProxy, raftProxy, owner, specDataHolderProxy } =
+      await loadFixture(deployContractFixture)
     const deployedContractName = await badgesProxy.name()
     const deployedSymbolName = await badgesProxy.symbol()
     expect(deployedContractName).to.equal(name)
@@ -446,7 +462,9 @@ describe('Badges', async function () {
     expect(deployedToChainId).to.equal(chainId)
   })
   it('should successfully set new raft contract when called by owner', async () => {
-    const { owner, specDataHolderProxy } = deployed
+    const { owner, specDataHolderProxy } = await loadFixture(
+      deployContractFixture
+    )
     const raft = await ethers.getContractFactory('Raft')
     const newRaftProxy = await upgrades.deployProxy(
       raft,
@@ -463,7 +481,9 @@ describe('Badges', async function () {
   })
 
   it('should revert setting new raft address when called by non-owner', async () => {
-    const { owner, randomSigner, specDataHolderProxy } = deployed
+    const { owner, randomSigner, specDataHolderProxy } = await loadFixture(
+      deployContractFixture
+    )
     const raft = await ethers.getContractFactory('Raft')
     const newRaftProxy = await upgrades.deployProxy(
       raft,
@@ -481,7 +501,7 @@ describe('Badges', async function () {
   })
 
   it('should match off-chain hash to on-chain hash', async () => {
-    const { badgesProxy, typedData } = deployed
+    const { badgesProxy, typedData } = await loadFixture(deployContractFixture)
     const offChainHash = _TypedDataEncoder.hash(
       typedData.domain,
       typedData.types,
