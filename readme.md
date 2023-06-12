@@ -162,6 +162,9 @@ On [Hardhat's website](https://hardhat.org) you will find:
 - watch the console for confirmation of deployment and verification, copy the implementation's address
 - go into Defender and propose and execute the upgrade
 
+## How Otterspace runs upgrades
+- Our process of running upgrades is managed by github actions, found in the `.github/workflows` directory.
+
 ## Publishing attestations
 
 `npx hardhat run publishAttestations.js --network optimisticEthereum`
