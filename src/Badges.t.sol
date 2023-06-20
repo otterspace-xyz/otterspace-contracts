@@ -495,4 +495,56 @@ contract BadgesTest is Test {
 
     assertEq(badgesProxy.balanceOf(recipient), 0);
   }
+
+  function testUpdateTokenURIAsAdmin() public {
+    // Initial setup
+    address admin = address(123);
+    address[] memory admins = new address[](1);
+    admins[0] = admin;
+    bool[] memory isActive = new bool[](1);
+    isActive[0] = true;
+    string memory oldTokenURI = specUri;
+    string memory newTokenURI = "new spec uri";
+
+    // Assign admin
+    vm.prank(raftOwner);
+    raftProxy.setAdmins(raftTokenId, admins, isActive);
+    assertEq(raftProxy.isAdminActive(raftTokenId, admins[0]), true);
+
+    // Mint a badge
+    // get badge id
+
+    // Admin updates the tokenURI
+    vm.prank(admin);
+
+    vm.expectEmit(true, true, false, true);
+
+    badgesProxy.updateTokenURI(badgesTokenId, oldTokenURI, newTokenURI);
+
+    // Check the updated tokenURI
+    assertEq(badgesProxy.tokenURI(badgesTokenId), newTokenURI);
+  }
+
+  // function testUpdateTokenURIByUnauthorizedUser() public {
+  //   address unauthorized = address(456);
+  //   string memory oldTokenURI = "oldTokenURI";
+  //   string memory newTokenURI = "newTokenURI";
+
+  //   // Unauthorized user tries to update the tokenURI
+  //   vm.prank(unauthorized);
+  //   vm.expectRevert(bytes("updateTokenURI: unauthorized"));
+  //   badgesProxy.updateTokenURI(raftTokenId, oldTokenURI, newTokenURI);
+  // }
+
+  // function testUpdateTokenURINonexistentToken() public {
+  //   address admin = address(123);
+  //   uint256 nonExistentTokenId = 999;
+  //   string memory oldTokenURI = "oldTokenURI";
+  //   string memory newTokenURI = "newTokenURI";
+
+  //   // Admin tries to update the tokenURI of a non-existent token
+  //   vm.prank(admin);
+  //   vm.expectRevert(bytes("updateTokenURI: token does not exist"));
+  //   badgesProxy.updateTokenURI(nonExistentTokenId, oldTokenURI, newTokenURI);
+  // }
 }
