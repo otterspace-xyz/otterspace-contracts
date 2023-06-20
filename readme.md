@@ -56,7 +56,7 @@ npx hardhat test
 
 ### Live contracts on Sepolia:
 
-- [Badges.sol](https://sepolia.etherscan.io/address/0x147e0dF40fdD1340C604726c670329c08176F208)
+- [Badges.sol](https://sepolia.etherscan.io/address/0x639a1703CfdeDaE61A535d53890130b4257f15eb)
 - [Raft.sol](https://sepolia.etherscan.io/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
 - [SpecDataHolder.sol](https://sepolia.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
 
