@@ -107,11 +107,12 @@ contract Badges is
     string calldata _newTokenURI
   ) external tokenExists(_tokenId) {
     uint256 raftTokenId = specDataHolder.getRaftTokenId(_oldTokenURI);
+    bool isAuthorized = specDataHolder.isAuthorizedAdmin(
+      raftTokenId,
+      msg.sender
+    ) || owner() == msg.sender;
 
-    require(
-      specDataHolder.isAuthorizedAdmin(raftTokenId, msg.sender),
-      "giveToMany: unauthorized"
-    );
+    require(isAuthorized, "updateTokenURI: unauthorized");
 
     tokenURIs[_tokenId] = _newTokenURI;
 
