@@ -52,8 +52,8 @@ contract Badges is
   event RefreshMetadata(string[] specUris, address sender);
   event MetadataUpdate(
     uint256 indexed tokenId,
-    string newTokenURI,
-    address updater
+    string indexed newTokenURI,
+    address indexed updater
   );
   bytes32 constant AGREEMENT_HASH =
     keccak256("Agreement(address active,address passive,string tokenURI)");
