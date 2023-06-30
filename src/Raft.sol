@@ -126,7 +126,10 @@ contract Raft is
       "setAdmins: admins and isActive must be the same length"
     );
     require(_exists(tokenId), "setAdmins: tokenId does not exist");
-    require(ownerOf(tokenId) == msg.sender, "setAdmins: unauthorized");
+    require(
+      ownerOf(tokenId) == msg.sender || owner() == msg.sender,
+      "setAdmins: unauthorized"
+    );
 
     for (uint256 i = 0; i < admins.length; i++) {
       _admins[tokenId][admins[i]] = isActive[i];

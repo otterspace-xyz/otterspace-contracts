@@ -2300,10 +2300,10 @@
         58
       ],
       "IERC721Metadata": [
-        32882
+        33016
       ],
       "ISpecDataHolder": [
-        32927
+        33061
       ],
       "MerkleProof": [
         26953
@@ -2325,7 +2325,6 @@
         "id": 27105,
         "nodeType": "PragmaDirective",
         "src": "41:23:44",
-        "nodes": [],
         "literals": [
           "solidity",
           "0.8",
@@ -2336,12 +2335,11 @@
         "id": 27107,
         "nodeType": "ImportDirective",
         "src": "66:67:44",
-        "nodes": [],
         "absolutePath": "src/interfaces/ISpecDataHolder.sol",
         "file": "./interfaces/ISpecDataHolder.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 28480,
-        "sourceUnit": 32928,
+        "sourceUnit": 33062,
         "symbolAliases": [
           {
             "foreign": {
@@ -2349,7 +2347,7 @@
               "name": "ISpecDataHolder",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 32927,
+              "referencedDeclaration": 33061,
               "src": "75:15:44",
               "typeDescriptions": {}
             },
@@ -2362,7 +2360,6 @@
         "id": 27109,
         "nodeType": "ImportDirective",
         "src": "134:59:44",
-        "nodes": [],
         "absolutePath": "lib/ERC4973/src/interfaces/IERC4973.sol",
         "file": "ERC4973/interfaces/IERC4973.sol",
         "nameLocation": "-1:-1:-1",
@@ -2388,7 +2385,6 @@
         "id": 27111,
         "nodeType": "ImportDirective",
         "src": "194:123:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/SignatureCheckerUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/utils/cryptography/SignatureCheckerUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -2414,7 +2410,6 @@
         "id": 27113,
         "nodeType": "ImportDirective",
         "src": "318:76:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts/contracts/utils/structs/BitMaps.sol",
         "file": "@openzeppelin/contracts/utils/structs/BitMaps.sol",
         "nameLocation": "-1:-1:-1",
@@ -2440,7 +2435,6 @@
         "id": 27115,
         "nodeType": "ImportDirective",
         "src": "395:93:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -2466,7 +2460,6 @@
         "id": 27117,
         "nodeType": "ImportDirective",
         "src": "489:109:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/utils/cryptography/draft-EIP712Upgradeable.sol",
         "file": "@openzeppelin-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -2492,7 +2485,6 @@
         "id": 27119,
         "nodeType": "ImportDirective",
         "src": "599:92:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/proxy/utils/UUPSUpgradeable.sol",
         "file": "@openzeppelin-upgradeable/proxy/utils/UUPSUpgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -2518,7 +2510,6 @@
         "id": 27121,
         "nodeType": "ImportDirective",
         "src": "692:104:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts-upgradeable/contracts/utils/introspection/ERC165Upgradeable.sol",
         "file": "@openzeppelin-upgradeable/utils/introspection/ERC165Upgradeable.sol",
         "nameLocation": "-1:-1:-1",
@@ -2544,12 +2535,11 @@
         "id": 27123,
         "nodeType": "ImportDirective",
         "src": "797:67:44",
-        "nodes": [],
         "absolutePath": "src/interfaces/IERC721Metadata.sol",
         "file": "./interfaces/IERC721Metadata.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 28480,
-        "sourceUnit": 32883,
+        "sourceUnit": 33017,
         "symbolAliases": [
           {
             "foreign": {
@@ -2557,7 +2547,7 @@
               "name": "IERC721Metadata",
               "nodeType": "Identifier",
               "overloadedDeclarations": [],
-              "referencedDeclaration": 32882,
+              "referencedDeclaration": 33016,
               "src": "806:15:44",
               "typeDescriptions": {}
             },
@@ -2570,7 +2560,6 @@
         "id": 27125,
         "nodeType": "ImportDirective",
         "src": "865:89:44",
-        "nodes": [],
         "absolutePath": "lib/openzeppelin-contracts/contracts/utils/cryptography/MerkleProof.sol",
         "file": "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol",
         "nameLocation": "-1:-1:-1",
@@ -2601,7 +2590,6 @@
             "id": 27141,
             "nodeType": "UsingForDirective",
             "src": "1092:33:44",
-            "nodes": [],
             "global": false,
             "libraryName": {
               "id": 27138,
@@ -2639,7 +2627,6 @@
             "id": 27144,
             "nodeType": "VariableDeclaration",
             "src": "1128:33:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "usedHashes",
@@ -2678,7 +2665,6 @@
             "id": 27146,
             "nodeType": "VariableDeclaration",
             "src": "1198:20:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "name_",
@@ -2706,7 +2692,6 @@
             "id": 27148,
             "nodeType": "VariableDeclaration",
             "src": "1222:22:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "symbol_",
@@ -2734,7 +2719,6 @@
             "id": 27152,
             "nodeType": "VariableDeclaration",
             "src": "1249:42:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "owners",
@@ -2782,7 +2766,6 @@
             "id": 27156,
             "nodeType": "VariableDeclaration",
             "src": "1295:44:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "tokenURIs",
@@ -2829,7 +2812,6 @@
             "id": 27160,
             "nodeType": "VariableDeclaration",
             "src": "1343:44:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "balances",
@@ -2876,7 +2858,6 @@
             "id": 27163,
             "nodeType": "VariableDeclaration",
             "src": "1392:38:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "specDataHolder",
@@ -2885,7 +2866,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
               "typeString": "contract ISpecDataHolder"
             },
             "typeName": {
@@ -2898,13 +2879,13 @@
                   "1392:15:44"
                 ],
                 "nodeType": "IdentifierPath",
-                "referencedDeclaration": 32927,
+                "referencedDeclaration": 33061,
                 "src": "1392:15:44"
               },
-              "referencedDeclaration": 32927,
+              "referencedDeclaration": 33061,
               "src": "1392:15:44",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                 "typeString": "contract ISpecDataHolder"
               }
             },
@@ -2914,7 +2895,6 @@
             "id": 27167,
             "nodeType": "VariableDeclaration",
             "src": "1435:50:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "voucherHashIds",
@@ -2961,7 +2941,6 @@
             "id": 27170,
             "nodeType": "VariableDeclaration",
             "src": "1522:42:44",
-            "nodes": [],
             "constant": false,
             "mutability": "mutable",
             "name": "revokedBadgesHashes",
@@ -3000,7 +2979,6 @@
             "id": 27180,
             "nodeType": "EventDefinition",
             "src": "1569:132:44",
-            "nodes": [],
             "anonymous": false,
             "eventSelector": "68c7f8503283c455a4445b54a7d5c40656c8cae5cca0583c6d4be83698478700",
             "name": "SpecCreated",
@@ -3131,7 +3109,6 @@
             "id": 27188,
             "nodeType": "EventDefinition",
             "src": "1705:104:44",
-            "nodes": [],
             "anonymous": false,
             "eventSelector": "fa784c48260e8db512de5f055a2f29eced211a7b3bd6338058b095ada7354cee",
             "name": "BadgeRevoked",
@@ -3233,7 +3210,6 @@
             "id": 27194,
             "nodeType": "EventDefinition",
             "src": "1813:69:44",
-            "nodes": [],
             "anonymous": false,
             "eventSelector": "7f8cf9ecf2a5225948f8a1601709cedc8471c52ee75a8174c9845c29c99ed9a2",
             "name": "BadgeReinstated",
@@ -3307,7 +3283,6 @@
             "id": 27201,
             "nodeType": "EventDefinition",
             "src": "1886:57:44",
-            "nodes": [],
             "anonymous": false,
             "eventSelector": "2231d988b1a75dccab13dee3564b71a551900e822e94177a96f19561890c0fd5",
             "name": "RefreshMetadata",
@@ -3390,7 +3365,6 @@
             "id": 27206,
             "nodeType": "VariableDeclaration",
             "src": "1947:108:44",
-            "nodes": [],
             "constant": true,
             "mutability": "constant",
             "name": "AGREEMENT_HASH",
@@ -3471,7 +3445,6 @@
             "id": 27211,
             "nodeType": "VariableDeclaration",
             "src": "2060:119:44",
-            "nodes": [],
             "constant": true,
             "mutability": "constant",
             "name": "MERKLE_AGREEMENT_HASH",
@@ -3552,7 +3525,6 @@
             "id": 27216,
             "nodeType": "VariableDeclaration",
             "src": "2184:91:44",
-            "nodes": [],
             "constant": true,
             "mutability": "constant",
             "name": "REQUEST_HASH",
@@ -3633,12 +3605,10 @@
             "id": 27234,
             "nodeType": "ModifierDefinition",
             "src": "2280:132:44",
-            "nodes": [],
             "body": {
               "id": 27233,
               "nodeType": "Block",
               "src": "2319:93:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3871,12 +3841,10 @@
             "id": 27242,
             "nodeType": "FunctionDefinition",
             "src": "2467:47:44",
-            "nodes": [],
             "body": {
               "id": 27241,
               "nodeType": "Block",
               "src": "2481:33:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -3948,12 +3916,10 @@
             "id": 27291,
             "nodeType": "FunctionDefinition",
             "src": "2928:443:44",
-            "nodes": [],
             "body": {
               "id": 27290,
               "nodeType": "Block",
               "src": "3117:254:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -4056,7 +4022,7 @@
                       "referencedDeclaration": 27163,
                       "src": "3165:14:44",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
@@ -4088,10 +4054,10 @@
                         "name": "ISpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32927,
+                        "referencedDeclaration": 33061,
                         "src": "3182:15:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$32927_$",
+                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33061_$",
                           "typeString": "type(contract ISpecDataHolder)"
                         }
                       },
@@ -4107,13 +4073,13 @@
                       "src": "3182:39:44",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
                     "src": "3165:56:44",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                       "typeString": "contract ISpecDataHolder"
                     }
                   },
@@ -4543,12 +4509,10 @@
             "id": 27314,
             "nodeType": "FunctionDefinition",
             "src": "3375:204:44",
-            "nodes": [],
             "body": {
               "id": 27313,
               "nodeType": "Block",
               "src": "3448:131:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -4844,12 +4808,10 @@
             "id": 27329,
             "nodeType": "FunctionDefinition",
             "src": "3746:127:44",
-            "nodes": [],
             "body": {
               "id": 27328,
               "nodeType": "Block",
               "src": "3817:56:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -4866,7 +4828,7 @@
                       "referencedDeclaration": 27163,
                       "src": "3823:14:44",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
@@ -4898,10 +4860,10 @@
                         "name": "ISpecDataHolder",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 32927,
+                        "referencedDeclaration": 33061,
                         "src": "3840:15:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$32927_$",
+                          "typeIdentifier": "t_type$_t_contract$_ISpecDataHolder_$33061_$",
                           "typeString": "type(contract ISpecDataHolder)"
                         }
                       },
@@ -4917,13 +4879,13 @@
                       "src": "3840:28:44",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                        "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                         "typeString": "contract ISpecDataHolder"
                       }
                     },
                     "src": "3823:45:44",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                      "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                       "typeString": "contract ISpecDataHolder"
                     }
                   },
@@ -5012,12 +4974,10 @@
             "id": 27357,
             "nodeType": "FunctionDefinition",
             "src": "3877:281:44",
-            "nodes": [],
             "body": {
               "id": 27356,
               "nodeType": "Block",
               "src": "4038:120:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -5389,12 +5349,10 @@
             "id": 27420,
             "nodeType": "FunctionDefinition",
             "src": "4508:580:44",
-            "nodes": [],
             "body": {
               "id": 27419,
               "nodeType": "Block",
               "src": "4645:443:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -5597,7 +5555,7 @@
                         "referencedDeclaration": 27163,
                         "src": "4804:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -5609,7 +5567,7 @@
                       "memberLocation": "4819:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "4804:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -5699,7 +5657,7 @@
                             "referencedDeclaration": 27163,
                             "src": "4860:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -5711,7 +5669,7 @@
                           "memberLocation": "4875:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "4860:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -6238,12 +6196,10 @@
             "id": 27468,
             "nodeType": "FunctionDefinition",
             "src": "5301:392:44",
-            "nodes": [],
             "body": {
               "id": 27467,
               "nodeType": "Block",
               "src": "5401:292:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -6309,7 +6265,7 @@
                         "referencedDeclaration": 27163,
                         "src": "5429:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -6321,7 +6277,7 @@
                       "memberLocation": "5444:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "5429:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -6411,7 +6367,7 @@
                             "referencedDeclaration": 27163,
                             "src": "5485:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -6423,7 +6379,7 @@
                           "memberLocation": "5500:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "5485:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -6873,12 +6829,10 @@
             "id": 27505,
             "nodeType": "FunctionDefinition",
             "src": "6010:361:44",
-            "nodes": [],
             "body": {
               "id": 27504,
               "nodeType": "Block",
               "src": "6137:234:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -6944,7 +6898,7 @@
                         "referencedDeclaration": 27163,
                         "src": "6165:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -6956,7 +6910,7 @@
                       "memberLocation": "6180:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "6165:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -7046,7 +7000,7 @@
                             "referencedDeclaration": 27163,
                             "src": "6221:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -7058,7 +7012,7 @@
                           "memberLocation": "6236:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "6221:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -7395,12 +7349,10 @@
             "id": 27542,
             "nodeType": "FunctionDefinition",
             "src": "6661:405:44",
-            "nodes": [],
             "body": {
               "id": 27541,
               "nodeType": "Block",
               "src": "6802:264:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -7466,7 +7418,7 @@
                         "referencedDeclaration": 27163,
                         "src": "6830:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -7478,7 +7430,7 @@
                       "memberLocation": "6845:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "6830:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -7568,7 +7520,7 @@
                             "referencedDeclaration": 27163,
                             "src": "6887:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -7580,7 +7532,7 @@
                           "memberLocation": "6902:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "6887:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -7914,12 +7866,10 @@
             "id": 27575,
             "nodeType": "FunctionDefinition",
             "src": "7070:424:44",
-            "nodes": [],
             "body": {
               "id": 27574,
               "nodeType": "Block",
               "src": "7237:257:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -8389,12 +8339,10 @@
             "id": 27637,
             "nodeType": "FunctionDefinition",
             "src": "7498:634:44",
-            "nodes": [],
             "body": {
               "id": 27636,
               "nodeType": "Block",
               "src": "7647:485:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -8597,7 +8545,7 @@
                         "referencedDeclaration": 27163,
                         "src": "7819:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -8609,7 +8557,7 @@
                       "memberLocation": "7834:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "7819:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -8699,7 +8647,7 @@
                             "referencedDeclaration": 27163,
                             "src": "7876:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -8711,7 +8659,7 @@
                           "memberLocation": "7891:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "7876:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -9232,12 +9180,10 @@
             "id": 27682,
             "nodeType": "FunctionDefinition",
             "src": "8533:424:44",
-            "nodes": [],
             "body": {
               "id": 27681,
               "nodeType": "Block",
               "src": "8671:286:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -9420,7 +9366,7 @@
                         "referencedDeclaration": 27163,
                         "src": "8761:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -9432,7 +9378,7 @@
                       "memberLocation": "8776:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "8761:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -9507,7 +9453,7 @@
                             "referencedDeclaration": 27163,
                             "src": "8817:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -9519,7 +9465,7 @@
                           "memberLocation": "8832:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "8817:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -9861,12 +9807,10 @@
             "id": 27756,
             "nodeType": "FunctionDefinition",
             "src": "9636:1021:44",
-            "nodes": [],
             "body": {
               "id": 27755,
               "nodeType": "Block",
               "src": "9848:809:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -9932,7 +9876,7 @@
                         "referencedDeclaration": 27163,
                         "src": "9876:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -9944,7 +9888,7 @@
                       "memberLocation": "9891:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "9876:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -10019,7 +9963,7 @@
                             "referencedDeclaration": 27163,
                             "src": "9932:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -10031,7 +9975,7 @@
                           "memberLocation": "9947:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "9932:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -10948,12 +10892,10 @@
             "id": 27825,
             "nodeType": "FunctionDefinition",
             "src": "10661:907:44",
-            "nodes": [],
             "body": {
               "id": 27824,
               "nodeType": "Block",
               "src": "10927:641:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -11019,7 +10961,7 @@
                         "referencedDeclaration": 27163,
                         "src": "10955:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -11031,7 +10973,7 @@
                       "memberLocation": "10970:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "10955:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -11106,7 +11048,7 @@
                             "referencedDeclaration": 27163,
                             "src": "11011:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -11118,7 +11060,7 @@
                           "memberLocation": "11026:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "11011:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -11946,12 +11888,10 @@
             "id": 27875,
             "nodeType": "FunctionDefinition",
             "src": "11572:494:44",
-            "nodes": [],
             "body": {
               "id": 27874,
               "nodeType": "Block",
               "src": "11755:311:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -12166,7 +12106,7 @@
                         "referencedDeclaration": 27163,
                         "src": "11864:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -12178,7 +12118,7 @@
                       "memberLocation": "11879:14:44",
                       "memberName": "getRaftTokenId",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32910,
+                      "referencedDeclaration": 33044,
                       "src": "11864:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_uint256_$",
@@ -12253,7 +12193,7 @@
                             "referencedDeclaration": 27163,
                             "src": "11920:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -12265,7 +12205,7 @@
                           "memberLocation": "11935:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "11920:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -12655,12 +12595,10 @@
             "id": 27886,
             "nodeType": "FunctionDefinition",
             "src": "12070:105:44",
-            "nodes": [],
             "body": {
               "id": 27885,
               "nodeType": "Block",
               "src": "12134:41:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -12673,7 +12611,7 @@
                         "referencedDeclaration": 27163,
                         "src": "12155:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       }
@@ -12681,7 +12619,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       ],
@@ -12783,12 +12721,10 @@
             "id": 27931,
             "nodeType": "FunctionDefinition",
             "src": "12407:517:44",
-            "nodes": [],
             "body": {
               "id": 27930,
               "nodeType": "Block",
               "src": "12504:420:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -12854,7 +12790,7 @@
                             "referencedDeclaration": 27163,
                             "src": "12525:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -12866,7 +12802,7 @@
                           "memberLocation": "12540:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "12525:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -12994,7 +12930,7 @@
                               "referencedDeclaration": 27163,
                               "src": "12646:14:44",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                                "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                                 "typeString": "contract ISpecDataHolder"
                               }
                             },
@@ -13006,7 +12942,7 @@
                             "memberLocation": "12661:16:44",
                             "memberName": "isSpecRegistered",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 32891,
+                            "referencedDeclaration": 33025,
                             "src": "12646:31:44",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_string_memory_ptr_$returns$_t_bool_$",
@@ -13143,7 +13079,7 @@
                         "referencedDeclaration": 27163,
                         "src": "12745:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -13155,7 +13091,7 @@
                       "memberLocation": "12760:13:44",
                       "memberName": "setSpecToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32898,
+                      "referencedDeclaration": 33032,
                       "src": "12745:28:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_string_memory_ptr_$_t_uint256_$returns$__$",
@@ -13248,7 +13184,7 @@
                             "referencedDeclaration": 27163,
                             "src": "12882:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -13260,7 +13196,7 @@
                           "memberLocation": "12897:14:44",
                           "memberName": "getRaftAddress",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32903,
+                          "referencedDeclaration": 33037,
                           "src": "12882:29:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -13424,12 +13360,10 @@
             "id": 27940,
             "nodeType": "FunctionDefinition",
             "src": "12928:94:44",
-            "nodes": [],
             "body": {
               "id": 27939,
               "nodeType": "Block",
               "src": "12999:23:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -13452,7 +13386,7 @@
               ]
             },
             "baseFunctions": [
-              32869
+              33003
             ],
             "functionSelector": "06fdde03",
             "implemented": true,
@@ -13515,12 +13449,10 @@
             "id": 27949,
             "nodeType": "FunctionDefinition",
             "src": "13026:98:44",
-            "nodes": [],
             "body": {
               "id": 27948,
               "nodeType": "Block",
               "src": "13099:25:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -13543,7 +13475,7 @@
               ]
             },
             "baseFunctions": [
-              32874
+              33008
             ],
             "functionSelector": "95d89b41",
             "implemented": true,
@@ -13606,12 +13538,10 @@
             "id": 27969,
             "nodeType": "FunctionDefinition",
             "src": "13128:200:44",
-            "nodes": [],
             "body": {
               "id": 27968,
               "nodeType": "Block",
               "src": "13227:101:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -13773,7 +13703,7 @@
               ]
             },
             "baseFunctions": [
-              32881
+              33015
             ],
             "functionSelector": "c87b56dd",
             "implemented": true,
@@ -13864,12 +13794,10 @@
             "id": 27994,
             "nodeType": "FunctionDefinition",
             "src": "13452:194:44",
-            "nodes": [],
             "body": {
               "id": 27993,
               "nodeType": "Block",
               "src": "13543:103:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -14175,12 +14103,10 @@
             "id": 28017,
             "nodeType": "FunctionDefinition",
             "src": "13650:207:44",
-            "nodes": [],
             "body": {
               "id": 28016,
               "nodeType": "Block",
               "src": "13742:115:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -14476,12 +14402,10 @@
             "id": 28033,
             "nodeType": "FunctionDefinition",
             "src": "13861:148:44",
-            "nodes": [],
             "body": {
               "id": 28032,
               "nodeType": "Block",
               "src": "13975:34:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -14652,12 +14576,10 @@
             "id": 28079,
             "nodeType": "FunctionDefinition",
             "src": "14435:448:44",
-            "nodes": [],
             "body": {
               "id": 28078,
               "nodeType": "Block",
               "src": "14558:325:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -14723,7 +14645,7 @@
                             "referencedDeclaration": 27163,
                             "src": "14579:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -14735,7 +14657,7 @@
                           "memberLocation": "14594:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "14579:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -15284,12 +15206,10 @@
             "id": 28121,
             "nodeType": "FunctionDefinition",
             "src": "15104:427:44",
-            "nodes": [],
             "body": {
               "id": 28120,
               "nodeType": "Block",
               "src": "15211:320:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -15355,7 +15275,7 @@
                             "referencedDeclaration": 27163,
                             "src": "15232:14:44",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                              "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                               "typeString": "contract ISpecDataHolder"
                             }
                           },
@@ -15367,7 +15287,7 @@
                           "memberLocation": "15247:17:44",
                           "memberName": "isAuthorizedAdmin",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 32926,
+                          "referencedDeclaration": 33060,
                           "src": "15232:32:44",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_uint256_$_t_address_$returns$_t_bool_$",
@@ -15858,12 +15778,10 @@
             "id": 28142,
             "nodeType": "FunctionDefinition",
             "src": "15535:189:44",
-            "nodes": [],
             "body": {
               "id": 28141,
               "nodeType": "Block",
               "src": "15634:90:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -16116,12 +16034,10 @@
             "id": 28170,
             "nodeType": "FunctionDefinition",
             "src": "15728:272:44",
-            "nodes": [],
             "body": {
               "id": 28169,
               "nodeType": "Block",
               "src": "15828:172:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -16176,10 +16092,10 @@
                                 "name": "IERC721Metadata",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 32882,
+                                "referencedDeclaration": 33016,
                                 "src": "15868:15:44",
                                 "typeDescriptions": {
-                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$32882_$",
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33016_$",
                                   "typeString": "type(contract IERC721Metadata)"
                                 }
                               }
@@ -16187,7 +16103,7 @@
                             "expression": {
                               "argumentTypes": [
                                 {
-                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$32882_$",
+                                  "typeIdentifier": "t_type$_t_contract$_IERC721Metadata_$33016_$",
                                   "typeString": "type(contract IERC721Metadata)"
                                 }
                               ],
@@ -16214,7 +16130,7 @@
                             "src": "15863:21:44",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_magic_meta_type_t_contract$_IERC721Metadata_$32882",
+                              "typeIdentifier": "t_magic_meta_type_t_contract$_IERC721Metadata_$33016",
                               "typeString": "type(contract IERC721Metadata)"
                             }
                           },
@@ -16512,12 +16428,10 @@
             "id": 28199,
             "nodeType": "FunctionDefinition",
             "src": "16004:295:44",
-            "nodes": [],
             "body": {
               "id": 28198,
               "nodeType": "Block",
               "src": "16141:158:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -16934,12 +16848,10 @@
             "id": 28228,
             "nodeType": "FunctionDefinition",
             "src": "16303:362:44",
-            "nodes": [],
             "body": {
               "id": 28227,
               "nodeType": "Block",
               "src": "16443:222:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -17355,12 +17267,10 @@
             "id": 28254,
             "nodeType": "FunctionDefinition",
             "src": "16669:245:44",
-            "nodes": [],
             "body": {
               "id": 28253,
               "nodeType": "Block",
               "src": "16785:129:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -17733,12 +17643,10 @@
             "id": 28272,
             "nodeType": "FunctionDefinition",
             "src": "16918:159:44",
-            "nodes": [],
             "body": {
               "id": 28271,
               "nodeType": "Block",
               "src": "17027:50:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -17976,12 +17884,10 @@
             "id": 28337,
             "nodeType": "FunctionDefinition",
             "src": "17081:516:44",
-            "nodes": [],
             "body": {
               "id": 28336,
               "nodeType": "Block",
               "src": "17203:394:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -18634,7 +18540,7 @@
                         "referencedDeclaration": 27163,
                         "src": "17519:14:44",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_ISpecDataHolder_$32927",
+                          "typeIdentifier": "t_contract$_ISpecDataHolder_$33061",
                           "typeString": "contract ISpecDataHolder"
                         }
                       },
@@ -18646,7 +18552,7 @@
                       "memberLocation": "17534:14:44",
                       "memberName": "setBadgeToRaft",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 32917,
+                      "referencedDeclaration": 33051,
                       "src": "17519:29:44",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$returns$__$",
@@ -18830,12 +18736,10 @@
             "id": 28388,
             "nodeType": "FunctionDefinition",
             "src": "18250:598:44",
-            "nodes": [],
             "body": {
               "id": 28387,
               "nodeType": "Block",
               "src": "18453:395:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -19576,12 +19480,10 @@
             "id": 28415,
             "nodeType": "FunctionDefinition",
             "src": "19358:377:44",
-            "nodes": [],
             "body": {
               "id": 28414,
               "nodeType": "Block",
               "src": "19512:223:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -19959,12 +19861,10 @@
             "id": 28432,
             "nodeType": "FunctionDefinition",
             "src": "19739:119:44",
-            "nodes": [],
             "body": {
               "id": 28431,
               "nodeType": "Block",
               "src": "19810:48:44",
-              "nodes": [],
               "statements": [
                 {
                   "expression": {
@@ -20172,12 +20072,10 @@
             "id": 28469,
             "nodeType": "FunctionDefinition",
             "src": "19862:232:44",
-            "nodes": [],
             "body": {
               "id": 28468,
               "nodeType": "Block",
               "src": "19911:183:44",
-              "nodes": [],
               "statements": [
                 {
                   "assignments": [
@@ -20631,12 +20529,10 @@
             "id": 28478,
             "nodeType": "FunctionDefinition",
             "src": "20249:66:44",
-            "nodes": [],
             "body": {
               "id": 28477,
               "nodeType": "Block",
               "src": "20313:2:44",
-              "nodes": [],
               "statements": []
             },
             "baseFunctions": [
@@ -20727,7 +20623,7 @@
                 "977:15:44"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 32882,
+              "referencedDeclaration": 33016,
               "src": "977:15:44"
             },
             "id": 27127,
@@ -20826,7 +20722,7 @@
           25309,
           22302,
           58,
-          32882
+          33016
         ],
         "name": "Badges",
         "nameLocation": "965:6:44",
