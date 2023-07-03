@@ -495,4 +495,56 @@ contract BadgesTest is Test {
 
     assertEq(badgesProxy.balanceOf(recipient), 0);
   }
+
+  function testUpdateTokenURIAsAdmin() public {
+    address admin = address(123);
+    address[] memory admins = new address[](1);
+    admins[0] = admin;
+    bool[] memory isActive = new bool[](1);
+    isActive[0] = true;
+    string memory oldTokenURI = specUri;
+    string memory newTokenURI = "new spec uri";
+
+    // Assign admin
+    vm.prank(raftOwner);
+    raftProxy.setAdmins(raftTokenId, admins, isActive);
+    assertEq(raftProxy.isAdminActive(raftTokenId, admins[0]), true);
+
+    // Mint a badge
+    (, uint256 tokenId) = testTake();
+
+    // Admin updates the tokenURI
+    vm.prank(admin);
+    assertEq(badgesProxy.tokenURI(tokenId), oldTokenURI);
+
+    vm.prank(admin);
+    badgesProxy.updateTokenURI(tokenId, oldTokenURI, newTokenURI);
+
+    assertEq(badgesProxy.tokenURI(tokenId), newTokenURI);
+  }
+
+  function testUpdateTokenURIUnauthorized() public {
+    address unauthorizedAddress = address(124);
+    string memory oldTokenURI = specUri;
+    string memory newTokenURI = "new spec uri";
+    (, uint256 tokenId) = testTake();
+
+    // Attempt to update the tokenURI as an unauthorized user
+    vm.prank(unauthorizedAddress);
+
+    vm.expectRevert("updateTokenURI: unauthorized");
+    badgesProxy.updateTokenURI(tokenId, oldTokenURI, newTokenURI);
+  }
+
+  function testUpdateTokenURINonexistentToken() public {
+    address admin = address(123);
+    string memory oldTokenURI = specUri;
+    string memory newTokenURI = "new spec uri";
+    uint256 nonexistentTokenId = 9999;
+
+    // Attempt to update the tokenURI of a nonexistent token
+    vm.prank(admin);
+    vm.expectRevert(bytes(errTokenDoesntExist));
+    badgesProxy.updateTokenURI(123, oldTokenURI, newTokenURI);
+  }
 }

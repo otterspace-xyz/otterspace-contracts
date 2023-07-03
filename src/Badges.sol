@@ -50,7 +50,11 @@ contract Badges is
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
 
   event RefreshMetadata(string[] specUris, address sender);
-
+  event MetadataUpdate(
+    uint256 indexed tokenId,
+    string indexed newTokenURI,
+    address indexed updater
+  );
   bytes32 constant AGREEMENT_HASH =
     keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -95,6 +99,24 @@ contract Badges is
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+  }
+
+  function updateTokenURI(
+    uint256 _tokenId,
+    string calldata _oldTokenURI,
+    string calldata _newTokenURI
+  ) external tokenExists(_tokenId) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_oldTokenURI);
+    bool isAuthorized = specDataHolder.isAuthorizedAdmin(
+      raftTokenId,
+      msg.sender
+    ) || owner() == msg.sender;
+
+    require(isAuthorized, "updateTokenURI: unauthorized");
+
+    tokenURIs[_tokenId] = _newTokenURI;
+
+    emit MetadataUpdate(_tokenId, _newTokenURI, msg.sender);
   }
 
   function refreshMetadata(string[] calldata _specUris) external onlyOwner {
