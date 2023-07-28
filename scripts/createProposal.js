@@ -21,7 +21,10 @@ const {
   MAINNET_SPECDATAHOLDER_ADDRESS,
   SEPOLIA_BADGES_ADDRESS,
   SEPOLIA_RAFT_ADDRESS,
-  SEPOLIA_SPECDATAHOLDER_ADDRESS,  
+  SEPOLIA_SPECDATAHOLDER_ADDRESS,
+  POLYGON_BADGES_ADDRESS,
+  POLYGON_RAFT_ADDRESS,
+  POLYGON_SPECDATAHOLDER_ADDRESS,
 } = process.env
 
 async function createProposal() {
@@ -33,7 +36,7 @@ async function createProposal() {
     console.log('🚀 ~ createProposal ~ process.argv[2]', process.argv[2])
     console.log('🚀 ~ createProposal ~ process.argv[3]', process.argv[3])
     console.log('🚀 ~ createProposal ~ process.argv[4]', process.argv[4])
-    
+
     const contract = {}
     const implementationAddress = process.argv[2]
     const contractName = process.argv[3]
@@ -133,7 +136,7 @@ async function createProposal() {
         // gnosis safe doesnt support Sepolia, so we need an address here
         via = sharedWalletAddress
         viaType = 'EOA'
-        break        
+        break
       default:
         throw new Error('Invalid network')
     }
@@ -144,7 +147,7 @@ async function createProposal() {
       viaType,
       newImplementation: implementationAddress,
     }
-    
+
     await client.proposeUpgrade(upgradeParams, contract)
   } catch (error) {
     console.log('🚀 ~ createProposal ~ error:', error)
