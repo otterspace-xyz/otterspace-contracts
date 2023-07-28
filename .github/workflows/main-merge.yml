@@ -59,7 +59,7 @@ jobs:
            set -e
 
            prev_tag=$(git describe --tags --abbrev=0)
-          
+
            echo "PREVIOUS TAG = $prev_tag"
            git branch prev_tag $prev_tag
            git switch prev_tag
@@ -76,13 +76,13 @@ jobs:
 
            declare -A networks=(
               ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
-              ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"
-              ["polygon"]="$POLYGON_RPC_URL $POLYGON_ETHERSCAN_API_KEY"      
+              # ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"
+              ["polygon"]="$POLYGON_RPC_URL $POLYGON_ETHERSCAN_API_KEY"
            )
 
            for networkName in "${!networks[@]}"; do
                read rpc_url etherscan_api_key <<<"${networks[$networkName]}"
-               
+
                # Initialize the list of successfully deployed contracts
                deployedContracts=()
 
