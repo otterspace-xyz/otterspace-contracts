@@ -236,6 +236,54 @@ contract RaftTest is Test {
     wrappedProxyV1.setAdmins(123, admins, adminActiveStatus);
   }
 
+  function testSetAdminsAsNonOwner() public {
+    address tokenOwner = address(1);
+    uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");
+
+    address admin1 = address(2);
+    address admin2 = address(3);
+    address admin3 = address(4);
+
+    // Add admins first
+    address[] memory admins = new address[](3);
+    admins[0] = admin1;
+    admins[1] = admin2;
+    admins[2] = admin3;
+
+    bool[] memory adminActiveStatus = new bool[](3);
+    adminActiveStatus[0] = true;
+    adminActiveStatus[1] = true;
+    adminActiveStatus[2] = true;
+
+    // attempt to set admins as a non-owner
+    address attacker = vm.addr(randomPrivateKey);
+    vm.prank(attacker);
+    vm.expectRevert(bytes("setAdmins: unauthorized"));
+    wrappedProxyV1.setAdmins(tokenId, admins, adminActiveStatus);
+  }
+
+  function testSetAdminsWithDifferentLengths() public {
+    address tokenOwner = address(1);
+    uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");
+
+    // Add admins first
+    address[] memory admins = new address[](3);
+    admins[0] = address(2);
+    admins[1] = address(3);
+    admins[2] = address(4);
+
+    // Array of admin statuses has less elements than the array of admins
+    bool[] memory adminActiveStatus = new bool[](2);
+    adminActiveStatus[0] = true;
+    adminActiveStatus[1] = true;
+
+    vm.expectRevert(
+      bytes("setAdmins: admins and isActive must be the same length")
+    );
+    vm.prank(tokenOwner);
+    wrappedProxyV1.setAdmins(tokenId, admins, adminActiveStatus);
+  }
+
   function testRemoveAdmins() public {
     address tokenOwner = address(1);
     uint256 tokenId = wrappedProxyV1.mint(tokenOwner, "some uri");

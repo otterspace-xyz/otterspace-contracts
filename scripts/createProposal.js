@@ -30,16 +30,16 @@ async function createProposal() {
       apiKey: DEFENDER_TEAM_API_KEY,
       apiSecret: DEFENDER_TEAM_API_SECRET_KEY,
     })
-    const newImplementation = process.argv[2]
-    console.log('🚀 ~ createProposal ~ process.argv[0]', process.argv[0])
-    console.log('🚀 ~ createProposal ~ process.argv[1]', process.argv[1])
     console.log('🚀 ~ createProposal ~ process.argv[2]', process.argv[2])
     console.log('🚀 ~ createProposal ~ process.argv[3]', process.argv[3])
     console.log('🚀 ~ createProposal ~ process.argv[4]', process.argv[4])
+    
     const contract = {}
+    const implementationAddress = process.argv[2]
     const contractName = process.argv[3]
     const network = process.argv[4]
 
+    contract.name = contractName
     switch (contractName) {
       case 'badges':
         if (network === 'goerli') {
@@ -110,6 +110,7 @@ async function createProposal() {
 
     let via
     let viaType
+    const sharedWalletAddress = '0x21b02E9131D1BADE784a7874967DCb8Ef243F2A4'
     switch (network) {
       case 'goerli':
         via = GOERLI_GNOSIS_SAFE
@@ -117,7 +118,7 @@ async function createProposal() {
         break
       case 'optimism-goerli':
         // gnosis safe doesnt support optimism-goerli, so we need an address here
-        via = '0x21b02E9131D1BADE784a7874967DCb8Ef243F2A4'
+        via = sharedWalletAddress
         viaType = 'EOA'
         break
       case 'optimism':
@@ -130,14 +131,21 @@ async function createProposal() {
         break
       case 'sepolia':
         // gnosis safe doesnt support Sepolia, so we need an address here
-        via = '0x21b02E9131D1BADE784a7874967DCb8Ef243F2A4'
+        via = sharedWalletAddress
         viaType = 'EOA'
         break        
       default:
         throw new Error('Invalid network')
     }
-
-    await client.proposeUpgrade({ newImplementation, via, viaType }, contract)
+    const upgradeParams = {
+      title: `Upgrade ${contractName} to ${implementationAddress}`,
+      description: `proposed automatically from github action`,
+      via,
+      viaType,
+      newImplementation: implementationAddress,
+    }
+    
+    await client.proposeUpgrade(upgradeParams, contract)
   } catch (error) {
     console.log('🚀 ~ createProposal ~ error:', error)
   }

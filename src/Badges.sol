@@ -50,7 +50,11 @@ contract Badges is
   event BadgeReinstated(uint256 indexed tokenId, address indexed from);
 
   event RefreshMetadata(string[] specUris, address sender);
-
+  event MetadataUpdate(
+    uint256 indexed tokenId,
+    string indexed newTokenURI,
+    address indexed updater
+  );
   bytes32 constant AGREEMENT_HASH =
     keccak256("Agreement(address active,address passive,string tokenURI)");
 
@@ -95,6 +99,24 @@ contract Badges is
     __EIP712_init(_name, _version);
     __UUPSUpgradeable_init();
     transferOwnership(_nextOwner);
+  }
+
+  function updateTokenURI(
+    uint256 _tokenId,
+    string calldata _oldTokenURI,
+    string calldata _newTokenURI
+  ) external tokenExists(_tokenId) {
+    uint256 raftTokenId = specDataHolder.getRaftTokenId(_oldTokenURI);
+    bool isAuthorized = specDataHolder.isAuthorizedAdmin(
+      raftTokenId,
+      msg.sender
+    ) || owner() == msg.sender;
+
+    require(isAuthorized, "updateTokenURI: unauthorized");
+
+    tokenURIs[_tokenId] = _newTokenURI;
+
+    emit MetadataUpdate(_tokenId, _newTokenURI, msg.sender);
   }
 
   function refreshMetadata(string[] calldata _specUris) external onlyOwner {
@@ -225,6 +247,13 @@ contract Badges is
     return mint(_to, _uri, raftTokenId);
   }
 
+  /**
+   * @notice This function allows an admin of the raft to mint multiple requested badges.
+   * @dev It verifies that the admin is authorized and that the requester's signature is valid for each recipient.
+   * @param _recipients An array of addresses who are set to receive the badge.
+   * @param _uri The URI of the badge spec.
+   * @param _signatures An array of signatures. Each signature verifies that the corresponding recipient actually requested the badge.
+   */
   function giveRequestedBadgeToMany(
     address[] memory _recipients,
     string calldata _uri,
@@ -315,6 +344,18 @@ contract Badges is
     return mint(_recipient, _uri, raftTokenId);
   }
 
+  /**
+   * @notice This function allows an issuer to mint a badge with consent from the recipient.
+   * @dev It checks the Merkle agreement between the issuer and recipient, as well as validates the recipient's signature.
+   * @param _issuer The address of the badge issuer.
+   * @param _recipient The address of the badge recipient.
+   * @param _uri The URI of the badge spec.
+   * @param _issuerSignature The issuer's signature to be checked in the Merkle agreement.
+   * @param _recipientSignature The recipient's signature to be verified.
+   * @param root The root of the Merkle tree.
+   * @param proof An array of bytes32 values used to prove the Merkle agreement.
+   * @return Returns the ID of the newly minted badge.
+   */
   function merkleMintWithConsent(
     address _issuer,
     address _recipient,
@@ -351,6 +392,17 @@ contract Badges is
 
     return mint(_recipient, _uri, raftTokenId);
   }
+
+  /**
+   * @notice This function allows a user to request a badge from an issuer using a Merkle proof.
+   * @dev It checks the Merkle agreement between the issuer and the caller, and mints the badge if authorized.
+   * @param _from The address of the issuer from whom the badge is requested.
+   * @param _uri The URI of the badge spec.
+   * @param _signature The issuer's signature to be checked in the Merkle agreement.
+   * @param root The root of the Merkle tree.
+   * @param proof An array of bytes32 values used to prove the Merkle agreement.
+   * @return Returns the ID of the newly minted badge.
+   */
 
   function merkleTake(
     address _from,
@@ -511,6 +563,14 @@ contract Badges is
       super.supportsInterface(_interfaceId);
   }
 
+  /**
+   * @notice Compute the agreement hash.
+   * @dev Generates a unique hash that represents an agreement between two addresses for a specific URI.
+   * @param _active The address of the active party.
+   * @param _passive The address of the passive party.
+   * @param _uri The URI for which the agreement is created.
+   * @return Returns the agreement hash.
+   */
   function getAgreementHash(
     address _active,
     address _passive,
@@ -524,6 +584,14 @@ contract Badges is
       );
   }
 
+  /**
+   * @notice Compute the Merkle agreement hash.
+   * @dev Generates a unique hash that represents a Merkle agreement between an issuer and a URI root.
+   * @param _issuer The address of the issuer.
+   * @param _uri The URI for which the agreement is created.
+   * @param _root The root of the Merkle tree.
+   * @return Returns the Merkle agreement hash.
+   */
   function getMerkleAgreementHash(
     address _issuer,
     string calldata _uri,
@@ -542,6 +610,12 @@ contract Badges is
       );
   }
 
+  /**
+   * @dev Generates a unique hash that represents a request by an address for a specific URI.
+   * @param _requester The address of the requester.
+   * @param _uri The URI for which the request is made.
+   * @return Returns the request hash.
+   */
   function getRequestHash(
     address _requester,
     string calldata _uri
@@ -552,12 +626,26 @@ contract Badges is
       );
   }
 
+  /**
+   * @dev Generates a unique hash that represents a badge ID for an address and a specific URI.
+   * @param _to The address of the receiver.
+   * @param _uri The URI of the badge.
+   * @return Returns the badge ID hash.
+   */
   function getBadgeIdHash(
     address _to,
     string calldata _uri
   ) public view virtual returns (bytes32) {
     return keccak256(abi.encode(_to, _uri));
   }
+
+  /**
+   * @dev Mint a new badge to an address.
+   * @param _to The address of the recipient.
+   * @param _uri The URI of the badge.
+   * @param _raftTokenId The ID of the raft token.
+   * @return Returns the ID of the newly minted badge.
+   */
 
   function mint(
     address _to,
