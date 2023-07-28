@@ -108,7 +108,7 @@ async function createProposal() {
         }
         break
       default:
-        throw new Error('Invalid contract name')
+        throw new Error('Invalid contract name: ' + contractName)
     }
 
     let via
@@ -138,7 +138,7 @@ async function createProposal() {
         viaType = 'EOA'
         break
       default:
-        throw new Error('Invalid network')
+        throw new Error('Invalid network: ' + network)
     }
     const upgradeParams = {
       title: `Upgrade ${contractName} to ${implementationAddress}`,

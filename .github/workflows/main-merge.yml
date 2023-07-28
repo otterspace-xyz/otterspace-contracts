@@ -76,7 +76,6 @@ jobs:
 
            declare -A networks=(
               ["optimism"]="$OPTIMISM_RPC_URL $OPTIMISTIC_ETHERSCAN_API_KEY"
-              # ["mainnet"]="$MAINNET_RPC_URL $ETHERSCAN_API_KEY"
               ["polygon"]="$POLYGON_RPC_URL $POLYGON_ETHERSCAN_API_KEY"
            )
 
