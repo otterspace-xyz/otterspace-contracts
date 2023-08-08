@@ -25,6 +25,7 @@ const {
   POLYGON_BADGES_ADDRESS,
   POLYGON_RAFT_ADDRESS,
   POLYGON_SPECDATAHOLDER_ADDRESS,
+  POLYGON_GNOSIS_SAFE,
 } = process.env
 
 async function createProposal() {
@@ -137,6 +138,9 @@ async function createProposal() {
         via = sharedWalletAddress
         viaType = 'EOA'
         break
+      case 'polygon':
+        via = POLYGON_GNOSIS_SAFE
+        viaType = 'Gnosis Safe'
       default:
         throw new Error('Invalid network: ' + network)
     }

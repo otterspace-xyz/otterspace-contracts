@@ -28,6 +28,7 @@ jobs:
       POLYGON_RAFT_ADDRESS: ${{ secrets.POLYGON_RAFT_ADDRESS }}
       POLYGON_SPECDATAHOLDER_ADDRESS: ${{ secrets.POLYGON_SPECDATAHOLDER_ADDRESS }}
       POLYGON_ETHERSCAN_API_KEY: ${{ secrets.POLYGON_ETHERSCAN_API_KEY }}
+      POLYGON_GNOSIS_SAFE: ${{ secrets.POLYGON_GNOSIS_SAFE }}
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
