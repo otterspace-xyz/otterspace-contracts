@@ -22,43 +22,8 @@ npx hardhat typechain
 npx hardhat test
 ```
 
-### Live contracts on Ethereum Mainnet:
-
-- [Badges.sol](https://etherscan.io/address/0x4537e34d5044626d72b3da203e7ffe997245947c)
-- [Raft.sol](https://etherscan.io/address/0x7465dA7E01A5FF3b2b1699EDa9E617A1329C14b8)
-- [SpecDataHolder.sol](https://etherscan.io/address/0x39DfCa12FCf403aa027aa64C04bCfB5eFF95d402)
-
-### Live contracts on Optimism:
-
-- [Badges.sol](https://optimistic.etherscan.io/address/0x7F9279B24D1c36Fa3E517041fdb4E8788dc63D25)
-- [Raft.sol](https://optimistic.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
-- [SpecDataHolder.sol](https://optimistic.etherscan.io/address/0x5c0B0B9c94f297f208375212AA70e5F86df6cb1B)
-
-### Live contracts on Polygon:
-
-- [Badges.sol](https://polygonscan.com/address/0x147e0dF40fdD1340C604726c670329c08176F208)
-- [Raft.sol](https://polygonscan.com/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
-- [SpecDataHolder.sol](https://polygonscan.com/address/0xdb8346eaf8c4a7ef82b17ce7843df8a9d00dc524)
-
----
-
-### Live contracts on Goerli:
-
-- [Badges.sol](https://goerli.etherscan.io/address/0xa6773847d3D2c8012C9cF62818b320eE278Ff722)
-- [Raft.sol](https://goerli.etherscan.io/address/0xBb8997048e5F0bFe6C9D6BEe63Ede53BD0236Bb2)
-- [SpecDataHolder.sol](https://goerli.etherscan.io/address/0xA3716e7794F756e7a22145516FcB87C962576ce4)
-
-### Live contracts on Optimism-Goerli:
-
-- [Badges.sol](https://goerli-optimism.etherscan.io/address/0x940f3b56fd53028f5d76a9ca335b1a9a6135528a)
-- [Raft.sol](https://goerli-optimism.etherscan.io/address/0xcd31CFCd7b784C5F4f51D4EaC45376bA30F9C3Eb)
-- [SpecDataHolder.sol](https://goerli-optimism.etherscan.io/address/0xbdBF9157BCF6a3f7cE9F7BdcFCa3067727F515F2)
-
-### Live contracts on Sepolia:
-
-- [Badges.sol](https://sepolia.etherscan.io/address/0x639a1703CfdeDaE61A535d53890130b4257f15eb)
-- [Raft.sol](https://sepolia.etherscan.io/address/0xa74caa864A2562999faf38280A3aA3d09c248daA)
-- [SpecDataHolder.sol](https://sepolia.etherscan.io/address/0xdB8346EAF8C4A7eF82B17Ce7843dF8A9d00dC524)
+### Supported networks and contract addresses
+Checkout our documentation site at [docs.otterspace.xyz](https://docs.otterspace.xyz/documentation/contracts)
 
 ### Use ABIs with JavaScript
 
@@ -137,12 +102,12 @@ On [Hardhat's website](https://hardhat.org) you will find:
 
 - Our contracts use the OpenZeppelin [UUPS](https://docs.openzeppelin.com/contracts/4.x/api/proxy#UUPSUpgradeable) proxy pattern for upgrades.
 - To test your working changes against the latest release:
-- 1. make sure you're on the latest from the `dev` branch
-- 2. run `forge build` to make sure you've generated the latest ABIs
-- 3. copy the contents of:
-- - `artifacts/src/Badges.sol/Badges.json` into `src/test/abis/latest`
-- - `artifacts/src/Raft.sol/Raft.json` into `src/test/abis/latest`
-- - `artifacts/src/SpecDataHolder.sol/SpecDataHolder.json` into `src/test/abis/latest`
+  1. make sure you're on the latest from the `dev` branch
+  2. run `forge build` to make sure you've generated the latest ABIs
+  3. copy the contents of:
+    - `artifacts/src/Badges.sol/Badges.json` into `src/test/abis/latest`
+    - `artifacts/src/Raft.sol/Raft.json` into `src/test/abis/latest`
+    - `artifacts/src/SpecDataHolder.sol/SpecDataHolder.json` into `src/test/abis/latest`
 - 4. make some changes to the contracts
 - 5. run `npx hardhat testUpgrade`
 - 6. As long as you don't see errors, your new contract is upgrade safe!
@@ -150,15 +115,15 @@ On [Hardhat's website](https://hardhat.org) you will find:
 ## Running upgrades (overview)
 
 - Once you've confirmed that the contracts are upgrade safe you'll
-- - deploy an implementation (not proxy) of each changed contract
-- - point the proxy at the new implementation
+  - deploy an implementation (not proxy) of each changed contract
+  - point the proxy at the new implementation
 
 ## Running upgrades (steps)
 
 - make sure your `.env.implementation` file has the correct values
 - run `./scripts deploy_and_verify_implementation.sh .env.implementation ${contractName} ${networkName}`
 - to deploy Badges on Optimism it would be
-- - `./scripts deploy_and_verify_implementation.sh .env.implementation Badges optimism`
+  - `./scripts deploy_and_verify_implementation.sh .env.implementation Badges optimism`
 - watch the console for confirmation of deployment and verification, copy the implementation's address
 - go into Defender and propose and execute the upgrade
 
@@ -183,6 +148,16 @@ Add a `.vscode` file under the root
 }
 ```
 
+## Versioning & publishing to NPM
+- First update the version in package.json
+- Add the version entry in changelog.md
+- Commit all your changes
+- Run `git tag v5.x.x` to the version you added in package.json
+- Run `git push origin v5.x.x`
+- Run `npm publish`
+
+Note - you need to have admin rights to otterspace registry in npm
+
 ## Changelog
 
 See changelog.md file.
@@ -190,11 +165,6 @@ See changelog.md file.
 ## Supporting new chains
 - [Adding support for new chains](https://www.notion.so/otterspace-xyz/How-to-add-support-for-a-new-chain-7f40b88185304a248f8014a7fd0af6c4)
 
-### Checklist for bumping version
-
-- update "version" in package.json
-- update contract addresses in readme (if necessary)
-- update changelog
 
 ## License
 
