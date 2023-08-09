@@ -2,6 +2,9 @@
 
 We're using https://semver.org/
 
+## 2.8.0
+- Introduces functionality to update Badge's token uri and emits a `MetadataUpdate` event
+
 ## 2.7.3
 - Bug fix in `mintWithConsent()` and rebuilding faulty ABIs
 
