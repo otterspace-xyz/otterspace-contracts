@@ -118,13 +118,15 @@ contract Raft is
     bool[] memory isActive
   ) public virtual {
     require(
-      admins.length > 0 && isActive.length > 0,
-      "setAdmins: invalid input"
-    );
-    require(
       admins.length == isActive.length,
       "setAdmins: admins and isActive must be the same length"
     );
+    // We only need to check that admins is not empty, since isActive will be empty if admins is empty.
+    require(
+      admins.length > 0,
+      "setAdmins: invalid input"
+    );
+
     require(_exists(tokenId), "setAdmins: tokenId does not exist");
     require(
       ownerOf(tokenId) == msg.sender || owner() == msg.sender,
